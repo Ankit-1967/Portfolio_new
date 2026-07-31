@@ -242,34 +242,32 @@ function App() {
     setFormStatus("Sending your message...");
 
     try {
+      const params = new URLSearchParams();
+      params.append("name", formDataObj.get("name"));
+      params.append("email", formDataObj.get("email"));
+      params.append("_replyto", formDataObj.get("email"));
+      params.append("message", formDataObj.get("message"));
+      params.append("_subject", `New Portfolio Contact Message from ${formDataObj.get("name")}`);
+      params.append("_autoresponse", portfolioData.contact?.autoReplyMessage || `Thank you for reaching out! I have received your message and will review it shortly. Best regards, Ankit Thakur`);
+
       const response = await fetch(`https://formsubmit.co/ajax/${targetEmail}`, {
         method: "POST",
         headers: { 
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
           'Accept': 'application/json'
         },
-        body: JSON.stringify({
-          name: formDataObj.get("name"),
-          email: formDataObj.get("email"),
-          _replyto: formDataObj.get("email"),
-          message: formDataObj.get("message"),
-          _subject: `New Portfolio Message from ${formDataObj.get("name")}`,
-          _autoresponse: `Thank you for reaching out, ${formDataObj.get("name")}! I have received your message and will review it shortly. I will reply directly to ${formDataObj.get("email")} as soon as possible. Best regards, Ankit Thakur (Frontend Developer)`,
-          _template: "table"
-        })
+        body: params.toString()
       });
 
       if (response.ok) {
-        setFormStatus(`✓ Thank you! Your message has been sent directly to ${targetEmail}.`);
+        setFormStatus(`✓ Thank you! Your message has been sent to ${targetEmail} and confirmation emailed to you.`);
         form.reset();
       } else {
-        setFormStatus(`✓ Message submitted! (Check ${targetEmail} inbox if activation confirmation is needed).`);
-        form.reset();
+        form.submit();
       }
     } catch (err) {
       console.error("Form submit error:", err);
-      setFormStatus(`✓ Thank you! Your message was submitted.`);
-      form.reset();
+      form.submit();
     } finally {
       setSubmitting(false);
     }
