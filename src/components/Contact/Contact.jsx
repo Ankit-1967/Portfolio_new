@@ -14,7 +14,7 @@ function Contact({ data, submit, formStatus, submitting }) {
           <p>{description || "Have an idea, design or project you'd like to bring to life? Let's talk about it and see how we can turn it into a responsive, engaging web experience."}</p>
           <div className="socials">
             <a href={github || "https://github.com/"} target="_blank" rel="noreferrer" aria-label="GitHub"><Icon name="github" /></a>
-            <a href={linkedin || "https://linkedin.com/"} target="_blank" rel="noreferrer" aria-label="LinkedIn"><Icon name="linkedin" /></a>
+            <a href={linkedin || "https://www.linkedin.com/in/ankit-thakur-4b5451277/"} target="_blank" rel="noreferrer" aria-label="LinkedIn"><Icon name="linkedin" /></a>
             <a href={`mailto:${email || "at667448@gmail.com"}`} aria-label="Email"><Icon name="mail" /></a>
           </div>
         </div>
