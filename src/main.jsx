@@ -253,8 +253,8 @@ function App() {
           email: formDataObj.get("email"),
           _replyto: formDataObj.get("email"),
           message: formDataObj.get("message"),
-          _subject: `New Portfolio Message from ${formDataObj.get("name")}`,
-          _autoresponse: portfolioData.contact?.autoReplyMessage || `Thank you for reaching out, ${formDataObj.get("name")}! I have received your message and will review it shortly. I appreciate your interest and will get back to you as soon as possible.\n\nBest regards,\nAnkit Thakur\nFrontend Developer`,
+          _subject: `New Portfolio Contact Message from ${formDataObj.get("name")}`,
+          _autoresponse: `Dear ${formDataObj.get("name")},\n\nThank you for reaching out through my portfolio! I have successfully received your message:\n\n"${formDataObj.get("message")}"\n\nI will review your inquiry and reply directly to ${formDataObj.get("email")} as soon as possible.\n\nBest regards,\nAnkit Thakur\nFrontend Developer\nat667448@gmail.com`,
           _template: "table"
         })
       });
