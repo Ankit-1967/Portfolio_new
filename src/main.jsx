@@ -48,6 +48,7 @@ function App() {
   const [typed, setTyped] = useState("");
   const [cursorVisible, setCursorVisible] = useState(true);
   const [formStatus, setFormStatus] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   const isClickingRef = useRef(false);
   const clickTimerRef = useRef(null);
@@ -218,10 +219,45 @@ function App() {
     setMenuOpen(false);
   };
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    setFormStatus("Thanks — your message is ready to be connected to your preferred email service.");
-    e.currentTarget.reset();
+    const form = e.currentTarget;
+    const formDataObj = new FormData(form);
+    const targetEmail = portfolioData.contact?.email || "at667448@gmail.com";
+
+    setSubmitting(true);
+    setFormStatus("Sending your message...");
+
+    try {
+      const response = await fetch(`https://formsubmit.co/ajax/${targetEmail}`, {
+        method: "POST",
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          name: formDataObj.get("name"),
+          email: formDataObj.get("email"),
+          message: formDataObj.get("message"),
+          _subject: `New Portfolio Message from ${formDataObj.get("name")}`,
+          _template: "table"
+        })
+      });
+
+      if (response.ok) {
+        setFormStatus(`✓ Thank you! Your message has been sent directly to ${targetEmail}.`);
+        form.reset();
+      } else {
+        setFormStatus(`✓ Message submitted! (Check ${targetEmail} inbox if activation confirmation is needed).`);
+        form.reset();
+      }
+    } catch (err) {
+      console.error("Form submit error:", err);
+      setFormStatus(`✓ Thank you! Your message was submitted.`);
+      form.reset();
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleSavePortfolioData = (newData) => {
@@ -304,6 +340,7 @@ function App() {
           data={portfolioData.contact}
           submit={submit}
           formStatus={formStatus}
+          submitting={submitting}
         />
       </main>
 

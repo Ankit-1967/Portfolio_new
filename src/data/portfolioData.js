@@ -169,6 +169,6 @@ export const initialPortfolioData = {
     description: "Have an idea, design or project you'd like to bring to life? Let's talk about it and see how we can turn it into a responsive, engaging web experience.",
     github: "https://github.com/",
     linkedin: "https://linkedin.com/",
-    email: "hello@example.com"
+    email: "at667448@gmail.com"
   }
 };

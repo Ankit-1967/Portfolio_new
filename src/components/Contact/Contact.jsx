@@ -2,7 +2,7 @@ import React from 'react';
 import './Contact.css';
 import Icon from '../Icon/Icon';
 
-function Contact({ data, submit, formStatus }) {
+function Contact({ data, submit, formStatus, submitting }) {
   const { eyebrow, headingLine1, headingLine2, description, github, linkedin, email } = data || {};
 
   return (
@@ -15,14 +15,16 @@ function Contact({ data, submit, formStatus }) {
           <div className="socials">
             <a href={github || "https://github.com/"} target="_blank" rel="noreferrer" aria-label="GitHub"><Icon name="github" /></a>
             <a href={linkedin || "https://linkedin.com/"} target="_blank" rel="noreferrer" aria-label="LinkedIn"><Icon name="linkedin" /></a>
-            <a href={`mailto:${email || "hello@example.com"}`} aria-label="Email"><Icon name="mail" /></a>
+            <a href={`mailto:${email || "at667448@gmail.com"}`} aria-label="Email"><Icon name="mail" /></a>
           </div>
         </div>
         <form className="contact-form reveal" onSubmit={submit}>
           <label>Name<input name="name" required placeholder="Your name" /></label>
           <label>Email<input type="email" name="email" required placeholder="you@example.com" /></label>
           <label>Message<textarea name="message" required minLength="10" placeholder="Tell me about your project..." /></label>
-          <button className="btn btn-primary" type="submit">Let's work together <Icon name="arrow" /></button>
+          <button className="btn btn-primary" type="submit" disabled={submitting}>
+            {submitting ? "Sending message..." : "Let's work together"} <Icon name="arrow" />
+          </button>
           {formStatus && <p className="form-status" role="status">{formStatus}</p>}
         </form>
       </div>
