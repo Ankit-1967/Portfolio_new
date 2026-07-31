@@ -24,6 +24,21 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
     }
   };
 
+  const handleExportDataFile = () => {
+    const fileContent = `export const initialPortfolioData = ${JSON.stringify(formData, null, 2)};\n`;
+    const blob = new Blob([fileContent], { type: 'application/javascript' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'portfolioData.js';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    setStatusMsg('📥 Downloaded updated portfolioData.js! Replace src/data/portfolioData.js to save permanently across all devices.');
+    setTimeout(() => setStatusMsg(''), 6000);
+  };
+
   // Updaters
   const updateHeroField = (field, val) => {
     setFormData(prev => ({ ...prev, hero: { ...prev.hero, [field]: val } }));
@@ -179,6 +194,9 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
 
         <div className="admin-topbar-actions">
           {statusMsg && <div className="admin-status-bar">{statusMsg}</div>}
+          <button className="admin-btn-secondary" onClick={handleExportDataFile} title="Download updated portfolioData.js code file to save permanently for all devices on GitHub/Vercel">
+            📥 Export Permanent File
+          </button>
           <button className="admin-btn-danger" onClick={handleReset}>Reset Defaults</button>
           <button className="admin-btn-primary" onClick={handleSave}>Save All Changes</button>
         </div>
