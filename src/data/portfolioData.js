@@ -170,6 +170,11 @@ export const initialPortfolioData = {
     github: "https://github.com/",
     linkedin: "https://linkedin.com/",
     email: "at667448@gmail.com",
-    autoReplyMessage: "Thank you for reaching out! I have received your message and will review it shortly. I appreciate your interest and will get back to you as soon as possible.\n\nBest regards,\nAnkit Thakur\nFrontend Developer"
+    autoReplyMessage: "Thank you for reaching out! I have received your message and will review it shortly. I appreciate your interest and will get back to you as soon as possible.\n\nBest regards,\nAnkit Thakur\nFrontend Developer",
+    emailJs: {
+      serviceId: "",
+      templateId: "",
+      publicKey: ""
+    }
   }
 };

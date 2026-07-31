@@ -558,6 +558,37 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                   </div>
                 </div>
               </div>
+
+              <div className="admin-card" style={{ marginTop: '20px' }}>
+                <h3 className="admin-card-title">Direct Gmail Sender Setup (EmailJS)</h3>
+                <p style={{ fontSize: '0.84rem', color: 'var(--muted)', marginBottom: '16px', lineHeight: '1.5' }}>
+                  Connect your EmailJS Gmail account to send Thank You letters directly from <b>at667448@gmail.com</b>.
+                </p>
+                <div className="admin-grid-2">
+                  <div className="admin-field">
+                    <label>EmailJS Service ID</label>
+                    <input
+                      placeholder="e.g. service_xxxx"
+                      value={formData.contact?.emailJs?.serviceId || ''}
+                      onChange={(e) => {
+                        const emailJs = { ...(formData.contact?.emailJs || {}), serviceId: e.target.value };
+                        updateContactField('emailJs', emailJs);
+                      }}
+                    />
+                  </div>
+                  <div className="admin-field">
+                    <label>EmailJS Public Key</label>
+                    <input
+                      placeholder="e.g. user_xxxx"
+                      value={formData.contact?.emailJs?.publicKey || ''}
+                      onChange={(e) => {
+                        const emailJs = { ...(formData.contact?.emailJs || {}), publicKey: e.target.value };
+                        updateContactField('emailJs', emailJs);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
             </section>
           )}
         </main>
