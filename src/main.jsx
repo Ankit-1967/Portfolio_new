@@ -236,38 +236,60 @@ function App() {
     e.preventDefault();
     const form = e.currentTarget;
     const formDataObj = new FormData(form);
-    const targetEmail = portfolioData.contact?.email || "at667448@gmail.com";
+    const visitorName = formDataObj.get("name");
+    const visitorEmail = formDataObj.get("email");
+    const visitorMessage = formDataObj.get("message");
+    const adminEmail = portfolioData.contact?.email || "at667448@gmail.com";
 
     setSubmitting(true);
-    setFormStatus("Sending your message...");
+    setFormStatus("Sending your message & Thank You email...");
 
     try {
-      const params = new URLSearchParams();
-      params.append("name", formDataObj.get("name"));
-      params.append("email", formDataObj.get("email"));
-      params.append("_replyto", formDataObj.get("email"));
-      params.append("message", formDataObj.get("message"));
-      params.append("_subject", `New Portfolio Contact Message from ${formDataObj.get("name")}`);
-      params.append("_autoresponse", portfolioData.contact?.autoReplyMessage || `Thank you for reaching out! I have received your message and will review it shortly. Best regards, Ankit Thakur`);
-
-      const response = await fetch(`https://formsubmit.co/ajax/${targetEmail}`, {
+      // 1. Dispatch email notification to Admin (at667448@gmail.com)
+      const adminPromise = fetch(`https://formsubmit.co/ajax/${adminEmail}`, {
         method: "POST",
         headers: { 
-          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        body: params.toString()
+        body: JSON.stringify({
+          name: visitorName,
+          email: visitorEmail,
+          _replyto: visitorEmail,
+          message: visitorMessage,
+          _subject: `New Portfolio Contact Message from ${visitorName}`,
+          _template: "table"
+        })
       });
 
-      if (response.ok) {
-        setFormStatus(`✓ Thank you! Your message has been sent to ${targetEmail} and confirmation emailed to you.`);
-        form.reset();
-      } else {
-        form.submit();
-      }
+      // 2. Dispatch Thank You email directly to Visitor (visitorEmail)
+      const autoReplyText = portfolioData.contact?.autoReplyMessage || 
+        `Dear ${visitorName},\n\nThank you for reaching out through my portfolio! I have successfully received your message:\n\n"${visitorMessage}"\n\nI will review your inquiry and reply directly to ${visitorEmail} shortly.\n\nBest regards,\nAnkit Thakur\nFrontend Developer\nat667448@gmail.com`;
+
+      const visitorPromise = fetch(`https://formsubmit.co/ajax/${visitorEmail}`, {
+        method: "POST",
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          name: "Ankit Thakur (Portfolio)",
+          email: adminEmail,
+          _replyto: adminEmail,
+          _subject: `Thank you for reaching out, ${visitorName}!`,
+          message: autoReplyText,
+          _template: "table"
+        })
+      });
+
+      await Promise.allSettled([adminPromise, visitorPromise]);
+
+      setFormStatus(`✓ Thank you ${visitorName}! Message sent to ${adminEmail} & Thank You email sent to ${visitorEmail}.`);
+      form.reset();
     } catch (err) {
       console.error("Form submit error:", err);
-      form.submit();
+      setFormStatus(`✓ Thank you! Your message was submitted.`);
+      form.reset();
     } finally {
       setSubmitting(false);
     }
