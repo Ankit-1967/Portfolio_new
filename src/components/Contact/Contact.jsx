@@ -18,10 +18,7 @@ function Contact({ data, submit, formStatus, submitting }) {
             <a href={`mailto:${email || "at667448@gmail.com"}`} aria-label="Email"><Icon name="mail" /></a>
           </div>
         </div>
-        <form className="contact-form reveal" onSubmit={submit} action={`https://formsubmit.co/${email || "at667448@gmail.com"}`} method="POST">
-          <input type="hidden" name="_subject" value="New Portfolio Contact Message" />
-          <input type="hidden" name="_autoresponse" value={data?.autoReplyMessage || "Thank you for reaching out! I have received your message and will review it shortly. Best regards, Ankit Thakur"} />
-          <input type="hidden" name="_template" value="table" />
+        <form className="contact-form reveal" onSubmit={submit}>
           <label>Name<input name="name" required placeholder="Your name" /></label>
           <label>Email<input type="email" name="email" required placeholder="you@example.com" /></label>
           <label>Message<textarea name="message" required minLength="10" placeholder="Tell me about your project..." /></label>

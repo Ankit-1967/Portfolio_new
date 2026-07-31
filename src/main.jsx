@@ -240,77 +240,37 @@ function App() {
     const visitorEmail = formDataObj.get("email");
     const visitorMessage = formDataObj.get("message");
     const adminEmail = portfolioData.contact?.email || "at667448@gmail.com";
-    const emailJsConfig = portfolioData.contact?.emailJs;
 
     setSubmitting(true);
-    setFormStatus("Sending your message & Thank You email...");
+    setFormStatus("Sending your message...");
 
     try {
-      const autoReplyText = portfolioData.contact?.autoReplyMessage || 
-        `Dear ${visitorName},\n\nThank you for reaching out through my portfolio! I have successfully received your message:\n\n"${visitorMessage}"\n\nI will review your inquiry and reply directly to ${visitorEmail} shortly.\n\nBest regards,\nAnkit Thakur\nFrontend Developer\nat667448@gmail.com`;
+      const response = await fetch(`https://formsubmit.co/ajax/${adminEmail}`, {
+        method: "POST",
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          name: visitorName,
+          email: visitorEmail,
+          _replyto: visitorEmail,
+          message: visitorMessage,
+          _subject: `New Portfolio Message from ${visitorName}`,
+          _template: "table"
+        })
+      });
 
-      if (emailJsConfig?.serviceId && emailJsConfig?.publicKey) {
-        // Send directly from user's connected Gmail account via EmailJS REST API
-        await fetch("https://api.emailjs.com/api/v1.0/email/send", {
-          method: "POST",
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            service_id: emailJsConfig.serviceId,
-            template_id: emailJsConfig.templateId || "template_portfolio",
-            user_id: emailJsConfig.publicKey,
-            template_params: {
-              to_name: visitorName,
-              to_email: visitorEmail,
-              from_name: "Ankit Thakur",
-              from_email: adminEmail,
-              message: visitorMessage,
-              auto_reply: autoReplyText
-            }
-          })
-        });
+      if (response.ok) {
+        setFormStatus("✓ Thank you for reaching out! Your message has been sent to Ankit. He will contact you shortly.");
+        form.reset();
       } else {
-        // 1. Dispatch email notification to Admin (at667448@gmail.com)
-        const adminPromise = fetch(`https://formsubmit.co/ajax/${adminEmail}`, {
-          method: "POST",
-          headers: { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            name: visitorName,
-            email: visitorEmail,
-            _replyto: visitorEmail,
-            message: visitorMessage,
-            _subject: `New Portfolio Contact Message from ${visitorName}`,
-            _template: "table"
-          })
-        });
-
-        // 2. Dispatch Thank You email directly to Visitor (visitorEmail)
-        const visitorPromise = fetch(`https://formsubmit.co/ajax/${visitorEmail}`, {
-          method: "POST",
-          headers: { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            name: "Ankit Thakur (Portfolio)",
-            email: adminEmail,
-            _replyto: adminEmail,
-            _subject: `Thank you for reaching out, ${visitorName}!`,
-            message: autoReplyText,
-            _template: "table"
-          })
-        });
-
-        await Promise.allSettled([adminPromise, visitorPromise]);
+        setFormStatus("✓ Thank you! Your message has been submitted. Ankit will contact you shortly.");
+        form.reset();
       }
-
-      setFormStatus(`✓ Thank you ${visitorName}! Message sent to ${adminEmail} & Thank You email sent to ${visitorEmail}.`);
-      form.reset();
     } catch (err) {
       console.error("Form submit error:", err);
-      setFormStatus(`✓ Thank you! Your message was submitted.`);
+      setFormStatus("✓ Thank you! Your message has been submitted. Ankit will contact you shortly.");
       form.reset();
     } finally {
       setSubmitting(false);
