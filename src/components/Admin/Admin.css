@@ -1,0 +1,232 @@
+.admin-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(12px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+.admin-modal-container {
+  width: min(900px, 95vw);
+  max-height: 88vh;
+  background: var(--surface-solid);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  color: var(--text);
+}
+
+.admin-header {
+  padding: 20px 28px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--surface);
+}
+
+.admin-header h2 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-close-btn {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--text);
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.admin-close-btn:hover {
+  background: var(--line);
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 6px;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+  overflow-x: auto;
+}
+
+.admin-tab-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: 0.2s;
+}
+
+.admin-tab-btn.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.admin-tab-btn:hover:not(.active) {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.admin-body {
+  padding: 28px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.admin-form-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admin-form-group label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.admin-form-group input,
+.admin-form-group textarea,
+.admin-form-group select {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.88rem;
+  outline: none;
+  transition: 0.2s;
+}
+
+.admin-form-group input:focus,
+.admin-form-group textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--glow);
+}
+
+.admin-item-card {
+  border: 1px solid var(--line);
+  padding: 18px;
+  border-radius: 14px;
+  background: var(--surface);
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.admin-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.admin-delete-btn {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.admin-delete-btn:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+.admin-add-btn {
+  background: var(--surface);
+  border: 1px dashed var(--accent);
+  color: var(--accent);
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.admin-add-btn:hover {
+  background: var(--glow);
+}
+
+.admin-footer {
+  padding: 18px 28px;
+  border-top: 1px solid var(--line);
+  background: var(--surface);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-footer-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-save-btn {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+  border: none;
+  padding: 11px 22px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  box-shadow: 0 10px 25px var(--glow);
+}
+
+.admin-reset-btn {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  padding: 11px 16px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.admin-reset-btn:hover {
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+.admin-toast {
+  font-size: 0.8rem;
+  color: #45d483;
+  font-weight: 600;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}

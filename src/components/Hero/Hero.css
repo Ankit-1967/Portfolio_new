@@ -1,0 +1,4 @@
+/* Hero styles are scoped in styles.css or extended here */
+.hero-section-wrapper {
+  position: relative;
+}
