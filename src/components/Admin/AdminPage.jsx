@@ -543,6 +543,10 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                   <label>Contact Email Address</label>
                   <input value={formData.contact?.email || ''} onChange={(e) => updateContactField('email', e.target.value)} />
                 </div>
+                <div className="admin-field">
+                  <label>Automated Thank You Letter Message (Sent to Visitor on Form Submit)</label>
+                  <textarea rows={4} value={formData.contact?.autoReplyMessage || ''} onChange={(e) => updateContactField('autoReplyMessage', e.target.value)} />
+                </div>
                 <div className="admin-grid-2">
                   <div className="admin-field">
                     <label>GitHub URL</label>

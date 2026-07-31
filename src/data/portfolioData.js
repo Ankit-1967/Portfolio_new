@@ -169,6 +169,7 @@ export const initialPortfolioData = {
     description: "Have an idea, design or project you'd like to bring to life? Let's talk about it and see how we can turn it into a responsive, engaging web experience.",
     github: "https://github.com/",
     linkedin: "https://linkedin.com/",
-    email: "at667448@gmail.com"
+    email: "at667448@gmail.com",
+    autoReplyMessage: "Thank you for reaching out! I have received your message and will review it shortly. I appreciate your interest and will get back to you as soon as possible.\n\nBest regards,\nAnkit Thakur\nFrontend Developer"
   }
 };
