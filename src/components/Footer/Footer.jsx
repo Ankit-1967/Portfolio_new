@@ -1,7 +1,7 @@
 import React from 'react';
 import './Footer.css';
 
-function Footer({ scrollTo, onOpenAdmin }) {
+function Footer({ scrollTo }) {
   return (
     <footer className="site-footer">
       <div className="footer-top">
@@ -13,25 +13,7 @@ function Footer({ scrollTo, onOpenAdmin }) {
       </div>
       <div className="footer-bottom">
         <span>© {new Date().getFullYear()} Ankit Thakur</span>
-        <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-          <span>Frontend Developer · React & Shopify</span>
-          {onOpenAdmin && (
-            <button
-              onClick={onOpenAdmin}
-              style={{
-                background: 'transparent',
-                border: '1px dashed var(--line)',
-                color: 'var(--accent)',
-                padding: '2px 8px',
-                borderRadius: '6px',
-                fontSize: '0.65rem',
-                cursor: 'pointer'
-              }}
-            >
-              ⚙ Admin Panel
-            </button>
-          )}
-        </div>
+        <span>Frontend Developer · React & Shopify</span>
       </div>
     </footer>
   );

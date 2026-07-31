@@ -17,8 +17,9 @@ import Services from "./components/Services/Services";
 import Contact from "./components/Contact/Contact";
 import Footer from "./components/Footer/Footer";
 
-// Full Page Admin Component
+// Full Page Admin & Login Components
 import AdminPage from "./components/Admin/AdminPage";
+import AdminLogin from "./components/Admin/AdminLogin";
 
 // Data Source
 import { initialPortfolioData } from "./data/portfolioData";
@@ -37,7 +38,13 @@ function App() {
   });
 
   const [currentView, setCurrentView] = useState(() => {
-    return window.location.hash === "#admin" ? "admin" : "portfolio";
+    const isPathAdmin = window.location.pathname.endsWith("/admin");
+    const isHashAdmin = window.location.hash === "#admin";
+    return isPathAdmin || isHashAdmin ? "admin" : "portfolio";
+  });
+
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return sessionStorage.getItem("admin-auth") === "true";
   });
 
   const [theme, setTheme] = useState(() => localStorage.getItem("portfolio-theme") || "dark");
@@ -65,18 +72,24 @@ function App() {
     localStorage.setItem("portfolio-theme", theme);
   }, [theme]);
 
-  // URL Hash Navigation Sync (#admin vs portfolio)
+  // URL Path & Hash Navigation Listener for /admin
   useEffect(() => {
-    const checkHash = () => {
-      if (window.location.hash === '#admin') {
+    const checkAdminRoute = () => {
+      const isPathAdmin = window.location.pathname.endsWith("/admin");
+      const isHashAdmin = window.location.hash === "#admin";
+      if (isPathAdmin || isHashAdmin) {
         setCurrentView("admin");
       } else {
         setCurrentView("portfolio");
       }
     };
-    checkHash();
-    window.addEventListener('hashchange', checkHash);
-    return () => window.removeEventListener('hashchange', checkHash);
+    checkAdminRoute();
+    window.addEventListener('hashchange', checkAdminRoute);
+    window.addEventListener('popstate', checkAdminRoute);
+    return () => {
+      window.removeEventListener('hashchange', checkAdminRoute);
+      window.removeEventListener('popstate', checkAdminRoute);
+    };
   }, []);
 
   // Typing effect for Hero
@@ -270,19 +283,34 @@ function App() {
     localStorage.removeItem("portfolio-data");
   };
 
+  const handleExitAdmin = () => {
+    setCurrentView("portfolio");
+    window.location.hash = "";
+    if (window.location.pathname.endsWith("/admin")) {
+      window.history.pushState(null, "", "/");
+    }
+  };
+
   if (loading) return <Loader />;
 
-  // RENDER DEDICATED FULL PAGE ADMIN VIEW
+  // RENDER DEDICATED ADMIN ROUTE
   if (currentView === "admin") {
+    if (!isAuthenticated) {
+      return (
+        <AdminLogin
+          targetEmail={portfolioData.contact?.email || "at667448@gmail.com"}
+          onAuthenticated={() => setIsAuthenticated(true)}
+          onBackToPortfolio={handleExitAdmin}
+        />
+      );
+    }
+
     return (
       <AdminPage
         data={portfolioData}
         onSave={handleSavePortfolioData}
         onReset={handleResetPortfolioData}
-        onBackToPortfolio={() => {
-          setCurrentView("portfolio");
-          window.location.hash = "";
-        }}
+        onBackToPortfolio={handleExitAdmin}
       />
     );
   }
@@ -346,10 +374,6 @@ function App() {
 
       <Footer
         scrollTo={scrollTo}
-        onOpenAdmin={() => {
-          setCurrentView("admin");
-          window.location.hash = "#admin";
-        }}
       />
 
       <button
