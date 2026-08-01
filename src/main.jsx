@@ -11,6 +11,7 @@ import Footer from "./components/Footer/Footer";
 // Pages from src/pages/
 import HomePage from "./pages/Home/HomePage";
 import ProjectsPage from "./pages/Projects/ProjectsPage";
+import ServicesPage from "./pages/Services/ServicesPage";
 import AdminPage from "./pages/Admin/AdminPage";
 import AdminLogin from "./pages/Admin/AdminLogin";
 
@@ -56,7 +57,6 @@ function AppContent() {
     if (hash === "#admin" || hash === "#/admin") {
       navigate("/admin", { replace: true });
     } else if (hash === "#projects" && location.pathname !== "/projects") {
-      // scroll to projects section if on main page
       document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
     }
   }, [location.pathname, navigate]);
@@ -358,6 +358,19 @@ function AppContent() {
           element={
             <ProjectsPage
               data={portfolioData.projects}
+              contactData={portfolioData.contact}
+              submit={submit}
+              formStatus={formStatus}
+              submitting={submitting}
+            />
+          }
+        />
+
+        <Route
+          path="/services"
+          element={
+            <ServicesPage
+              data={portfolioData.services}
               contactData={portfolioData.contact}
               submit={submit}
               formStatus={formStatus}

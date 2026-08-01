@@ -25,6 +25,11 @@ function Header({ menuOpen, setMenuOpen, active, scrollTo, nav, theme, setTheme 
       return;
     }
 
+    if (id === 'services') {
+      navigate('/services');
+      return;
+    }
+
     if (location.pathname !== '/') {
       navigate('/');
       setTimeout(() => {
@@ -40,6 +45,7 @@ function Header({ menuOpen, setMenuOpen, active, scrollTo, nav, theme, setTheme 
   };
 
   const isProjectsPage = location.pathname === '/projects';
+  const isServicesPage = location.pathname === '/services';
 
   return (
     <>
@@ -63,10 +69,14 @@ function Header({ menuOpen, setMenuOpen, active, scrollTo, nav, theme, setTheme 
 
         <nav className={`nav ${menuOpen ? "open" : ""}`} aria-label="Primary navigation">
           {nav.map((id, index) => {
-            const isActive = isProjectsPage ? id === 'projects' : active === id;
+            let isActive = active === id;
+            if (isProjectsPage && id === 'projects') isActive = true;
+            if (isServicesPage && id === 'services') isActive = true;
+
             const getHref = () => {
               if (id === 'home') return '/';
               if (id === 'projects') return '/projects';
+              if (id === 'services') return '/services';
               return `#${id}`;
             };
 
