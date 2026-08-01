@@ -3,16 +3,16 @@ import './AdminPage.css';
 
 function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
   const [formData, setFormData] = useState(data);
-  const [selectedPage, setSelectedPage] = useState('all'); // 'all', 'home', 'services', 'pages'
+  const [selectedPage, setSelectedPage] = useState('all'); // 'all', 'home', 'projects', 'pages'
   const [activeTab, setActiveTab] = useState('hero');
   const [statusMsg, setStatusMsg] = useState('');
   const [sheetsUrl, setSheetsUrl] = useState(() => localStorage.getItem("portfolio_sheets_url") || "");
 
   // State for Add / Edit custom pages
   const [pagesList, setPagesList] = useState(() => data?.pages || [
-    { id: 'home', name: 'Home Page', path: '/#', status: 'Active', type: 'Main Landing' },
-    { id: 'services', name: 'Services Page', path: '/#/services', status: 'Active', type: 'Filtered Services' },
-    { id: 'admin', name: 'Admin Control Center', path: '/#/admin', status: 'Active', type: 'Management' }
+    { id: 'home', name: 'Home Page', path: '/', status: 'Active', type: 'Main Landing' },
+    { id: 'projects', name: 'Projects Page', path: '/projects', status: 'Active', type: 'Filtered Projects' },
+    { id: 'admin', name: 'Admin Control Center', path: '/admin', status: 'Active', type: 'Management' }
   ]);
 
   const [newPage, setNewPage] = useState({ name: '', path: '', type: 'Custom Page', status: 'Active' });
@@ -155,7 +155,6 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
     const newServ = {
       id: `s_${Date.now()}`,
       number: `0${count}`,
-      category: 'Frontend',
       title: 'New Service Offering',
       description: 'Detailed service description...'
     };
@@ -194,11 +193,11 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
     { id: 'about', label: 'About Me', icon: '👤', page: 'home' },
     { id: 'skills', label: 'Skills & Toolkit', icon: '⚡', page: 'home' },
     { id: 'ai', label: 'AI Workflow', icon: '🤖', page: 'home' },
-    { id: 'projects', label: 'Selected Projects', icon: '💼', page: 'home' },
+    { id: 'projects', label: 'Projects Page & Filters', icon: '💼', page: 'projects' },
     { id: 'experience', label: 'Experience Timeline', icon: '📜', page: 'home' },
-    { id: 'services', label: 'Services Page & Filters', icon: '🛠', page: 'services' },
+    { id: 'services', label: 'Services Offered', icon: '🛠', page: 'home' },
     { id: 'pages', label: 'Add / Edit Pages System', icon: '📄', page: 'pages' },
-    { id: 'contact', label: 'Contact & Socials', icon: 'home' },
+    { id: 'contact', label: 'Contact & Socials', icon: '✉', page: 'home' },
     { id: 'inbox', label: 'Inbox Messages', icon: '📬', page: 'all' },
     { id: 'backend', label: 'Google Sheets Backend', icon: '📊', page: 'all' }
   ];
@@ -206,7 +205,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
   const visibleNavTabs = allNavTabs.filter(tab => {
     if (selectedPage === 'all') return true;
     if (selectedPage === 'home') return tab.page === 'home' || tab.page === 'all';
-    if (selectedPage === 'services') return tab.page === 'services' || tab.page === 'all';
+    if (selectedPage === 'projects') return tab.page === 'projects' || tab.page === 'all';
     if (selectedPage === 'pages') return tab.page === 'pages' || tab.page === 'all';
     return true;
   });
@@ -245,10 +244,10 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
             🏠 Home Page
           </button>
           <button
-            className={`page-select-btn ${selectedPage === 'services' ? 'active' : ''}`}
-            onClick={() => { setSelectedPage('services'); setActiveTab('services'); }}
+            className={`page-select-btn ${selectedPage === 'projects' ? 'active' : ''}`}
+            onClick={() => { setSelectedPage('projects'); setActiveTab('projects'); }}
           >
-            🛠 Services Page
+            💼 Projects Page
           </button>
           <button
             className={`page-select-btn ${selectedPage === 'pages' ? 'active' : ''}`}
@@ -414,9 +413,41 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
           {activeTab === 'projects' && (
             <section>
               <div className="admin-section-header">
-                <h2>Projects Portfolio</h2>
-                <p>Manage showcased projects, live links, and categories.</p>
+                <h2>Projects Page & Category Filters</h2>
+                <p>Manage showcased projects, category filters, and live demo links.</p>
               </div>
+
+              <div className="admin-card">
+                <h3 className="admin-card-title">Projects Page Header & Filter Categories</h3>
+                <div className="admin-grid-2">
+                  <div className="admin-field">
+                    <label>Section Eyebrow</label>
+                    <input
+                      value={formData.projects?.label || ''}
+                      onChange={(e) => setFormData(prev => ({ ...prev, projects: { ...prev.projects, label: e.target.value } }))}
+                    />
+                  </div>
+                  <div className="admin-field">
+                    <label>Page Title</label>
+                    <input
+                      value={formData.projects?.title || ''}
+                      onChange={(e) => setFormData(prev => ({ ...prev, projects: { ...prev.projects, title: e.target.value } }))}
+                    />
+                  </div>
+                </div>
+                <div className="admin-field">
+                  <label>Filter Categories (Comma Separated)</label>
+                  <input
+                    value={(formData.projects?.categories || ['All', 'React', 'Shopify', 'Web']).join(', ')}
+                    onChange={(e) => {
+                      const cats = e.target.value.split(',').map(s => s.trim()).filter(Boolean);
+                      setFormData(prev => ({ ...prev, projects: { ...prev.projects, categories: cats } }));
+                    }}
+                  />
+                </div>
+              </div>
+
+              <h3>Portfolio Items List</h3>
               {(formData.projects?.items || []).map((proj, index) => (
                 <div key={proj.id || index} className="admin-card">
                   <div className="admin-card-title">
@@ -429,7 +460,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                       <input value={proj.title} onChange={(e) => updateProject(index, 'title', e.target.value)} />
                     </div>
                     <div className="admin-field">
-                      <label>Category (e.g. React, Shopify)</label>
+                      <label>Category (e.g. React, Shopify, Web)</label>
                       <input value={proj.category} onChange={(e) => updateProject(index, 'category', e.target.value)} />
                     </div>
                   </div>
@@ -484,56 +515,18 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
           {activeTab === 'services' && (
             <section>
               <div className="admin-section-header">
-                <h2>Services Page & Category Filters</h2>
-                <p>Manage offerings, categories, and service breakdown for the dedicated Services Page.</p>
+                <h2>Services Offered</h2>
+                <p>Update service offerings and development solutions.</p>
               </div>
-
-              <div className="admin-card">
-                <h3 className="admin-card-title">Services Page Header Settings</h3>
-                <div className="admin-grid-2">
-                  <div className="admin-field">
-                    <label>Section Eyebrow</label>
-                    <input
-                      value={formData.services?.label || ''}
-                      onChange={(e) => setFormData(prev => ({ ...prev, services: { ...prev.services, label: e.target.value } }))}
-                    />
-                  </div>
-                  <div className="admin-field">
-                    <label>Page Heading Title</label>
-                    <input
-                      value={formData.services?.title || ''}
-                      onChange={(e) => setFormData(prev => ({ ...prev, services: { ...prev.services, title: e.target.value } }))}
-                    />
-                  </div>
-                </div>
-                <div className="admin-field">
-                  <label>Filter Categories (Comma Separated for Services Page Filter Pills)</label>
-                  <input
-                    value={(formData.services?.categories || ['All', 'Frontend', 'Shopify', 'React', 'UI Engineering', 'Performance', 'AI Workflow']).join(', ')}
-                    onChange={(e) => {
-                      const cats = e.target.value.split(',').map(s => s.trim()).filter(Boolean);
-                      setFormData(prev => ({ ...prev, services: { ...prev.services, categories: cats } }));
-                    }}
-                  />
-                </div>
-              </div>
-
-              <h3>Service Offerings List</h3>
               {(formData.services?.items || []).map((serv, index) => (
                 <div key={serv.id || index} className="admin-card">
                   <div className="admin-card-title">
                     <span>Service #{serv.number || index + 1}: {serv.title}</span>
                     <button className="admin-btn-danger" onClick={() => deleteService(index)}>Delete Service</button>
                   </div>
-                  <div className="admin-grid-2">
-                    <div className="admin-field">
-                      <label>Service Title</label>
-                      <input value={serv.title} onChange={(e) => updateService(index, 'title', e.target.value)} />
-                    </div>
-                    <div className="admin-field">
-                      <label>Category Tag (for Filter)</label>
-                      <input value={serv.category || 'Frontend'} onChange={(e) => updateService(index, 'category', e.target.value)} />
-                    </div>
+                  <div className="admin-field">
+                    <label>Service Title</label>
+                    <input value={serv.title} onChange={(e) => updateService(index, 'title', e.target.value)} />
                   </div>
                   <div className="admin-field">
                     <label>Service Description</label>
@@ -562,17 +555,17 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                       <label>Page Name</label>
                       <input
                         type="text"
-                        placeholder="e.g. Services Page, Portfolio Showcase"
+                        placeholder="e.g. Projects Page, Portfolio Showcase"
                         value={newPage.name}
                         onChange={(e) => setNewPage({ ...newPage, name: e.target.value })}
                         required
                       />
                     </div>
                     <div className="admin-field">
-                      <label>Route Hash Path</label>
+                      <label>Route Path</label>
                       <input
                         type="text"
-                        placeholder="e.g. /#/services, /#/about"
+                        placeholder="e.g. /projects, /about"
                         value={newPage.path}
                         onChange={(e) => setNewPage({ ...newPage, path: e.target.value })}
                         required
@@ -586,7 +579,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                         value={newPage.type}
                         onChange={(e) => setNewPage({ ...newPage, type: e.target.value })}
                       >
-                        <option value="Filtered Services">Filtered Services</option>
+                        <option value="Filtered Projects">Filtered Projects</option>
                         <option value="Main Landing">Main Landing</option>
                         <option value="Custom Page">Custom Page</option>
                         <option value="External Link">External Link</option>
@@ -622,7 +615,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                       <div className="page-meta">
                         <span className="page-badge">{p.type}</span>
                         <span className={`status-badge ${p.status?.toLowerCase()}`}>{p.status}</span>
-                        {p.id !== 'home' && p.id !== 'services' && p.id !== 'admin' && (
+                        {p.id !== 'home' && p.id !== 'projects' && p.id !== 'admin' && (
                           <button className="admin-btn-danger" onClick={() => handleDeletePage(p.id)}>
                             Delete
                           </button>

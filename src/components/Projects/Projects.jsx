@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './Projects.css';
 import Icon from '../Icon/Icon';
 
@@ -47,7 +48,7 @@ function ProjectCard({ project, index }) {
   );
 }
 
-function Projects({ data, filter, setFilter }) {
+function Projects({ data, filter, setFilter, isHomePage = false }) {
   const { number, label, title, introText, categories, items } = data || {};
   const availableCategories = categories || ["All", "React", "Shopify", "Web"];
   const projectList = items || [];
@@ -75,6 +76,13 @@ function Projects({ data, filter, setFilter }) {
           <ProjectCard project={project} index={i} key={project.id || project.title || i} />
         ))}
       </div>
+      {isHomePage && (
+        <div className="projects-home-footer reveal" style={{ marginTop: '2.5rem', textAlign: 'center' }}>
+          <Link to="/projects" className="services-explore-btn">
+            View All Projects & Filter Options <Icon name="arrow" />
+          </Link>
+        </div>
+      )}
     </section>
   );
 }

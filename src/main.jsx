@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState, useRef } from "react";
 import { createRoot } from "react-dom/client";
-import { HashRouter, Routes, Route, Navigate, useLocation, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate } from "react-router-dom";
 import "./styles.css";
 
 // Shared & Background Components
@@ -10,7 +10,7 @@ import Footer from "./components/Footer/Footer";
 
 // Pages from src/pages/
 import HomePage from "./pages/Home/HomePage";
-import ServicesPage from "./pages/Services/ServicesPage";
+import ProjectsPage from "./pages/Projects/ProjectsPage";
 import AdminPage from "./pages/Admin/AdminPage";
 import AdminLogin from "./pages/Admin/AdminLogin";
 
@@ -49,6 +49,17 @@ function AppContent() {
     }
     syncRemoteData();
   }, []);
+
+  // Handle direct hash navigation fallback (e.g. /#admin or /#projects)
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash === "#admin" || hash === "#/admin") {
+      navigate("/admin", { replace: true });
+    } else if (hash === "#projects" && location.pathname !== "/projects") {
+      // scroll to projects section if on main page
+      document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [location.pathname, navigate]);
 
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return sessionStorage.getItem("admin-auth") === "true";
@@ -343,10 +354,10 @@ function AppContent() {
         />
 
         <Route
-          path="/services"
+          path="/projects"
           element={
-            <ServicesPage
-              data={portfolioData.services}
+            <ProjectsPage
+              data={portfolioData.projects}
               contactData={portfolioData.contact}
               submit={submit}
               formStatus={formStatus}
@@ -405,9 +416,9 @@ function Loader() {
 
 function App() {
   return (
-    <HashRouter>
+    <BrowserRouter>
       <AppContent />
-    </HashRouter>
+    </BrowserRouter>
   );
 }
 
