@@ -624,6 +624,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                 <p>Manage showcased projects, category filter tags, and live demo links.</p>
               </div>
 
+              {/* 1. First Card: Projects Page Header & Filter Categories */}
               <div className="admin-card">
                 <h3 className="admin-card-title">Projects Page Header & Filter Categories</h3>
                 <div className="admin-grid-2">
@@ -654,25 +655,39 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                 </div>
               </div>
 
+              {/* 2. Second Card: Home Page Projects Selector (Batch Checklist) */}
+              <div className="admin-card">
+                <h3 className="admin-card-title">💼 Home Page Projects Selector</h3>
+                <p style={{ color: 'var(--muted)', fontSize: '0.85rem', marginBottom: '16px' }}>
+                  Check or uncheck projects to select which ones appear on the Home Page preview:
+                </p>
+                <div className="section-checklist-grid">
+                  {(formData.projects?.items || []).map((proj, idx) => {
+                    const isChecked = proj.showOnHome !== false;
+                    return (
+                      <label key={proj.id || idx} className={`section-checkbox-card ${isChecked ? 'selected' : ''}`}>
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => toggleProjectShowOnHome(idx)}
+                        />
+                        <span className="sec-icon">💼</span>
+                        <span className="sec-name">{proj.title}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* 3. Individual Project Editing Cards (Cleaned of duplicate checkboxes) */}
               {(formData.projects?.items || []).map((proj, index) => (
                 <div key={proj.id || index} className="admin-card">
-                  <div className="admin-card-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                  <div className="admin-card-title">
                     <span>Project #{index + 1}: {proj.title}</span>
                     <button className="admin-btn-danger" onClick={() => deleteProject(index)}>Delete Project</button>
                   </div>
 
-                  <div style={{ margin: '14px 0 16px 0', background: 'rgba(99, 102, 241, 0.08)', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(99, 102, 241, 0.2)' }}>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', fontSize: '0.88rem', fontWeight: '600', color: 'var(--text)' }}>
-                      <input
-                        type="checkbox"
-                        checked={proj.showOnHome !== false}
-                        onChange={() => toggleProjectShowOnHome(index)}
-                      />
-                      Show this Project on Home Page Preview
-                    </label>
-                  </div>
-
-                  <div className="admin-grid-2">
+                  <div className="admin-grid-2" style={{ marginTop: '14px' }}>
                     <div className="admin-field">
                       <label>Project Title</label>
                       <input value={proj.title} onChange={(e) => updateProject(index, 'title', e.target.value)} />
@@ -700,6 +715,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                 <p>Manage service offerings, categories, and service breakdown for the Services Page.</p>
               </div>
 
+              {/* 1. First Card: Services Page Header Settings */}
               <div className="admin-card">
                 <h3 className="admin-card-title">Services Page Header Settings</h3>
                 <div className="admin-grid-2">
@@ -730,25 +746,39 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                 </div>
               </div>
 
+              {/* 2. Second Card: Home Page Services Selector (Batch Checklist) */}
+              <div className="admin-card">
+                <h3 className="admin-card-title">🛠 Home Page Services Selector</h3>
+                <p style={{ color: 'var(--muted)', fontSize: '0.85rem', marginBottom: '16px' }}>
+                  Check or uncheck services to select which ones appear on the Home Page preview:
+                </p>
+                <div className="section-checklist-grid">
+                  {(formData.services?.items || []).map((serv, idx) => {
+                    const isChecked = serv.showOnHome !== false;
+                    return (
+                      <label key={serv.id || idx} className={`section-checkbox-card ${isChecked ? 'selected' : ''}`}>
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => toggleServiceShowOnHome(idx)}
+                        />
+                        <span className="sec-icon">🛠</span>
+                        <span className="sec-name">{serv.title}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* 3. Individual Service Editing Cards (Cleaned of duplicate checkboxes) */}
               {(formData.services?.items || []).map((serv, index) => (
                 <div key={serv.id || index} className="admin-card">
-                  <div className="admin-card-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+                  <div className="admin-card-title">
                     <span>Service #{serv.number || index + 1}: {serv.title}</span>
                     <button className="admin-btn-danger" onClick={() => deleteService(index)}>Delete Service</button>
                   </div>
 
-                  <div style={{ margin: '14px 0 16px 0', background: 'rgba(99, 102, 241, 0.08)', padding: '10px 14px', borderRadius: '10px', border: '1px solid rgba(99, 102, 241, 0.2)' }}>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', fontSize: '0.88rem', fontWeight: '600', color: 'var(--text)' }}>
-                      <input
-                        type="checkbox"
-                        checked={serv.showOnHome !== false}
-                        onChange={() => toggleServiceShowOnHome(index)}
-                      />
-                      Show this Service on Home Page Preview
-                    </label>
-                  </div>
-
-                  <div className="admin-grid-2">
+                  <div className="admin-grid-2" style={{ marginTop: '14px' }}>
                     <div className="admin-field">
                       <label>Service Title</label>
                       <input value={serv.title} onChange={(e) => updateService(index, 'title', e.target.value)} />
