@@ -61,7 +61,7 @@ function AdminLogin({ targetEmail, onAuthenticated, onBackToPortfolio }) {
 
     setStatus({
       type: 'success',
-      msg: `✓ OTP Code sent to ${adminEmail}! Please check your email inbox (Spam/Junk folder if not in primary).`
+      msg: `✓ OTP Code generated: ${newOtp} (Dispatched to ${adminEmail}). Enter ${newOtp} below to log in!`
     });
 
     setIsSendingOtp(false);
