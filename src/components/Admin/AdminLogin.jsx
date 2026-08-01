@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './AdminLogin.css';
+import { GOOGLE_SHEETS_API_URL } from '../../services/googleSheets';
 
 function AdminLogin({ targetEmail, onAuthenticated, onBackToPortfolio }) {
   const adminEmail = targetEmail || 'at667448@gmail.com';
@@ -16,8 +17,11 @@ function AdminLogin({ targetEmail, onAuthenticated, onBackToPortfolio }) {
     const newOtp = String(Math.floor(100000 + Math.random() * 900000));
     setGeneratedOtp(newOtp);
 
+    let sent = false;
+
+    // 1. Try sending via FormSubmit (with captcha disabled)
     try {
-      const response = await fetch(`https://formsubmit.co/ajax/${adminEmail}`, {
+      const res = await fetch(`https://formsubmit.co/ajax/${adminEmail}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,31 +31,39 @@ function AdminLogin({ targetEmail, onAuthenticated, onBackToPortfolio }) {
           _subject: `🔐 Portfolio Admin Security OTP Code: ${newOtp}`,
           name: 'Portfolio Admin Authentication System',
           email: adminEmail,
+          _captcha: 'false',
           message: `Your 6-digit Admin Login OTP Security Code is: ${newOtp}\n\nEnter this OTP code on your portfolio admin login page to access your Admin Control Center.`
         })
       });
-
-      if (response.ok) {
-        setStatus({
-          type: 'success',
-          msg: `✓ OTP Code sent to ${adminEmail}! Please check your email inbox.`
-        });
-      } else {
-        // Fallback status if first-time FormSubmit confirmation
-        setStatus({
-          type: 'success',
-          msg: `✓ OTP Code generated: ${newOtp} (If first time, check ${adminEmail} for activation).`
-        });
-      }
-    } catch (err) {
-      console.error('OTP Send error:', err);
-      setStatus({
-        type: 'success',
-        msg: `✓ OTP Code sent to ${adminEmail}. Check your inbox for code ${newOtp}.`
-      });
-    } finally {
-      setIsSendingOtp(false);
+      if (res.ok) sent = true;
+    } catch (e) {
+      console.log('FormSubmit OTP dispatch error:', e);
     }
+
+    // 2. Try sending via Google Sheets API (if configured)
+    if (GOOGLE_SHEETS_API_URL) {
+      try {
+        await fetch(GOOGLE_SHEETS_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'send_otp',
+            otp: newOtp,
+            email: adminEmail
+          })
+        });
+        sent = true;
+      } catch (e) {
+        console.log('Google Sheets OTP dispatch error:', e);
+      }
+    }
+
+    setStatus({
+      type: 'success',
+      msg: `✓ OTP Code sent to ${adminEmail}! Please check your email inbox (Spam/Junk folder if not in primary).`
+    });
+
+    setIsSendingOtp(false);
   };
 
   const handleVerify = (e) => {
