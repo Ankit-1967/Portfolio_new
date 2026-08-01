@@ -284,10 +284,10 @@ function App() {
           'Accept': 'application/json'
         },
         body: JSON.stringify({
-          name: visitorName,
-          email: visitorEmail,
+          Name: visitorName,
+          Email: visitorEmail,
           _replyto: visitorEmail,
-          message: visitorMessage,
+          Message: visitorMessage,
           _subject: `📩 Portfolio Inquiry from ${visitorName}`,
           _template: "table"
         })
