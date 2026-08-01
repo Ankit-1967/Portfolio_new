@@ -6,7 +6,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: var(--accent, #6366f1);
+  color: var(--accent);
   font-weight: 500;
   margin-bottom: 1.5rem;
   text-decoration: none;
@@ -32,11 +32,11 @@
 }
 
 .search-box input {
-  background: var(--input-bg, rgba(0, 0, 0, 0.25));
-  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+  background: var(--surface-solid, #ffffff);
+  border: 1px solid var(--line);
   border-radius: 20px;
   padding: 0.45rem 2.2rem 0.45rem 0.95rem;
-  color: var(--text-color, #fff);
+  color: var(--text);
   font-size: 0.88rem;
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -44,22 +44,22 @@
 }
 
 .search-box input:focus {
-  border-color: var(--accent, #6366f1);
-  box-shadow: 0 0 12px rgba(99, 102, 241, 0.25);
+  border-color: var(--accent);
+  box-shadow: 0 0 12px var(--glow);
 }
 
 .search-box .search-icon {
   position: absolute;
   right: 12px;
   font-size: 0.85rem;
-  opacity: 0.5;
+  color: var(--muted);
   pointer-events: none;
 }
 
 .clear-search {
   position: absolute;
   right: 10px;
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--line);
   border: none;
   border-radius: 50%;
   width: 18px;
@@ -67,7 +67,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-muted, #94a3b8);
+  color: var(--muted);
   cursor: pointer;
   font-size: 0.75rem;
   transition: background 0.2s ease, color 0.2s ease;
@@ -81,7 +81,8 @@
 .no-projects-found {
   text-align: center;
   padding: 4rem 2rem;
-  background: var(--card-bg, rgba(255, 255, 255, 0.02));
+  background: var(--surface);
   border-radius: 16px;
-  border: 1px dashed var(--border-color, rgba(255, 255, 255, 0.1));
+  border: 1px dashed var(--line);
+  color: var(--text);
 }

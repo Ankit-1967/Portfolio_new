@@ -10,7 +10,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: var(--accent, #6366f1);
+  color: var(--accent);
   font-weight: 500;
   margin-bottom: 1.5rem;
   text-decoration: none;
@@ -26,18 +26,19 @@
   max-width: 650px;
   font-size: 1.15rem;
   line-height: 1.7;
-  color: var(--text-muted, #94a3b8);
+  color: var(--muted);
   margin-top: 1rem;
   margin-bottom: 2.5rem;
 }
 
 .services-filter-container {
-  background: var(--card-bg, rgba(255, 255, 255, 0.03));
-  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  background: var(--surface);
+  border: 1px solid var(--line);
   border-radius: 16px;
   padding: 1.5rem;
   margin-top: 2rem;
   backdrop-filter: blur(10px);
+  box-shadow: var(--shadow);
 }
 
 .services-filter-header {
@@ -52,7 +53,7 @@
 .services-filter-header h3 {
   font-size: 1.1rem;
   font-weight: 600;
-  color: var(--text-color, #f8fafc);
+  color: var(--text);
   margin: 0;
 }
 
@@ -63,11 +64,11 @@
 }
 
 .search-box input {
-  background: var(--input-bg, rgba(0, 0, 0, 0.25));
-  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.15));
+  background: var(--surface-solid, #ffffff);
+  border: 1px solid var(--line);
   border-radius: 20px;
   padding: 0.45rem 2.2rem 0.45rem 0.95rem;
-  color: var(--text-color, #fff);
+  color: var(--text);
   font-size: 0.88rem;
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -75,22 +76,22 @@
 }
 
 .search-box input:focus {
-  border-color: var(--accent, #6366f1);
-  box-shadow: 0 0 12px rgba(99, 102, 241, 0.25);
+  border-color: var(--accent);
+  box-shadow: 0 0 12px var(--glow);
 }
 
 .search-box .search-icon {
   position: absolute;
   right: 12px;
   font-size: 0.85rem;
-  opacity: 0.5;
+  color: var(--muted);
   pointer-events: none;
 }
 
 .clear-search {
   position: absolute;
   right: 10px;
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--line);
   border: none;
   border-radius: 50%;
   width: 18px;
@@ -98,7 +99,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-muted, #94a3b8);
+  color: var(--muted);
   cursor: pointer;
   font-size: 0.75rem;
   transition: background 0.2s ease, color 0.2s ease;
@@ -116,9 +117,9 @@
 }
 
 .filter-pill {
-  background: var(--pill-bg, rgba(255, 255, 255, 0.05));
-  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
-  color: var(--text-muted, #94a3b8);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--muted);
   padding: 0.5rem 1.2rem;
   border-radius: 30px;
   font-size: 0.9rem;
@@ -128,16 +129,16 @@
 }
 
 .filter-pill:hover {
-  background: rgba(99, 102, 241, 0.15);
-  color: var(--text-color, #fff);
-  border-color: rgba(99, 102, 241, 0.3);
+  background: var(--glow);
+  color: var(--text);
+  border-color: var(--accent);
 }
 
 .filter-pill.active {
-  background: var(--accent, #6366f1);
+  background: var(--accent);
   color: #ffffff;
-  border-color: var(--accent, #6366f1);
-  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+  border-color: var(--accent);
+  box-shadow: 0 4px 14px var(--glow);
 }
 
 .services-grid-section {
@@ -156,16 +157,18 @@
   justify-content: space-between;
   height: 100%;
   padding: 2rem;
-  background: var(--card-bg, rgba(255, 255, 255, 0.03));
-  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  background: var(--surface);
+  border: 1px solid var(--line);
   border-radius: 16px;
+  box-shadow: var(--shadow);
   transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  backdrop-filter: blur(12px);
 }
 
 .services-page-card:hover {
   transform: translateY(-5px);
-  border-color: var(--accent, #6366f1);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+  border-color: var(--accent);
+  box-shadow: 0 12px 30px var(--glow);
 }
 
 .card-top-row {
@@ -178,7 +181,7 @@
 .service-num {
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--accent, #6366f1);
+  color: var(--accent);
 }
 
 .category-badge {
@@ -187,19 +190,19 @@
   letter-spacing: 0.05em;
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
-  background: rgba(99, 102, 241, 0.12);
-  color: var(--accent, #818cf8);
+  background: var(--glow);
+  color: var(--accent);
   font-weight: 600;
 }
 
 .services-page-card h3 {
   font-size: 1.3rem;
   margin-bottom: 0.75rem;
-  color: var(--text-color, #fff);
+  color: var(--text);
 }
 
 .services-page-card p {
-  color: var(--text-muted, #94a3b8);
+  color: var(--muted);
   line-height: 1.6;
   font-size: 0.95rem;
   margin-bottom: 1.5rem;
@@ -208,14 +211,14 @@
 .service-card-footer {
   margin-top: auto;
   padding-top: 1rem;
-  border-top: 1px solid var(--border-color, rgba(255, 255, 255, 0.06));
+  border-top: 1px solid var(--line);
 }
 
 .service-cta {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: var(--accent, #6366f1);
+  color: var(--accent);
   font-weight: 600;
   text-decoration: none;
   font-size: 0.9rem;
@@ -229,7 +232,8 @@
 .no-services-found {
   text-align: center;
   padding: 4rem 2rem;
-  background: var(--card-bg, rgba(255, 255, 255, 0.02));
+  background: var(--surface);
   border-radius: 16px;
-  border: 1px dashed var(--border-color, rgba(255, 255, 255, 0.1));
+  border: 1px dashed var(--line);
+  color: var(--text);
 }
