@@ -51,7 +51,6 @@ function ProjectsPage({ data, contactData, submit, formStatus, submitting }) {
       projCat.includes(q) ||
       techList.some(t => t.includes(q));
 
-    // When searching, match any project matching the search query
     return matchesSearch;
   });
 
@@ -75,16 +74,23 @@ function ProjectsPage({ data, contactData, submit, formStatus, submitting }) {
           
           <div className="filters-and-search">
             <div className="search-box">
-              <span className="search-icon">🔍</span>
               <input
                 type="text"
-                placeholder="Search projects or tech..."
+                placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 aria-label="Search projects"
               />
-              {searchQuery && (
-                <button className="clear-search" onClick={() => setSearchQuery('')} aria-label="Clear search">✕</button>
+              {!searchQuery ? (
+                <span className="search-icon">🔍</span>
+              ) : (
+                <button
+                  className="clear-search"
+                  onClick={() => setSearchQuery('')}
+                  aria-label="Clear search"
+                >
+                  ✕
+                </button>
               )}
             </div>
 

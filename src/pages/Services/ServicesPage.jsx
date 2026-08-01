@@ -33,11 +33,39 @@ function ServicesPage({ data, contactData, submit, formStatus, submitting }) {
     'AI Workflow'
   ];
 
+  // Helper to infer category if item.category is missing or undefined
+  const getItemCategory = (item) => {
+    if (item.category) return item.category;
+    const titleStr = (item.title || '').toLowerCase();
+    if (titleStr.includes('shopify')) return 'Shopify';
+    if (titleStr.includes('react')) return 'React';
+    if (titleStr.includes('ui') || titleStr.includes('engineering')) return 'UI Engineering';
+    if (titleStr.includes('performance') || titleStr.includes('speed')) return 'Performance';
+    if (titleStr.includes('ai') || titleStr.includes('assisted')) return 'AI Workflow';
+    return 'Frontend';
+  };
+
   const filteredServices = servicesList.filter(item => {
-    const itemCat = item.category || 'Frontend';
-    const matchesFilter = activeFilter === 'All' || itemCat.toLowerCase() === activeFilter.toLowerCase();
-    const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) || item.description.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesFilter && matchesSearch;
+    const q = searchQuery.trim().toLowerCase();
+    const catFilter = activeFilter.trim().toLowerCase();
+
+    const itemCat = getItemCategory(item).toLowerCase();
+
+    // Loose Category Matching
+    const matchesFilter = activeFilter === 'All' || itemCat.includes(catFilter) || catFilter.includes(itemCat);
+
+    // Search Query Matching across title, description, and category
+    if (!q) return matchesFilter;
+
+    const titleStr = (item.title || '').toLowerCase();
+    const descStr = (item.description || '').toLowerCase();
+
+    const matchesSearch =
+      titleStr.includes(q) ||
+      descStr.includes(q) ||
+      itemCat.includes(q);
+
+    return matchesSearch;
   });
 
   return (
@@ -67,13 +95,21 @@ function ServicesPage({ data, contactData, submit, formStatus, submitting }) {
             <div className="search-box">
               <input
                 type="text"
-                placeholder="Search services..."
+                placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 aria-label="Search services"
               />
-              {searchQuery && (
-                <button className="clear-search" onClick={() => setSearchQuery('')}>✕</button>
+              {!searchQuery ? (
+                <span className="search-icon">🔍</span>
+              ) : (
+                <button
+                  className="clear-search"
+                  onClick={() => setSearchQuery('')}
+                  aria-label="Clear search"
+                >
+                  ✕
+                </button>
               )}
             </div>
           </div>
@@ -82,8 +118,11 @@ function ServicesPage({ data, contactData, submit, formStatus, submitting }) {
             {categories.map((cat) => (
               <button
                 key={cat}
-                className={`filter-pill ${activeFilter === cat ? 'active' : ''}`}
-                onClick={() => setActiveFilter(cat)}
+                className={`filter-pill ${activeFilter === cat && !searchQuery ? 'active' : ''}`}
+                onClick={() => {
+                  setActiveFilter(cat);
+                  setSearchQuery('');
+                }}
               >
                 {cat}
               </button>
@@ -96,14 +135,24 @@ function ServicesPage({ data, contactData, submit, formStatus, submitting }) {
       <section className="section services-grid-section">
         {filteredServices.length === 0 ? (
           <div className="no-services-found">
-            <p>No services found matching <strong>"{activeFilter}"</strong> {searchQuery && `or "${searchQuery}"`}.</p>
-            <button className="btn btn-secondary" onClick={() => { setActiveFilter('All'); setSearchQuery(''); }}>Reset Filters</button>
+            <p style={{ fontSize: '1.1rem', marginBottom: '12px' }}>
+              No services found matching <strong>"{searchQuery || activeFilter}"</strong>.
+            </p>
+            <button
+              className="btn btn-secondary"
+              onClick={() => {
+                setActiveFilter('All');
+                setSearchQuery('');
+              }}
+            >
+              Reset Filters
+            </button>
           </div>
         ) : (
           <div className="services-page-grid">
             {filteredServices.map((item, index) => {
               const num = item.number || `0${index + 1}`;
-              const categoryTag = item.category || 'Engineering';
+              const categoryTag = getItemCategory(item);
               return (
                 <article className="service-card services-page-card" key={item.id || index}>
                   <div className="card-top-row">

@@ -1,15 +1,6 @@
 export const initialPortfolioData = {
-  navLinks: [
-    { id: 'home', label: 'Home', target: '/', visible: true },
-    { id: 'about', label: 'About', target: '#about', visible: true },
-    { id: 'skills', label: 'Skills', target: '#skills', visible: true },
-    { id: 'projects', label: 'Projects', target: '/projects', visible: true },
-    { id: 'experience', label: 'Experience', target: '#experience', visible: true },
-    { id: 'services', label: 'Services', target: '/services', visible: true },
-    { id: 'contact', label: 'Contact', target: '#contact', visible: true }
-  ],
   hero: {
-    eyebrow: "Available for frontend projects",
+    eyebrow: "AVAILABLE FOR FRONTEND PROJECTS",
     headingLine1: "I build digital",
     headingLine2: "experiences",
     headingLine3: "that matter.",
@@ -20,72 +11,86 @@ export const initialPortfolioData = {
       "AI-Assisted Development"
     ],
     description: "I turn ambitious ideas into fast, accessible and beautifully engineered products — blending frontend craft with practical AI workflows.",
-    primaryCtaText: "View my work",
-    primaryCtaLink: "projects",
-    secondaryCtaText: "More about me",
-    secondaryCtaLink: "/resume.pdf",
+    primaryCtaText: "Let's talk",
+    secondaryCtaText: "View my code",
+    secondaryCtaLink: "https://github.com/",
     metaStats: [
-      { label: "years building", value: "5+" },
-      { label: "projects shipped", value: "30+" },
-      { label: "curiosity", value: "100%" }
+      { value: "03+", label: "Years experience" },
+      { value: "15+", label: "Projects shipped" },
+      { value: "100%", label: "Client satisfaction" }
     ],
     developerCard: {
+      fileName: "portfolio.jsx",
+      badgeText: "AI × Code",
       name: "Ankit Thakur",
       focus: "Frontend + AI",
       stack: ["React", "Vite"],
-      mindset: "Build. Learn. Repeat."
+      mindset: "Build. Learn. Repeat.",
+      floatingTags: ["React", "Shopify"]
     }
   },
   about: {
     number: "01",
-    label: "About me",
-    title: "A little about me",
-    leadText: "I care about the space where design, code and technology meet.",
+    label: "ABOUT ME",
+    title: "Crafting modern web applications with focus on design & code.",
+    leadText: "Frontend developer specializing in React, modern JavaScript, and Shopify storefront development.",
     paragraphs: [
-      "I'm a frontend developer focused on building thoughtful web experiences that feel as good as they perform. My toolkit spans modern React development, Shopify themes, responsive UI engineering and AI-assisted workflows.",
-      "I enjoy taking messy problems, finding the simple underlying system and turning it into maintainable code that teams can confidently build on."
+      "I bring user interfaces to life using React, Vite, and modern CSS architecture. My focus is on writing clean, maintainable code that delivers fast, responsive, and intuitive web experiences.",
+      "With hands-on experience in component-driven UI design, state management, and API integrations, I bridge the gap between design vision and technical execution."
     ],
     signatureName: "Ankit Thakur",
     signatureTitle: "Frontend Developer"
   },
   skills: {
     number: "02",
-    label: "Toolkit",
-    title: "Skills & technologies",
+    label: "SKILLS & AI TOOLKIT",
+    title: "Technologies & tools I use every day.",
     items: [
-      { name: "HTML5", percentage: 90 },
-      { name: "CSS3", percentage: 85 },
-      { name: "JavaScript", percentage: 80 },
-      { name: "React", percentage: 78 },
-      { name: "Liquid (Shopify)", percentage: 85 },
-      { name: "Git", percentage: 80 }
+      { name: "HTML5 / CSS3", percentage: 95 },
+      { name: "JavaScript (ES6+)", percentage: 90 },
+      { name: "React.js", percentage: 88 },
+      { name: "Shopify / Liquid", percentage: 85 },
+      { name: "Tailwind CSS", percentage: 85 },
+      { name: "Git / GitHub", percentage: 90 },
+      { name: "AI Coding Workflows", percentage: 88 },
+      { name: "Vite / Modern Tooling", percentage: 85 }
     ]
   },
-  aiSkills: {
+  ai: {
     number: "03",
-    label: "AI Engineering",
-    title: "AI-Assisted Development",
-    introText: "Using AI to write code faster, catch edge cases early and iterate with confidence.",
-    items: [
-      { name: "Copilot & Gemini", icon: "✦", text: "Daily driver for code completion, refactoring and boilerplate generation." },
-      { name: "Prompt Engineering", icon: "✦", text: "Structuring clear context and constraints to get precise code output." },
-      { name: "AI Code Reviews", icon: "✦", text: "Using LLMs as an extra pair of eyes for security, edge cases and performance." },
-      { name: "Documentation", icon: "✦", text: "Accelerating documentation, API specs and inline comments with AI assistance." }
+    label: "AI WORKFLOWS",
+    title: "Accelerating development with AI-assisted workflows.",
+    description: "Integrating AI tools into daily engineering practice to write better code faster, catch bugs early, and explore new architectural patterns.",
+    cards: [
+      {
+        icon: "⚡",
+        title: "Rapid Prototyping",
+        text: "Using LLMs and AI coding assistants to quickly scaffold components, draft test cases, and explore UI layout options."
+      },
+      {
+        icon: "🔍",
+        title: "Code Review & Audit",
+        text: "Leveraging AI for automated code inspection, catching edge cases, accessibility checks, and performance optimization."
+      },
+      {
+        icon: "📚",
+        title: "Continuous Learning",
+        text: "Exploring emerging AI development tools and integrating prompt-engineered workflows into production React applications."
+      }
     ]
   },
   projects: {
     number: "04",
-    label: "Recent projects",
+    label: "RECENT PROJECTS",
     title: "Selected work",
-    introText: "A selection of interfaces and web experiences I've built while working with modern front-end technologies.",
     categories: ["All", "React", "Shopify", "Web"],
     items: [
       {
         id: "p1",
         title: "Shopify E-commerce Store",
         category: "Shopify",
-        description: "Custom liquid sections, optimized mobile layout and cart interactions.",
-        tech: ["Shopify", "Liquid", "JavaScript", "CSS"],
+        description: "Custom Shopify storefront with responsive layouts, Liquid sections, product pages and optimized shopping experiences.",
+        tech: ["Shopify", "Liquid", "CSS3", "JavaScript"],
         image: "commerce",
         live: "#contact",
         github: "https://github.com/"
@@ -138,13 +143,22 @@ export const initialPortfolioData = {
     number: "06",
     label: "Services",
     title: "How I can help",
+    categories: [
+      'All',
+      'Frontend',
+      'Shopify',
+      'React',
+      'UI Engineering',
+      'Performance',
+      'AI Workflow'
+    ],
     items: [
-      { id: "s1", number: "01", title: "Frontend Development", description: "Creating responsive websites using HTML, CSS and JavaScript with clean, scalable and user-friendly interfaces." },
-      { id: "s2", number: "02", title: "Shopify Development", description: "Custom Shopify themes, Liquid sections, storefront customization and optimized e-commerce experiences." },
-      { id: "s3", number: "03", title: "React Development", description: "Building fast, responsive and maintainable React applications with reusable components and modern development practices." },
-      { id: "s4", number: "04", title: "UI Engineering", description: "Transforming Figma designs into pixel-perfect, responsive and accessible web interfaces." },
-      { id: "s5", number: "05", title: "Performance Optimization", description: "Improving website speed, responsiveness, code quality and overall user experience." },
-      { id: "s6", number: "06", title: "AI-assisted Development", description: "Using AI tools for learning, debugging, code reviews, documentation and improving development workflows." }
+      { id: "s1", number: "01", category: "Frontend", title: "Frontend Development", description: "Creating responsive websites using HTML, CSS and JavaScript with clean, scalable and user-friendly interfaces." },
+      { id: "s2", number: "02", category: "Shopify", title: "Shopify Development", description: "Custom Shopify themes, Liquid sections, storefront customization and optimized e-commerce experiences." },
+      { id: "s3", number: "03", category: "React", title: "React Development", description: "Building fast, responsive and maintainable React applications with reusable components and modern development practices." },
+      { id: "s4", number: "04", category: "UI Engineering", title: "UI Engineering", description: "Transforming Figma designs into pixel-perfect, responsive and accessible web interfaces." },
+      { id: "s5", number: "05", category: "Performance", title: "Performance Optimization", description: "Improving website speed, responsiveness, code quality and overall user experience." },
+      { id: "s6", number: "06", category: "AI Workflow", title: "AI-assisted Development", description: "Using AI tools for learning, debugging, code reviews, documentation and improving development workflows." }
     ]
   },
   contact: {
