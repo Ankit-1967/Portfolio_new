@@ -624,7 +624,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                 <p>Manage showcased projects, category filter tags, and live demo links.</p>
               </div>
 
-              {/* 1. First Card: Projects Page Header & Filter Categories */}
+              {/* 1. Projects Page Header Settings */}
               <div className="admin-card">
                 <h3 className="admin-card-title">Projects Page Header & Filter Categories</h3>
                 <div className="admin-grid-2">
@@ -655,7 +655,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                 </div>
               </div>
 
-              {/* 2. Second Card: Home Page Projects Selector (Batch Checklist) */}
+              {/* 2. Home Page Projects Selector (Batch Checklist Box) */}
               <div className="admin-card">
                 <h3 className="admin-card-title">💼 Home Page Projects Selector</h3>
                 <p style={{ color: 'var(--muted)', fontSize: '0.85rem', marginBottom: '16px' }}>
@@ -679,31 +679,35 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                 </div>
               </div>
 
-              {/* 3. Individual Project Editing Cards (Cleaned of duplicate checkboxes) */}
-              {(formData.projects?.items || []).map((proj, index) => (
-                <div key={proj.id || index} className="admin-card">
-                  <div className="admin-card-title">
-                    <span>Project #{index + 1}: {proj.title}</span>
-                    <button className="admin-btn-danger" onClick={() => deleteProject(index)}>Delete Project</button>
-                  </div>
+              {/* 3. Individual Project Editing Cards (Hidden on 'all' view to keep All Content clean and concise!) */}
+              {selectedPage !== 'all' && (
+                <>
+                  {(formData.projects?.items || []).map((proj, index) => (
+                    <div key={proj.id || index} className="admin-card">
+                      <div className="admin-card-title">
+                        <span>Project #{index + 1}: {proj.title}</span>
+                        <button className="admin-btn-danger" onClick={() => deleteProject(index)}>Delete Project</button>
+                      </div>
 
-                  <div className="admin-grid-2" style={{ marginTop: '14px' }}>
-                    <div className="admin-field">
-                      <label>Project Title</label>
-                      <input value={proj.title} onChange={(e) => updateProject(index, 'title', e.target.value)} />
+                      <div className="admin-grid-2" style={{ marginTop: '14px' }}>
+                        <div className="admin-field">
+                          <label>Project Title</label>
+                          <input value={proj.title} onChange={(e) => updateProject(index, 'title', e.target.value)} />
+                        </div>
+                        <div className="admin-field">
+                          <label>Category (e.g. React, Shopify, Web)</label>
+                          <input value={proj.category} onChange={(e) => updateProject(index, 'category', e.target.value)} />
+                        </div>
+                      </div>
+                      <div className="admin-field">
+                        <label>Description</label>
+                        <textarea rows={2} value={proj.description} onChange={(e) => updateProject(index, 'description', e.target.value)} />
+                      </div>
                     </div>
-                    <div className="admin-field">
-                      <label>Category (e.g. React, Shopify, Web)</label>
-                      <input value={proj.category} onChange={(e) => updateProject(index, 'category', e.target.value)} />
-                    </div>
-                  </div>
-                  <div className="admin-field">
-                    <label>Description</label>
-                    <textarea rows={2} value={proj.description} onChange={(e) => updateProject(index, 'description', e.target.value)} />
-                  </div>
-                </div>
-              ))}
-              <button className="admin-btn-secondary" style={{ width: '100%' }} onClick={addProject}>+ Add Portfolio Project</button>
+                  ))}
+                  <button className="admin-btn-secondary" style={{ width: '100%' }} onClick={addProject}>+ Add Portfolio Project</button>
+                </>
+              )}
             </section>
           )}
 
@@ -715,7 +719,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                 <p>Manage service offerings, categories, and service breakdown for the Services Page.</p>
               </div>
 
-              {/* 1. First Card: Services Page Header Settings */}
+              {/* 1. Services Page Header Settings */}
               <div className="admin-card">
                 <h3 className="admin-card-title">Services Page Header Settings</h3>
                 <div className="admin-grid-2">
@@ -746,7 +750,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                 </div>
               </div>
 
-              {/* 2. Second Card: Home Page Services Selector (Batch Checklist) */}
+              {/* 2. Home Page Services Selector (Batch Checklist Box) */}
               <div className="admin-card">
                 <h3 className="admin-card-title">🛠 Home Page Services Selector</h3>
                 <p style={{ color: 'var(--muted)', fontSize: '0.85rem', marginBottom: '16px' }}>
@@ -770,31 +774,35 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                 </div>
               </div>
 
-              {/* 3. Individual Service Editing Cards (Cleaned of duplicate checkboxes) */}
-              {(formData.services?.items || []).map((serv, index) => (
-                <div key={serv.id || index} className="admin-card">
-                  <div className="admin-card-title">
-                    <span>Service #{serv.number || index + 1}: {serv.title}</span>
-                    <button className="admin-btn-danger" onClick={() => deleteService(index)}>Delete Service</button>
-                  </div>
+              {/* 3. Individual Service Editing Cards (Hidden on 'all' view to keep All Content clean and concise!) */}
+              {selectedPage !== 'all' && (
+                <>
+                  {(formData.services?.items || []).map((serv, index) => (
+                    <div key={serv.id || index} className="admin-card">
+                      <div className="admin-card-title">
+                        <span>Service #{serv.number || index + 1}: {serv.title}</span>
+                        <button className="admin-btn-danger" onClick={() => deleteService(index)}>Delete Service</button>
+                      </div>
 
-                  <div className="admin-grid-2" style={{ marginTop: '14px' }}>
-                    <div className="admin-field">
-                      <label>Service Title</label>
-                      <input value={serv.title} onChange={(e) => updateService(index, 'title', e.target.value)} />
+                      <div className="admin-grid-2" style={{ marginTop: '14px' }}>
+                        <div className="admin-field">
+                          <label>Service Title</label>
+                          <input value={serv.title} onChange={(e) => updateService(index, 'title', e.target.value)} />
+                        </div>
+                        <div className="admin-field">
+                          <label>Category Tag (for Filter)</label>
+                          <input value={serv.category || 'Frontend'} onChange={(e) => updateService(index, 'category', e.target.value)} />
+                        </div>
+                      </div>
+                      <div className="admin-field">
+                        <label>Service Description</label>
+                        <textarea rows={2} value={serv.description} onChange={(e) => updateService(index, 'description', e.target.value)} />
+                      </div>
                     </div>
-                    <div className="admin-field">
-                      <label>Category Tag (for Filter)</label>
-                      <input value={serv.category || 'Frontend'} onChange={(e) => updateService(index, 'category', e.target.value)} />
-                    </div>
-                  </div>
-                  <div className="admin-field">
-                    <label>Service Description</label>
-                    <textarea rows={2} value={serv.description} onChange={(e) => updateService(index, 'description', e.target.value)} />
-                  </div>
-                </div>
-              ))}
-              <button className="admin-btn-secondary" style={{ width: '100%' }} onClick={addService}>+ Add New Service</button>
+                  ))}
+                  <button className="admin-btn-secondary" style={{ width: '100%' }} onClick={addService}>+ Add New Service</button>
+                </>
+              )}
             </section>
           )}
 

@@ -378,6 +378,41 @@ function AppContent() {
           }
         />
 
+        {/* Dynamic Custom Registered Pages Route Handler */}
+        {(portfolioData.pages || []).map((page) => {
+          if (
+            !page.path ||
+            page.path === '/' ||
+            page.path === '/projects' ||
+            page.path === '/services' ||
+            page.path === '/admin'
+          ) {
+            return null;
+          }
+          return (
+            <Route
+              key={page.id || page.path}
+              path={page.path}
+              element={
+                <HomePage
+                  data={{
+                    ...portfolioData,
+                    homeSections: page.sections || ['hero', 'about', 'skills', 'contact']
+                  }}
+                  typed={typed}
+                  cursorVisible={cursorVisible}
+                  scrollTo={scrollTo}
+                  filter={filter}
+                  setFilter={setFilter}
+                  submit={submit}
+                  formStatus={formStatus}
+                  submitting={submitting}
+                />
+              }
+            />
+          );
+        })}
+
         <Route
           path="/admin"
           element={

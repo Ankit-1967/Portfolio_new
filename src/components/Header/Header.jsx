@@ -45,10 +45,10 @@ function Header({ menuOpen, setMenuOpen, active, scrollTo, navLinks, pages, them
       return;
     }
 
-    // 2. Direct Registered React Page Routes (/projects, /services, /admin)
-    const validRoutes = ['/projects', '/services', '/admin'];
-    const customPageRoutes = (pages || []).map(p => p.path);
-    const registeredRoutes = [...validRoutes, ...customPageRoutes];
+    // 2. Check if rawTarget is a registered multi-page route (/projects, /services, /admin, or custom pages)
+    const validBaseRoutes = ['/projects', '/services', '/admin'];
+    const customPageRoutes = (pages || []).filter(p => p.id !== 'home').map(p => p.path);
+    const registeredRoutes = [...validBaseRoutes, ...customPageRoutes];
 
     if (registeredRoutes.includes(rawTarget)) {
       if (location.pathname === rawTarget) {
@@ -59,14 +59,14 @@ function Header({ menuOpen, setMenuOpen, active, scrollTo, navLinks, pages, them
       return;
     }
 
-    // 3. Section Anchor Targets (e.g. #about, /about, about, #skills, /skills, skills, #contact, contact)
+    // 3. Section Anchor Targets on Home Page (e.g. #about, /about, about, #skills, /skills, skills, #contact, contact, #hero, /hero, hero)
     let cleanSectionId = rawTarget.replace(/^[/#]+/, ''); // removes leading / or #
-    if (!cleanSectionId) cleanSectionId = 'home';
+    if (!cleanSectionId || cleanSectionId === 'hero') cleanSectionId = 'home';
 
     if (location.pathname !== '/') {
       navigate('/');
       setTimeout(() => {
-        if (cleanSectionId === 'home' || cleanSectionId === '/') {
+        if (cleanSectionId === 'home') {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
           const el = document.getElementById(cleanSectionId);
@@ -78,7 +78,7 @@ function Header({ menuOpen, setMenuOpen, active, scrollTo, navLinks, pages, them
         }
       }, 180);
     } else {
-      if (cleanSectionId === 'home' || cleanSectionId === '/') {
+      if (cleanSectionId === 'home') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         const el = document.getElementById(cleanSectionId);
