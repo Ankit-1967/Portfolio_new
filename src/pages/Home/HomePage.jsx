@@ -12,7 +12,7 @@ function DynamicCustomSection({ section }) {
   return (
     <section id={section.id} className="section custom-section-wrapper reveal">
       <div className="section-heading">
-        <span className="section-number">✦</span>
+        <span className="section-number">{section.number || "01"}</span>
         <div>
           <p className="eyebrow">{section.eyebrow || 'Custom Section'}</p>
           <h2>{section.title}</h2>
@@ -52,8 +52,16 @@ function HomePage({
   ];
 
   const customSections = data?.customSections || [];
-
   const showSection = (sec) => activeSections.includes(sec);
+
+  // Dynamically calculate 1-based sequential section number based on rendered section order
+  const getSectionNum = (secId) => {
+    const nonHeroActive = activeSections.filter(s => s !== 'hero');
+    const idx = nonHeroActive.indexOf(secId);
+    if (idx === -1) return "01";
+    const numVal = idx + 1;
+    return numVal < 10 ? `0${numVal}` : `${numVal}`;
+  };
 
   return (
     <main>
@@ -70,28 +78,28 @@ function HomePage({
       {/* About Section */}
       {showSection('about') && (
         <About
-          data={data?.about}
+          data={{ ...data?.about, number: getSectionNum('about') }}
         />
       )}
 
       {/* Skills & Toolkit Section */}
       {showSection('skills') && (
         <Skills
-          data={data?.skills}
+          data={{ ...data?.skills, number: getSectionNum('skills') }}
         />
       )}
 
       {/* AI Workflow Section */}
       {showSection('ai') && (
         <AiWorkflow
-          data={data?.aiSkills}
+          data={{ ...data?.ai, number: getSectionNum('ai') }}
         />
       )}
 
       {/* Projects Preview Section */}
       {showSection('projects') && (
         <Projects
-          data={data?.projects}
+          data={{ ...data?.projects, number: getSectionNum('projects') }}
           filter={filter}
           setFilter={setFilter}
           isHomePage={true}
@@ -101,21 +109,26 @@ function HomePage({
       {/* Experience Section */}
       {showSection('experience') && (
         <Experience
-          data={data?.experience}
+          data={{ ...data?.experience, number: getSectionNum('experience') }}
         />
       )}
 
       {/* Services Preview Section */}
       {showSection('services') && (
         <Services
-          data={data?.services}
+          data={{ ...data?.services, number: getSectionNum('services') }}
         />
       )}
 
       {/* Render Custom Added Sections */}
       {customSections.map(sec => {
         if (showSection(sec.id)) {
-          return <DynamicCustomSection key={sec.id} section={sec} />;
+          return (
+            <DynamicCustomSection
+              key={sec.id}
+              section={{ ...sec, number: getSectionNum(sec.id) }}
+            />
+          );
         }
         return null;
       })}
@@ -123,7 +136,7 @@ function HomePage({
       {/* Contact Section */}
       {showSection('contact') && (
         <Contact
-          data={data?.contact}
+          data={{ ...data?.contact, number: getSectionNum('contact') }}
           submit={submit}
           formStatus={formStatus}
           submitting={submitting}

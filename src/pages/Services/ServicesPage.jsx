@@ -12,7 +12,7 @@ function ServicesPage({ data, contactData, submit, formStatus, submitting }) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  const { number, label, title, items, categories: initialCategories } = data || {};
+  const { label, title, items, categories: initialCategories } = data || {};
 
   const servicesList = items || [
     { id: "s1", number: "01", category: "Frontend", title: "Frontend Development", description: "Creating responsive websites using HTML, CSS and JavaScript with clean, scalable and user-friendly interfaces." },
@@ -77,9 +77,9 @@ function ServicesPage({ data, contactData, submit, formStatus, submitting }) {
             ← Back to Home
           </Link>
           <div className="section-heading">
-            <span className="section-number">{number || "06"}</span>
+            <span className="section-number">01</span>
             <div>
-              <p className="eyebrow">{label || "Services Offered"}</p>
+              <p className="eyebrow">{label || "SERVICES OFFERED"}</p>
               <h2>{title || "Specialized Solutions & Expertise"}</h2>
             </div>
           </div>
@@ -173,7 +173,7 @@ function ServicesPage({ data, contactData, submit, formStatus, submitting }) {
 
       {/* Contact Section */}
       <Contact
-        data={contactData}
+        data={{ ...contactData, number: "02" }}
         submit={submit}
         formStatus={formStatus}
         submitting={submitting}

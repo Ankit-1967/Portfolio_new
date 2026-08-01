@@ -25,7 +25,7 @@ function ProjectsPage({ data, contactData, submit, formStatus, submitting }) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  const { number, label, title, introText, categories: initialCategories, items } = data || {};
+  const { label, title, introText, categories: initialCategories, items } = data || {};
 
   const projectList = items || [];
   const categories = initialCategories || ["All", "React", "Shopify", "Web"];
@@ -63,7 +63,7 @@ function ProjectsPage({ data, contactData, submit, formStatus, submitting }) {
 
         {/* Header Heading */}
         <SectionHeading
-          number={number || "04"}
+          number="01"
           title={title || "Selected work"}
           label={label || "RECENT PROJECTS"}
         />
@@ -169,7 +169,7 @@ function ProjectsPage({ data, contactData, submit, formStatus, submitting }) {
 
       {/* Contact Section */}
       <Contact
-        data={contactData}
+        data={{ ...contactData, number: "02" }}
         submit={submit}
         formStatus={formStatus}
         submitting={submitting}
