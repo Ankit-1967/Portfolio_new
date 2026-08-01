@@ -1,0 +1,214 @@
+.services-page-main {
+  padding-top: 5rem;
+}
+
+.services-page-hero {
+  margin-bottom: 2rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--accent, #6366f1);
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  text-decoration: none;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.back-link:hover {
+  transform: translateX(-4px);
+  opacity: 0.85;
+}
+
+.services-page-lead {
+  max-width: 650px;
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: var(--text-muted, #94a3b8);
+  margin-top: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.services-filter-container {
+  background: var(--card-bg, rgba(255, 255, 255, 0.03));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  backdrop-filter: blur(10px);
+}
+
+.services-filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.services-filter-header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-color, #f8fafc);
+  margin: 0;
+}
+
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-box input {
+  background: var(--input-bg, rgba(0, 0, 0, 0.2));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.12));
+  border-radius: 20px;
+  padding: 0.5rem 2rem 0.5rem 1rem;
+  color: var(--text-color, #fff);
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+  min-width: 220px;
+}
+
+.search-box input:focus {
+  border-color: var(--accent, #6366f1);
+}
+
+.clear-search {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: var(--text-muted, #94a3b8);
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.services-filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.filter-pill {
+  background: var(--pill-bg, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+  color: var(--text-muted, #94a3b8);
+  padding: 0.5rem 1.2rem;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.filter-pill:hover {
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--text-color, #fff);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.filter-pill.active {
+  background: var(--accent, #6366f1);
+  color: #ffffff;
+  border-color: var(--accent, #6366f1);
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+}
+
+.services-grid-section {
+  padding-top: 1rem;
+}
+
+.services-page-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.75rem;
+}
+
+.services-page-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 2rem;
+  background: var(--card-bg, rgba(255, 255, 255, 0.03));
+  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
+  border-radius: 16px;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.services-page-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent, #6366f1);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.card-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.service-num {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent, #6366f1);
+}
+
+.category-badge {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  background: rgba(99, 102, 241, 0.12);
+  color: var(--accent, #818cf8);
+  font-weight: 600;
+}
+
+.services-page-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.75rem;
+  color: var(--text-color, #fff);
+}
+
+.services-page-card p {
+  color: var(--text-muted, #94a3b8);
+  line-height: 1.6;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+.service-card-footer {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color, rgba(255, 255, 255, 0.06));
+}
+
+.service-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--accent, #6366f1);
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: gap 0.2s ease;
+}
+
+.service-cta:hover {
+  gap: 0.75rem;
+}
+
+.no-services-found {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: var(--card-bg, rgba(255, 255, 255, 0.02));
+  border-radius: 16px;
+  border: 1px dashed var(--border-color, rgba(255, 255, 255, 0.1));
+}

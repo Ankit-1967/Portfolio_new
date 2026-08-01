@@ -13,15 +13,11 @@ function AdminLogin({ targetEmail, onAuthenticated, onBackToPortfolio }) {
     setIsSendingOtp(true);
     setStatus({ type: '', msg: '' });
 
-    // Generate random 6-digit OTP
     const newOtp = String(Math.floor(100000 + Math.random() * 900000));
     setGeneratedOtp(newOtp);
 
-    let sent = false;
-
-    // 1. Try sending via FormSubmit (with captcha disabled)
     try {
-      const res = await fetch(`https://formsubmit.co/ajax/${adminEmail}`, {
+      await fetch(`https://formsubmit.co/ajax/${adminEmail}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -35,12 +31,10 @@ function AdminLogin({ targetEmail, onAuthenticated, onBackToPortfolio }) {
           message: `Your 6-digit Admin Login OTP Security Code is: ${newOtp}\n\nEnter this OTP code on your portfolio admin login page to access your Admin Control Center.`
         })
       });
-      if (res.ok) sent = true;
     } catch (e) {
       console.log('FormSubmit OTP dispatch error:', e);
     }
 
-    // 2. Try sending via Google Sheets API (if configured)
     const sheetsUrl = getGoogleSheetsUrl();
     if (sheetsUrl) {
       try {
@@ -53,7 +47,6 @@ function AdminLogin({ targetEmail, onAuthenticated, onBackToPortfolio }) {
             email: adminEmail
           })
         });
-        sent = true;
       } catch (e) {
         console.log('Google Sheets OTP dispatch error:', e);
       }
@@ -71,7 +64,6 @@ function AdminLogin({ targetEmail, onAuthenticated, onBackToPortfolio }) {
     e.preventDefault();
     const cleanInput = otpCode.trim();
 
-    // Verify against generated OTP or master passcode "1967"
     if ((generatedOtp && cleanInput === generatedOtp) || cleanInput === '1967') {
       setStatus({ type: 'success', msg: '✓ Access Granted! Redirecting to Admin...' });
       sessionStorage.setItem('admin-auth', 'true');

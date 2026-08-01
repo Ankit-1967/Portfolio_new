@@ -1,31 +1,27 @@
 import React, { useEffect, useMemo, useState, useRef } from "react";
 import { createRoot } from "react-dom/client";
+import { HashRouter, Routes, Route, Navigate, useLocation, useNavigate } from "react-router-dom";
 import "./styles.css";
 
 // Shared & Background Components
 import Background from "./components/Background/Background";
 import Header from "./components/Header/Header";
-
-// Modular Section Components
-import Hero from "./components/Hero/Hero";
-import About from "./components/About/About";
-import Skills from "./components/Skills/Skills";
-import AiWorkflow from "./components/AiWorkflow/AiWorkflow";
-import Projects from "./components/Projects/Projects";
-import Experience from "./components/Experience/Experience";
-import Services from "./components/Services/Services";
-import Contact from "./components/Contact/Contact";
 import Footer from "./components/Footer/Footer";
 
-// Full Page Admin & Login Components
-import AdminPage from "./components/Admin/AdminPage";
-import AdminLogin from "./components/Admin/AdminLogin";
+// Pages from src/pages/
+import HomePage from "./pages/Home/HomePage";
+import ServicesPage from "./pages/Services/ServicesPage";
+import AdminPage from "./pages/Admin/AdminPage";
+import AdminLogin from "./pages/Admin/AdminLogin";
 
 // Data Source & Remote Backend Service
 import { initialPortfolioData } from "./data/portfolioData";
 import { fetchPortfolioFromSheets, savePortfolioToSheets } from "./services/googleSheets";
 
-function App() {
+function AppContent() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [portfolioData, setPortfolioData] = useState(() => {
     const saved = localStorage.getItem("portfolio-data");
     if (saved) {
@@ -41,7 +37,7 @@ function App() {
     return initialPortfolioData;
   });
 
-  // Sync with Google Sheets backend on load if API URL is configured
+  // Sync with Google Sheets backend on load
   useEffect(() => {
     async function syncRemoteData() {
       const remoteData = await fetchPortfolioFromSheets();
@@ -53,12 +49,6 @@ function App() {
     }
     syncRemoteData();
   }, []);
-
-  const [currentView, setCurrentView] = useState(() => {
-    const isPathAdmin = window.location.pathname.endsWith("/admin");
-    const isHashAdmin = window.location.hash === "#admin";
-    return isPathAdmin || isHashAdmin ? "admin" : "portfolio";
-  });
 
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return sessionStorage.getItem("admin-auth") === "true";
@@ -89,29 +79,9 @@ function App() {
     localStorage.setItem("portfolio-theme", theme);
   }, [theme]);
 
-  // URL Path & Hash Navigation Listener for /admin
-  useEffect(() => {
-    const checkAdminRoute = () => {
-      const isPathAdmin = window.location.pathname.endsWith("/admin");
-      const isHashAdmin = window.location.hash === "#admin";
-      if (isPathAdmin || isHashAdmin) {
-        setCurrentView("admin");
-      } else {
-        setCurrentView("portfolio");
-      }
-    };
-    checkAdminRoute();
-    window.addEventListener('hashchange', checkAdminRoute);
-    window.addEventListener('popstate', checkAdminRoute);
-    return () => {
-      window.removeEventListener('hashchange', checkAdminRoute);
-      window.removeEventListener('popstate', checkAdminRoute);
-    };
-  }, []);
-
   // Typing effect for Hero
   useEffect(() => {
-    if (currentView !== "portfolio") return;
+    if (location.pathname !== "/") return;
     let role = 0, index = 0, deleting = false, timer;
     const tick = () => {
       const word = roles[role] || "Developer";
@@ -135,7 +105,7 @@ function App() {
     };
     timer = setTimeout(tick, 350);
     return () => clearTimeout(timer);
-  }, [roles, currentView]);
+  }, [roles, location.pathname]);
 
   const sectionToNavMap = useMemo(() => ({
     home: "home",
@@ -150,7 +120,7 @@ function App() {
 
   // Scroll spy for Portfolio view
   useEffect(() => {
-    if (loading || currentView !== "portfolio") return;
+    if (loading || location.pathname !== "/") return;
 
     const handleScrollSpy = () => {
       if (isClickingRef.current) return;
@@ -187,11 +157,11 @@ function App() {
 
     window.addEventListener("scroll", handleScrollSpy, { passive: true });
     return () => window.removeEventListener("scroll", handleScrollSpy);
-  }, [loading, currentView, sectionToNavMap]);
+  }, [loading, location.pathname, sectionToNavMap]);
 
   // Reveal elements on scroll
   useEffect(() => {
-    if (loading || currentView !== "portfolio") return;
+    if (loading || location.pathname === "/admin") return;
     const revealElements = document.querySelectorAll(".reveal");
     const observer = new IntersectionObserver(
       (entries) => {
@@ -205,11 +175,11 @@ function App() {
     );
     revealElements.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [loading, filter, portfolioData, currentView]);
+  }, [loading, filter, portfolioData, location.pathname]);
 
   // Scroll progress bar
   useEffect(() => {
-    if (currentView !== "portfolio") return;
+    if (location.pathname === "/admin") return;
     const onScroll = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
       document.documentElement.style.setProperty("--scroll", `${max ? (window.scrollY / max) * 100 : 0}%`);
@@ -217,7 +187,7 @@ function App() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [currentView]);
+  }, [location.pathname]);
 
   useEffect(() => {
     return () => {
@@ -226,12 +196,16 @@ function App() {
   }, []);
 
   const nav = ["home", "about", "skills", "projects", "experience", "services", "contact"];
+
   const scrollTo = (id) => {
-    if (currentView !== "portfolio") {
-      setCurrentView("portfolio");
-      window.location.hash = `#${id}`;
+    if (location.pathname !== "/") {
+      navigate("/");
       setTimeout(() => {
-        document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+        if (id === "home") {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        } else {
+          document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+        }
       }, 100);
       return;
     }
@@ -240,7 +214,11 @@ function App() {
     isClickingRef.current = true;
     if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
 
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    if (id === "home") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    }
 
     clickTimerRef.current = setTimeout(() => {
       isClickingRef.current = false;
@@ -270,13 +248,11 @@ function App() {
         date: new Date().toLocaleString()
       };
 
-      // Save message to Admin Inbox state & local storage
       const updatedInbox = [newMessage, ...(portfolioData.inbox || [])];
       const updatedData = { ...portfolioData, inbox: updatedInbox };
       setPortfolioData(updatedData);
       localStorage.setItem("portfolio-data", JSON.stringify(updatedData));
 
-      // Send to FormSubmit
       fetch(`https://formsubmit.co/ajax/${adminEmail}`, {
         method: "POST",
         headers: { 
@@ -293,7 +269,6 @@ function App() {
         })
       }).catch(e => console.log("FormSubmit background dispatch:", e));
 
-      // Save message to Google Sheets backend
       savePortfolioToSheets({
         action: "save_message",
         name: visitorName,
@@ -326,105 +301,94 @@ function App() {
   };
 
   const handleExitAdmin = () => {
-    setCurrentView("portfolio");
-    window.location.hash = "";
-    if (window.location.pathname.endsWith("/admin")) {
-      window.history.pushState(null, "", "/");
-    }
+    navigate("/");
   };
 
   if (loading) return <Loader />;
 
-  // RENDER DEDICATED ADMIN ROUTE
-  if (currentView === "admin") {
-    if (!isAuthenticated) {
-      return (
-        <AdminLogin
-          targetEmail={portfolioData.contact?.email || "at667448@gmail.com"}
-          onAuthenticated={() => setIsAuthenticated(true)}
-          onBackToPortfolio={handleExitAdmin}
-        />
-      );
-    }
+  const isAdminRoute = location.pathname === "/admin";
 
-    return (
-      <AdminPage
-        data={portfolioData}
-        onSave={handleSavePortfolioData}
-        onReset={handleResetPortfolioData}
-        onBackToPortfolio={handleExitAdmin}
-      />
-    );
-  }
-
-  // RENDER MAIN PORTFOLIO VIEW
   return (
     <>
-      <div className="scroll-progress" />
-      <Background theme={theme} />
-      <Header
-        menuOpen={menuOpen}
-        setMenuOpen={setMenuOpen}
-        active={active}
-        scrollTo={scrollTo}
-        nav={nav}
-        theme={theme}
-        setTheme={setTheme}
-      />
-
-      <main>
-        <Hero
-          data={portfolioData.hero}
-          typed={typed}
-          cursorVisible={cursorVisible}
+      {!isAdminRoute && <div className="scroll-progress" />}
+      {!isAdminRoute && <Background theme={theme} />}
+      {!isAdminRoute && (
+        <Header
+          menuOpen={menuOpen}
+          setMenuOpen={setMenuOpen}
+          active={active}
           scrollTo={scrollTo}
+          nav={nav}
+          theme={theme}
+          setTheme={setTheme}
+        />
+      )}
+
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <HomePage
+              data={portfolioData}
+              typed={typed}
+              cursorVisible={cursorVisible}
+              scrollTo={scrollTo}
+              filter={filter}
+              setFilter={setFilter}
+              submit={submit}
+              formStatus={formStatus}
+              submitting={submitting}
+            />
+          }
         />
 
-        <About
-          data={portfolioData.about}
+        <Route
+          path="/services"
+          element={
+            <ServicesPage
+              data={portfolioData.services}
+              contactData={portfolioData.contact}
+              submit={submit}
+              formStatus={formStatus}
+              submitting={submitting}
+            />
+          }
         />
 
-        <Skills
-          data={portfolioData.skills}
+        <Route
+          path="/admin"
+          element={
+            !isAuthenticated ? (
+              <AdminLogin
+                targetEmail={portfolioData.contact?.email || "at667448@gmail.com"}
+                onAuthenticated={() => setIsAuthenticated(true)}
+                onBackToPortfolio={handleExitAdmin}
+              />
+            ) : (
+              <AdminPage
+                data={portfolioData}
+                onSave={handleSavePortfolioData}
+                onReset={handleResetPortfolioData}
+                onBackToPortfolio={handleExitAdmin}
+              />
+            )
+          }
         />
 
-        <AiWorkflow
-          data={portfolioData.aiSkills}
-        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
 
-        <Projects
-          data={portfolioData.projects}
-          filter={filter}
-          setFilter={setFilter}
-        />
+      {!isAdminRoute && <Footer scrollTo={scrollTo} />}
 
-        <Experience
-          data={portfolioData.experience}
-        />
-
-        <Services
-          data={portfolioData.services}
-        />
-
-        <Contact
-          data={portfolioData.contact}
-          submit={submit}
-          formStatus={formStatus}
-          submitting={submitting}
-        />
-      </main>
-
-      <Footer
-        scrollTo={scrollTo}
-      />
-
-      <button
-        className="top-button"
-        onClick={() => scrollTo("home")}
-        aria-label="Back to top"
-      >
-        ↑
-      </button>
+      {!isAdminRoute && (
+        <button
+          className="top-button"
+          onClick={() => scrollTo("home")}
+          aria-label="Back to top"
+        >
+          ↑
+        </button>
+      )}
     </>
   );
 }
@@ -436,6 +400,14 @@ function Loader() {
       <div className="loader-line"><i /></div>
       <p>Crafting digital experiences</p>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <HashRouter>
+      <AppContent />
+    </HashRouter>
   );
 }
 
