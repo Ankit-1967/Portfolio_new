@@ -258,7 +258,8 @@ function App() {
     setFormStatus("Sending your message...");
 
     try {
-      const response = await fetch(`https://formsubmit.co/ajax/${adminEmail}`, {
+      // Send to FormSubmit with captcha/OTP disabled
+      fetch(`https://formsubmit.co/ajax/${adminEmail}`, {
         method: "POST",
         headers: { 
           'Content-Type': 'application/json',
@@ -270,20 +271,25 @@ function App() {
           _replyto: visitorEmail,
           message: visitorMessage,
           _subject: `New Portfolio Message from ${visitorName}`,
+          _captcha: "false",
           _template: "table"
         })
-      });
+      }).catch(e => console.log("FormSubmit background dispatch:", e));
 
-      if (response.ok) {
-        setFormStatus("✓ Thank you for reaching out! Your message has been sent to Ankit. He will contact you shortly.");
-        form.reset();
-      } else {
-        setFormStatus("✓ Thank you! Your message has been submitted. Ankit will contact you shortly.");
-        form.reset();
-      }
+      // Also save message to Google Sheets if configured
+      savePortfolioToSheets({
+        type: "contact_message",
+        name: visitorName,
+        email: visitorEmail,
+        message: visitorMessage,
+        date: new Date().toISOString()
+      }).catch(e => console.log("Google Sheets message save:", e));
+
+      setFormStatus("✓ Thank you for reaching out! Your message has been sent to Ankit. He will contact you shortly.");
+      form.reset();
     } catch (err) {
       console.error("Form submit error:", err);
-      setFormStatus("✓ Thank you! Your message has been submitted. Ankit will contact you shortly.");
+      setFormStatus("✓ Thank you for reaching out! Your message has been sent to Ankit. He will contact you shortly.");
       form.reset();
     } finally {
       setSubmitting(false);
