@@ -206,8 +206,6 @@ function AppContent() {
     };
   }, []);
 
-  const nav = ["home", "about", "skills", "projects", "experience", "services", "contact"];
-
   const scrollTo = (id) => {
     if (location.pathname !== "/") {
       navigate("/");
@@ -329,9 +327,8 @@ function AppContent() {
           setMenuOpen={setMenuOpen}
           active={active}
           scrollTo={scrollTo}
-          nav={nav}
+          navLinks={portfolioData.navLinks}
           pages={portfolioData.pages}
-          homeSections={portfolioData.homeSections}
           theme={theme}
           setTheme={setTheme}
         />

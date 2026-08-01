@@ -31,6 +31,17 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
     'contact'
   ]);
 
+  // State for header nav links
+  const [navLinks, setNavLinks] = useState(() => data?.navLinks || [
+    { id: 'home', label: 'Home', target: '/', visible: true },
+    { id: 'about', label: 'About', target: '#about', visible: true },
+    { id: 'skills', label: 'Skills', target: '#skills', visible: true },
+    { id: 'projects', label: 'Projects', target: '/projects', visible: true },
+    { id: 'experience', label: 'Experience', target: '#experience', visible: true },
+    { id: 'services', label: 'Services', target: '/services', visible: true },
+    { id: 'contact', label: 'Contact', target: '#contact', visible: true }
+  ]);
+
   // State for registered site pages
   const [pagesList, setPagesList] = useState(() => data?.pages || [
     { id: 'home', name: 'Home Page', path: '/', status: 'Active', type: 'Main Landing', sections: ['hero', 'about', 'skills', 'ai', 'projects', 'experience', 'services', 'contact'] },
@@ -47,7 +58,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
 
   const handleSave = async () => {
     setStatusMsg('⏳ Saving all changes...');
-    const updatedDataWithPages = { ...formData, pages: pagesList, homeSections };
+    const updatedDataWithPages = { ...formData, pages: pagesList, homeSections, navLinks };
     const res = await onSave(updatedDataWithPages);
     setStatusMsg('✓ Portfolio data saved successfully!');
     setTimeout(() => setStatusMsg(''), 4000);
@@ -78,6 +89,33 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
       }
       return p;
     }));
+  };
+
+  // Nav Links Management
+  const updateNavLink = (index, field, val) => {
+    const updated = [...navLinks];
+    updated[index] = { ...updated[index], [field]: val };
+    setNavLinks(updated);
+  };
+
+  const toggleNavLinkVisibility = (index) => {
+    const updated = [...navLinks];
+    updated[index] = { ...updated[index], visible: !updated[index].visible };
+    setNavLinks(updated);
+  };
+
+  const addNavLink = () => {
+    const newLink = {
+      id: `link_${Date.now()}`,
+      label: 'New Link',
+      target: '#home',
+      visible: true
+    };
+    setNavLinks([...navLinks, newLink]);
+  };
+
+  const deleteNavLink = (index) => {
+    setNavLinks(navLinks.filter((_, i) => i !== index));
   };
 
   // Updaters
@@ -226,6 +264,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
   };
 
   const allNavTabs = [
+    { id: 'navLinks', label: 'Header Menu Links Manager', icon: '🔗', page: 'all' },
     { id: 'hero', label: 'Hero & Headline', icon: '🚀', page: 'home' },
     { id: 'about', label: 'About Me', icon: '👤', page: 'home' },
     { id: 'skills', label: 'Skills & AI Toolkit', icon: '⚡', page: 'home' },
@@ -239,10 +278,10 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
 
   const visibleNavTabs = allNavTabs.filter(tab => {
     if (selectedPage === 'all') return true;
-    if (selectedPage === 'home') return tab.page === 'home' || tab.id === 'inbox' || tab.id === 'pages';
-    if (selectedPage === 'projects') return tab.page === 'projects' || tab.id === 'inbox' || tab.id === 'pages';
-    if (selectedPage === 'services') return tab.page === 'services' || tab.id === 'inbox' || tab.id === 'pages';
-    if (selectedPage === 'pages') return tab.page === 'pages' || tab.id === 'inbox';
+    if (selectedPage === 'home') return tab.page === 'home' || tab.id === 'navLinks' || tab.id === 'inbox' || tab.id === 'pages';
+    if (selectedPage === 'projects') return tab.page === 'projects' || tab.id === 'navLinks' || tab.id === 'inbox' || tab.id === 'pages';
+    if (selectedPage === 'services') return tab.page === 'services' || tab.id === 'navLinks' || tab.id === 'inbox' || tab.id === 'pages';
+    if (selectedPage === 'pages') return tab.page === 'pages' || tab.id === 'navLinks' || tab.id === 'inbox';
     return true;
   });
 
@@ -274,7 +313,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
         <div className="page-selector-buttons">
           <button
             className={`page-select-btn ${selectedPage === 'all' ? 'active' : ''}`}
-            onClick={() => { setSelectedPage('all'); setActiveTab('hero'); }}
+            onClick={() => { setSelectedPage('all'); setActiveTab('navLinks'); }}
           >
             🌐 All Content
           </button>
@@ -324,6 +363,63 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
 
         {/* Content Area */}
         <main className="admin-main-content">
+          {/* HEADER NAV LINKS MANAGER TAB */}
+          {isSectionVisible('navLinks') && (
+            <section id="sec-navLinks">
+              <div className="admin-section-header">
+                <h2>Header Menu Links Manager</h2>
+                <p>Add, rename, edit target routes/anchors, or toggle top navigation bar menu links.</p>
+              </div>
+
+              <div className="admin-card">
+                <h3 className="admin-card-title">Site Header Navigation Menu Links</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  {navLinks.map((link, index) => (
+                    <div key={link.id || index} className="admin-card" style={{ background: 'rgba(255, 255, 255, 0.02)', margin: 0, padding: '16px' }}>
+                      <div className="admin-grid-2">
+                        <div className="admin-field">
+                          <label>Menu Item Display Label</label>
+                          <input
+                            value={link.label}
+                            onChange={(e) => updateNavLink(index, 'label', e.target.value)}
+                          />
+                        </div>
+                        <div className="admin-field">
+                          <label>Target URL / Route / Anchor (e.g. /, /projects, /services, #about, #contact)</label>
+                          <input
+                            value={link.target}
+                            onChange={(e) => updateNavLink(index, 'target', e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.85rem' }}>
+                          <input
+                            type="checkbox"
+                            checked={link.visible !== false}
+                            onChange={() => toggleNavLinkVisibility(index)}
+                          />
+                          Show in Site Header Navbar
+                        </label>
+                        <button className="admin-btn-danger" onClick={() => deleteNavLink(index)}>
+                          Delete Link
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  className="admin-btn-secondary"
+                  style={{ width: '100%', marginTop: '20px' }}
+                  onClick={addNavLink}
+                >
+                  + Add New Header Menu Link
+                </button>
+              </div>
+            </section>
+          )}
+
           {/* HERO TAB */}
           {isSectionVisible('hero') && (
             <section id="sec-hero">

@@ -1,4 +1,13 @@
 export const initialPortfolioData = {
+  navLinks: [
+    { id: 'home', label: 'Home', target: '/', visible: true },
+    { id: 'about', label: 'About', target: '#about', visible: true },
+    { id: 'skills', label: 'Skills', target: '#skills', visible: true },
+    { id: 'projects', label: 'Projects', target: '/projects', visible: true },
+    { id: 'experience', label: 'Experience', target: '#experience', visible: true },
+    { id: 'services', label: 'Services', target: '/services', visible: true },
+    { id: 'contact', label: 'Contact', target: '#contact', visible: true }
+  ],
   hero: {
     eyebrow: "Available for frontend projects",
     headingLine1: "I build digital",
@@ -41,31 +50,27 @@ export const initialPortfolioData = {
   },
   skills: {
     number: "02",
-    label: "Technologies",
-    title: "My toolkit",
-    hugeNumber: "08",
-    introText: "The technologies and skills I use to turn ideas and designs into functional digital experiences.",
+    label: "Toolkit",
+    title: "Skills & technologies",
     items: [
       { name: "HTML5", percentage: 90 },
       { name: "CSS3", percentage: 85 },
-      { name: "JavaScript", percentage: 60 },
-      { name: "React.js", percentage: 70 },
-      { name: "Vite", percentage: 70 },
-      { name: "Shopify Liquid", percentage: 75 },
-      { name: "Responsive Design", percentage: 90 },
-      { name: "Git & GitHub", percentage: 75 },
-      { name: "Performance Optimization", percentage: 80 }
+      { name: "JavaScript", percentage: 80 },
+      { name: "React", percentage: 78 },
+      { name: "Liquid (Shopify)", percentage: 85 },
+      { name: "Git", percentage: 80 }
     ]
   },
   aiSkills: {
     number: "03",
-    label: "Ai workflow",
-    title: "AI × Development",
-    introText: "I use AI tools as development assistants to explore ideas, understand new concepts, debug problems, improve implementations and create visual assets — while keeping the final decisions and code under my control.",
+    label: "AI Engineering",
+    title: "AI-Assisted Development",
+    introText: "Using AI to write code faster, catch edge cases early and iterate with confidence.",
     items: [
-      { name: "ChatGPT", icon: "✦", text: "Prompt engineering, AI-assisted coding, debugging and documentation." },
-      { name: "Claude AI", icon: "◈", text: "Code analysis, refactoring, software architecture and project planning." },
-      { name: "Gemini AI", icon: "✧", text: "Research, code generation, brainstorming and productivity workflows." }
+      { name: "Copilot & Gemini", icon: "✦", text: "Daily driver for code completion, refactoring and boilerplate generation." },
+      { name: "Prompt Engineering", icon: "✦", text: "Structuring clear context and constraints to get precise code output." },
+      { name: "AI Code Reviews", icon: "✦", text: "Using LLMs as an extra pair of eyes for security, edge cases and performance." },
+      { name: "Documentation", icon: "✦", text: "Accelerating documentation, API specs and inline comments with AI assistance." }
     ]
   },
   projects: {
@@ -79,7 +84,7 @@ export const initialPortfolioData = {
         id: "p1",
         title: "Shopify E-commerce Store",
         category: "Shopify",
-        description: "Custom Shopify storefront with responsive layouts, Liquid sections, product pages and optimized shopping experiences.",
+        description: "Custom liquid sections, optimized mobile layout and cart interactions.",
         tech: ["Shopify", "Liquid", "JavaScript", "CSS"],
         image: "commerce",
         live: "#contact",
@@ -89,49 +94,29 @@ export const initialPortfolioData = {
         id: "p2",
         title: "Personal Portfolio",
         category: "React",
-        description: "A modern portfolio showcasing projects, skills and experience with smooth animations and responsive design.",
-        tech: ["React", "Vite", "JavaScript", "CSS"],
+        description: "Modern, responsive portfolio with dark/light themes and clean component structure.",
+        tech: ["React", "Vite", "CSS"],
         image: "portfolio",
-        live: "#contact",
+        live: "#home",
         github: "https://github.com/"
       },
       {
         id: "p3",
-        title: "Flight Search Interface",
+        title: "AI Code Assistant Dashboard",
         category: "React",
-        description: "Responsive flight booking interface with smart filters, traveler selection, validation and intuitive user interactions.",
-        tech: ["React", "JavaScript", "CSS", "API"],
-        image: "travel",
+        description: "Interactive dashboard layout exploring AI-assisted developer workflows and prompt engineering.",
+        tech: ["React", "JavaScript", "CSS"],
+        image: "ai",
         live: "#contact",
         github: "https://github.com/"
       },
       {
         id: "p4",
-        title: "Creative Agency Landing Page",
-        category: "Frontend",
-        description: "Responsive landing page focused on typography, animations and clean component-based layouts.",
-        tech: ["HTML", "CSS", "JavaScript", "Vite"],
-        image: "agency",
-        live: "#contact",
-        github: "https://github.com/"
-      },
-      {
-        id: "p5",
-        title: "Weather App",
-        category: "React",
-        description: "Weather application with live API integration, dynamic backgrounds and responsive user interface.",
-        tech: ["React", "API", "JavaScript", "CSS"],
-        image: "weather",
-        live: "#contact",
-        github: "https://github.com/"
-      },
-      {
-        id: "p6",
-        title: "Shopify Theme Components",
-        category: "Shopify",
-        description: "Reusable Shopify sections and custom components built for flexible, responsive and scalable storefronts.",
-        tech: ["Shopify", "Liquid", "JavaScript", "CSS"],
-        image: "theme",
+        title: "Responsive Web Landing Page",
+        category: "Web",
+        description: "Pixel-perfect landing page with fluid typography, modern layout techniques and micro-interactions.",
+        tech: ["HTML5", "CSS3", "JavaScript"],
+        image: "landing",
         live: "#contact",
         github: "https://github.com/"
       }

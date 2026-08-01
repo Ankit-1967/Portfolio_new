@@ -3,7 +3,7 @@ import { useLocation, useNavigate, Link } from 'react-router-dom';
 import './Header.css';
 import Icon from '../Icon/Icon';
 
-function Header({ menuOpen, setMenuOpen, active, scrollTo, nav, pages, homeSections, theme, setTheme }) {
+function Header({ menuOpen, setMenuOpen, active, scrollTo, navLinks, pages, theme, setTheme }) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -17,35 +17,41 @@ function Header({ menuOpen, setMenuOpen, active, scrollTo, nav, pages, homeSecti
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [menuOpen, setMenuOpen]);
 
-  const handleNavClick = (id, targetPath) => {
+  const defaultNavLinks = [
+    { id: 'home', label: 'Home', target: '/', visible: true },
+    { id: 'about', label: 'About', target: '#about', visible: true },
+    { id: 'skills', label: 'Skills', target: '#skills', visible: true },
+    { id: 'projects', label: 'Projects', target: '/projects', visible: true },
+    { id: 'experience', label: 'Experience', target: '#experience', visible: true },
+    { id: 'services', label: 'Services', target: '/services', visible: true },
+    { id: 'contact', label: 'Contact', target: '#contact', visible: true }
+  ];
+
+  const activeNavLinks = (navLinks && navLinks.length > 0 ? navLinks : defaultNavLinks).filter(link => link.visible !== false);
+
+  const handleNavClick = (link) => {
     setMenuOpen(false);
 
-    if (targetPath && targetPath.startsWith('/')) {
-      if (location.pathname === targetPath) {
+    const { id, target } = link;
+
+    if (target && target.startsWith('/')) {
+      if (location.pathname === target) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        navigate(targetPath);
+        navigate(target);
       }
       return;
     }
 
-    if (id === 'projects') {
-      navigate('/projects');
-      return;
-    }
-
-    if (id === 'services') {
-      navigate('/services');
-      return;
-    }
+    const sectionId = target ? target.replace('#', '') : id;
 
     if (location.pathname !== '/') {
       navigate('/');
       setTimeout(() => {
-        if (id === 'home') {
+        if (sectionId === 'home' || sectionId === '/') {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
-          const el = document.getElementById(id);
+          const el = document.getElementById(sectionId);
           if (el) {
             el.scrollIntoView({ behavior: 'smooth' });
           } else {
@@ -54,15 +60,12 @@ function Header({ menuOpen, setMenuOpen, active, scrollTo, nav, pages, homeSecti
         }
       }, 150);
     } else {
-      scrollTo(id);
+      scrollTo(sectionId);
     }
   };
 
   const isProjectsPage = location.pathname === '/projects';
   const isServicesPage = location.pathname === '/services';
-
-  // Include base nav plus custom pages from pages prop if registered
-  const customPages = (pages || []).filter(p => p.path !== '/' && p.path !== '/projects' && p.path !== '/services' && p.path !== '/admin' && p.status === 'Active');
 
   return (
     <>
@@ -77,7 +80,7 @@ function Header({ menuOpen, setMenuOpen, active, scrollTo, nav, pages, homeSecti
           className="logo" 
           to="/" 
           onClick={() => { 
-            handleNavClick("home", "/"); 
+            handleNavClick({ id: 'home', target: '/' }); 
           }} 
           aria-label="Home"
         >
@@ -85,50 +88,25 @@ function Header({ menuOpen, setMenuOpen, active, scrollTo, nav, pages, homeSecti
         </Link>
 
         <nav className={`nav ${menuOpen ? "open" : ""}`} aria-label="Primary navigation">
-          {nav.map((id, index) => {
-            let isActive = active === id;
-            if (isProjectsPage && id === 'projects') isActive = true;
-            if (isServicesPage && id === 'services') isActive = true;
-
-            const getHref = () => {
-              if (id === 'home') return '/';
-              if (id === 'projects') return '/projects';
-              if (id === 'services') return '/services';
-              return `#${id}`;
-            };
+          {activeNavLinks.map((item, index) => {
+            const sectionId = item.target ? item.target.replace('#', '') : item.id;
+            let isActive = active === sectionId || active === item.id;
+            if (isProjectsPage && (item.target === '/projects' || item.id === 'projects')) isActive = true;
+            if (isServicesPage && (item.target === '/services' || item.id === 'services')) isActive = true;
+            if (location.pathname === item.target) isActive = true;
 
             return (
               <a
-                key={id}
+                key={item.id || index}
                 className={isActive ? "active" : ""}
-                href={getHref()}
+                href={item.target || `#${item.id}`}
                 style={{ '--i': index }}
                 onClick={(e) => {
                   e.preventDefault();
-                  if (id === 'projects') handleNavClick(id, '/projects');
-                  else if (id === 'services') handleNavClick(id, '/services');
-                  else handleNavClick(id);
+                  handleNavClick(item);
                 }}
               >
-                {id === "home" ? "Home" : id[0].toUpperCase() + id.slice(1)}
-              </a>
-            );
-          })}
-
-          {customPages.map((cp, idx) => {
-            const isActive = location.pathname === cp.path;
-            return (
-              <a
-                key={cp.id || cp.path}
-                className={isActive ? "active" : ""}
-                href={cp.path}
-                style={{ '--i': nav.length + idx }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavClick(cp.id, cp.path);
-                }}
-              >
-                {cp.name}
+                {item.label}
               </a>
             );
           })}
@@ -140,7 +118,7 @@ function Header({ menuOpen, setMenuOpen, active, scrollTo, nav, pages, homeSecti
             href="#contact" 
             onClick={(e) => { 
               e.preventDefault(); 
-              handleNavClick("contact"); 
+              handleNavClick({ id: 'contact', target: '#contact' }); 
             }}
           >
             Let's talk <Icon name="arrow" />
