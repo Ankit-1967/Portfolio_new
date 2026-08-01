@@ -5,38 +5,26 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
   const [formData, setFormData] = useState(data);
   const [activeTab, setActiveTab] = useState('hero');
   const [statusMsg, setStatusMsg] = useState('');
+  const [sheetsUrl, setSheetsUrl] = useState(() => localStorage.getItem("portfolio_sheets_url") || "");
 
   useEffect(() => {
     setFormData(data);
   }, [data]);
 
-  const handleSave = () => {
-    onSave(formData);
-    setStatusMsg('✓ Portfolio data successfully updated & saved to local storage!');
-    setTimeout(() => setStatusMsg(''), 4000);
-  };
-
-  const handleReset = () => {
-    if (window.confirm('Are you sure you want to reset all portfolio content back to initial defaults?')) {
-      onReset();
-      setStatusMsg('✓ Reset all portfolio content back to initial defaults.');
-      setTimeout(() => setStatusMsg(''), 4000);
+  const handleSave = async () => {
+    setStatusMsg('⏳ Saving all changes...');
+    if (sheetsUrl) {
+      localStorage.setItem("portfolio_sheets_url", sheetsUrl.trim());
+    } else {
+      localStorage.removeItem("portfolio_sheets_url");
     }
-  };
-
-  const handleExportDataFile = () => {
-    const fileContent = `export const initialPortfolioData = ${JSON.stringify(formData, null, 2)};\n`;
-    const blob = new Blob([fileContent], { type: 'application/javascript' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'portfolioData.js';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-    setStatusMsg('📥 Downloaded updated portfolioData.js! Replace src/data/portfolioData.js to save permanently across all devices.');
-    setTimeout(() => setStatusMsg(''), 6000);
+    const res = await onSave(formData);
+    if (sheetsUrl && sheetsUrl.trim()) {
+      setStatusMsg('✓ Portfolio data successfully updated live in Google Sheets!');
+    } else {
+      setStatusMsg('✓ Portfolio data saved locally!');
+    }
+    setTimeout(() => setStatusMsg(''), 5000);
   };
 
   // Updaters
@@ -178,7 +166,8 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
     { id: 'projects', label: 'Selected Projects', icon: '💼' },
     { id: 'experience', label: 'Experience Timeline', icon: '📜' },
     { id: 'services', label: 'Services Offered', icon: '🛠' },
-    { id: 'contact', label: 'Contact & Socials', icon: '✉' }
+    { id: 'contact', label: 'Contact & Socials', icon: '✉' },
+    { id: 'backend', label: 'Google Sheets Backend', icon: '📊' }
   ];
 
   return (
@@ -194,10 +183,6 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
 
         <div className="admin-topbar-actions">
           {statusMsg && <div className="admin-status-bar">{statusMsg}</div>}
-          <button className="admin-btn-secondary" onClick={handleExportDataFile} title="Download updated portfolioData.js code file to save permanently for all devices on GitHub/Vercel">
-            📥 Export Permanent File
-          </button>
-          <button className="admin-btn-danger" onClick={handleReset}>Reset Defaults</button>
           <button className="admin-btn-primary" onClick={handleSave}>Save All Changes</button>
         </div>
       </header>
@@ -587,6 +572,29 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                       }}
                     />
                   </div>
+                </div>
+              </div>
+            </section>
+          )}
+
+          {activeTab === 'backend' && (
+            <section className="admin-tab-content">
+              <h2>📊 Google Sheets Backend Integration</h2>
+              <p className="admin-tab-subtitle">Connect your Google Sheet Web App URL so all changes update live worldwide for all visitors.</p>
+
+              <div className="admin-card">
+                <h3>Google Apps Script Web App URL</h3>
+                <div className="admin-field">
+                  <label>Web App Deployment URL</label>
+                  <input
+                    type="url"
+                    placeholder="https://script.google.com/macros/s/.../exec"
+                    value={sheetsUrl}
+                    onChange={(e) => setSheetsUrl(e.target.value)}
+                  />
+                  <small style={{ color: 'var(--muted)', marginTop: '8px', display: 'block', lineHeight: '1.4' }}>
+                    Paste your deployed Google Apps Script Web App URL here and click <b>Save All Changes</b>. Once saved, any edits you make in this Admin Panel will write directly to your Google Sheet and update your live portfolio worldwide!
+                  </small>
                 </div>
               </div>
             </section>

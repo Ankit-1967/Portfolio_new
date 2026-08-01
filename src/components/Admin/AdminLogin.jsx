@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './AdminLogin.css';
-import { GOOGLE_SHEETS_API_URL } from '../../services/googleSheets';
+import { getGoogleSheetsUrl } from '../../services/googleSheets';
 
 function AdminLogin({ targetEmail, onAuthenticated, onBackToPortfolio }) {
   const adminEmail = targetEmail || 'at667448@gmail.com';
@@ -41,9 +41,10 @@ function AdminLogin({ targetEmail, onAuthenticated, onBackToPortfolio }) {
     }
 
     // 2. Try sending via Google Sheets API (if configured)
-    if (GOOGLE_SHEETS_API_URL) {
+    const sheetsUrl = getGoogleSheetsUrl();
+    if (sheetsUrl) {
       try {
-        await fetch(GOOGLE_SHEETS_API_URL, {
+        await fetch(sheetsUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({
