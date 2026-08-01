@@ -3,7 +3,7 @@ import { useLocation, useNavigate, Link } from 'react-router-dom';
 import './Header.css';
 import Icon from '../Icon/Icon';
 
-function Header({ menuOpen, setMenuOpen, active, scrollTo, nav, theme, setTheme }) {
+function Header({ menuOpen, setMenuOpen, active, scrollTo, nav, pages, homeSections, theme, setTheme }) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -17,8 +17,17 @@ function Header({ menuOpen, setMenuOpen, active, scrollTo, nav, theme, setTheme 
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [menuOpen, setMenuOpen]);
 
-  const handleNavClick = (id) => {
+  const handleNavClick = (id, targetPath) => {
     setMenuOpen(false);
+
+    if (targetPath && targetPath.startsWith('/')) {
+      if (location.pathname === targetPath) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        navigate(targetPath);
+      }
+      return;
+    }
 
     if (id === 'projects') {
       navigate('/projects');
@@ -36,9 +45,14 @@ function Header({ menuOpen, setMenuOpen, active, scrollTo, nav, theme, setTheme 
         if (id === 'home') {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
-          document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+          const el = document.getElementById(id);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth' });
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
         }
-      }, 100);
+      }, 150);
     } else {
       scrollTo(id);
     }
@@ -46,6 +60,9 @@ function Header({ menuOpen, setMenuOpen, active, scrollTo, nav, theme, setTheme 
 
   const isProjectsPage = location.pathname === '/projects';
   const isServicesPage = location.pathname === '/services';
+
+  // Include base nav plus custom pages from pages prop if registered
+  const customPages = (pages || []).filter(p => p.path !== '/' && p.path !== '/projects' && p.path !== '/services' && p.path !== '/admin' && p.status === 'Active');
 
   return (
     <>
@@ -60,7 +77,7 @@ function Header({ menuOpen, setMenuOpen, active, scrollTo, nav, theme, setTheme 
           className="logo" 
           to="/" 
           onClick={() => { 
-            handleNavClick("home"); 
+            handleNavClick("home", "/"); 
           }} 
           aria-label="Home"
         >
@@ -88,10 +105,30 @@ function Header({ menuOpen, setMenuOpen, active, scrollTo, nav, theme, setTheme 
                 style={{ '--i': index }}
                 onClick={(e) => {
                   e.preventDefault();
-                  handleNavClick(id);
+                  if (id === 'projects') handleNavClick(id, '/projects');
+                  else if (id === 'services') handleNavClick(id, '/services');
+                  else handleNavClick(id);
                 }}
               >
                 {id === "home" ? "Home" : id[0].toUpperCase() + id.slice(1)}
+              </a>
+            );
+          })}
+
+          {customPages.map((cp, idx) => {
+            const isActive = location.pathname === cp.path;
+            return (
+              <a
+                key={cp.id || cp.path}
+                className={isActive ? "active" : ""}
+                href={cp.path}
+                style={{ '--i': nav.length + idx }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleNavClick(cp.id, cp.path);
+                }}
+              >
+                {cp.name}
               </a>
             );
           })}

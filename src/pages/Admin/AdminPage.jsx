@@ -215,6 +215,16 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
     setPagesList(prev => prev.filter(p => p.id !== id));
   };
 
+  const handleSidebarClick = (tabId) => {
+    setActiveTab(tabId);
+    if (selectedPage === 'all') {
+      const el = document.getElementById(`sec-${tabId}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  };
+
   const allNavTabs = [
     { id: 'hero', label: 'Hero & Headline', icon: '🚀', page: 'home' },
     { id: 'about', label: 'About Me', icon: '👤', page: 'home' },
@@ -235,6 +245,11 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
     if (selectedPage === 'pages') return tab.page === 'pages' || tab.id === 'inbox';
     return true;
   });
+
+  const isSectionVisible = (tabId) => {
+    if (selectedPage === 'all') return true;
+    return activeTab === tabId;
+  };
 
   return (
     <div className="admin-page">
@@ -299,7 +314,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
             <button
               key={tab.id}
               className={`admin-nav-item ${activeTab === tab.id ? 'active' : ''}`}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleSidebarClick(tab.id)}
             >
               <span className="admin-nav-icon">{tab.icon}</span>
               <span>{tab.label}</span>
@@ -310,7 +325,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
         {/* Content Area */}
         <main className="admin-main-content">
           {/* HERO TAB */}
-          {activeTab === 'hero' && (
+          {isSectionVisible('hero') && (
             <section id="sec-hero">
               <div className="admin-section-header">
                 <h2>Hero Section Settings (Home Page)</h2>
@@ -357,7 +372,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
           )}
 
           {/* ABOUT TAB */}
-          {activeTab === 'about' && (
+          {isSectionVisible('about') && (
             <section id="sec-about">
               <div className="admin-section-header">
                 <h2>About Me Section (Home Page)</h2>
@@ -381,7 +396,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
           )}
 
           {/* SKILLS TAB */}
-          {activeTab === 'skills' && (
+          {isSectionVisible('skills') && (
             <section id="sec-skills">
               <div className="admin-section-header">
                 <h2>Skills & AI Toolkit (Home Page)</h2>
@@ -410,7 +425,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
           )}
 
           {/* EXPERIENCE TAB */}
-          {activeTab === 'experience' && (
+          {isSectionVisible('experience') && (
             <section id="sec-experience">
               <div className="admin-section-header">
                 <h2>Experience & Career Timeline (Home Page)</h2>
@@ -447,7 +462,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
           )}
 
           {/* PROJECTS TAB */}
-          {activeTab === 'projects' && (
+          {isSectionVisible('projects') && (
             <section id="sec-projects">
               <div className="admin-section-header">
                 <h2>Projects Page & Category Filters (/projects)</h2>
@@ -512,7 +527,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
           )}
 
           {/* SERVICES TAB */}
-          {activeTab === 'services' && (
+          {isSectionVisible('services') && (
             <section id="sec-services">
               <div className="admin-section-header">
                 <h2>Services Page & Category Filters (/services)</h2>
@@ -577,7 +592,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
           )}
 
           {/* PAGE MANAGEMENT & SECTION SELECTOR LIST */}
-          {activeTab === 'pages' && (
+          {isSectionVisible('pages') && (
             <section id="sec-pages">
               <div className="admin-section-header">
                 <h2>Page Management & Section List Selector</h2>
@@ -715,7 +730,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
           )}
 
           {/* CONTACT TAB */}
-          {activeTab === 'contact' && (
+          {isSectionVisible('contact') && (
             <section id="sec-contact">
               <div className="admin-section-header">
                 <h2>Contact Section & Socials (Home Page)</h2>
@@ -745,7 +760,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
           )}
 
           {/* INBOX TAB - ENHANCED FULL MESSAGE DETAILS */}
-          {activeTab === 'inbox' && (
+          {isSectionVisible('inbox') && (
             <section id="sec-inbox" className="admin-tab-content">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                 <div>

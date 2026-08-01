@@ -217,7 +217,7 @@ function AppContent() {
         } else {
           document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
         }
-      }, 100);
+      }, 150);
       return;
     }
 
@@ -330,6 +330,8 @@ function AppContent() {
           active={active}
           scrollTo={scrollTo}
           nav={nav}
+          pages={portfolioData.pages}
+          homeSections={portfolioData.homeSections}
           theme={theme}
           setTheme={setTheme}
         />
