@@ -1,0 +1,17 @@
+{
+  "name": "Ankit Thakur — Official Portfolio",
+  "short_name": "Ankit",
+  "description": "Official portfolio of Ankit Thakur (Ankit) — Frontend, React & Shopify Developer.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#070b16",
+  "theme_color": "#070b16",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

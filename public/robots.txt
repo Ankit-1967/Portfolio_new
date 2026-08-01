@@ -1,0 +1,8 @@
+# Robots.txt for Ankit Thakur Portfolio (Ankit)
+User-agent: *
+Allow: /
+Disallow: /admin
+
+# Host & Sitemap
+Host: https://ankit-thakur.vercel.app
+Sitemap: https://ankit-thakur.vercel.app/sitemap.xml
