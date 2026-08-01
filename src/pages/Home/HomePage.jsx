@@ -8,6 +8,27 @@ import Experience from '../../components/Experience/Experience';
 import Services from '../../components/Services/Services';
 import Contact from '../../components/Contact/Contact';
 
+function DynamicCustomSection({ section }) {
+  return (
+    <section id={section.id} className="section custom-section-wrapper reveal">
+      <div className="section-heading">
+        <span className="section-number">✦</span>
+        <div>
+          <p className="eyebrow">{section.eyebrow || 'Custom Section'}</p>
+          <h2>{section.title}</h2>
+        </div>
+      </div>
+      {section.content && (
+        <div className="custom-section-body" style={{ marginTop: '1.5rem', background: 'var(--surface)', padding: '2rem', borderRadius: '16px', border: '1px solid var(--line)' }}>
+          <p style={{ fontSize: '1.05rem', lineHeight: '1.7', color: 'var(--muted)', whiteSpace: 'pre-wrap' }}>
+            {section.content}
+          </p>
+        </div>
+      )}
+    </section>
+  );
+}
+
 function HomePage({
   data,
   typed,
@@ -29,6 +50,8 @@ function HomePage({
     'services',
     'contact'
   ];
+
+  const customSections = data?.customSections || [];
 
   const showSection = (sec) => activeSections.includes(sec);
 
@@ -88,6 +111,14 @@ function HomePage({
           data={data?.services}
         />
       )}
+
+      {/* Render Custom Added Sections */}
+      {customSections.map(sec => {
+        if (showSection(sec.id)) {
+          return <DynamicCustomSection key={sec.id} section={sec} />;
+        }
+        return null;
+      })}
 
       {/* Contact Section */}
       {showSection('contact') && (

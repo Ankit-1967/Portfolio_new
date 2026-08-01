@@ -51,7 +51,13 @@ function ProjectCard({ project, index }) {
 function Projects({ data, filter, setFilter, isHomePage = false }) {
   const { number, label, title, introText, categories, items } = data || {};
   const availableCategories = categories || ["All", "React", "Shopify", "Web"];
-  const projectList = items || [];
+  const rawProjectList = items || [];
+  
+  // Filter for home page preview if isHomePage is true
+  const projectList = isHomePage
+    ? rawProjectList.filter(p => p.showOnHome !== false)
+    : rawProjectList;
+
   const filteredProjects = filter === "All" ? projectList : projectList.filter(p => p.category === filter);
 
   return (

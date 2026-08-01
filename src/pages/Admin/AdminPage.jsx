@@ -7,8 +7,8 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
   const [activeTab, setActiveTab] = useState('hero');
   const [statusMsg, setStatusMsg] = useState('');
 
-  // Available portfolio sections list
-  const availableSectionsList = [
+  // Default core sections list
+  const defaultSectionsList = [
     { id: 'hero', name: 'Hero & Headline', icon: '🚀' },
     { id: 'about', name: 'About Me', icon: '👤' },
     { id: 'skills', name: 'Skills & Toolkit', icon: '⚡' },
@@ -17,6 +17,21 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
     { id: 'experience', name: 'Experience Timeline', icon: '📜' },
     { id: 'services', name: 'Services Offered', icon: '🛠' },
     { id: 'contact', name: 'Contact & Socials', icon: '✉' }
+  ];
+
+  // Custom added sections
+  const [customSections, setCustomSections] = useState(() => data?.customSections || []);
+  const [newSection, setNewSection] = useState({ title: '', eyebrow: '', content: '', icon: '🧩' });
+
+  // Combine default sections + custom sections for the Active Sections Selector
+  const availableSectionsList = [
+    ...defaultSectionsList,
+    ...customSections.map(s => ({
+      id: s.id,
+      name: s.title,
+      icon: s.icon || '🧩',
+      isCustom: true
+    }))
   ];
 
   // Active home page sections
@@ -58,7 +73,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
 
   const handleSave = async () => {
     setStatusMsg('⏳ Saving all changes...');
-    const updatedDataWithPages = { ...formData, pages: pagesList, homeSections, navLinks };
+    const updatedDataWithPages = { ...formData, pages: pagesList, homeSections, navLinks, customSections };
     const res = await onSave(updatedDataWithPages);
     setStatusMsg('✓ Portfolio data saved successfully!');
     setTimeout(() => setStatusMsg(''), 4000);
@@ -89,6 +104,30 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
       }
       return p;
     }));
+  };
+
+  // Custom Sections Management
+  const handleAddCustomSection = (e) => {
+    e.preventDefault();
+    if (!newSection.title) return;
+    const secId = `sec_custom_${Date.now()}`;
+    const sectionObj = {
+      id: secId,
+      title: newSection.title,
+      eyebrow: newSection.eyebrow || 'Custom Section',
+      icon: newSection.icon || '🧩',
+      content: newSection.content || 'Section content paragraph...'
+    };
+    setCustomSections(prev => [...prev, sectionObj]);
+    setHomeSections(prev => [...prev, secId]);
+    setNewSection({ title: '', eyebrow: '', content: '', icon: '🧩' });
+    setStatusMsg(`✓ Custom section "${newSection.title}" created and added!`);
+    setTimeout(() => setStatusMsg(''), 4000);
+  };
+
+  const handleDeleteCustomSection = (id) => {
+    setCustomSections(prev => prev.filter(s => s.id !== id));
+    setHomeSections(prev => prev.filter(secId => secId !== id));
   };
 
   // Nav Links Management
@@ -158,6 +197,13 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
     setFormData(prev => ({ ...prev, projects: { ...prev.projects, items: updated } }));
   };
 
+  const toggleProjectShowOnHome = (index) => {
+    const updated = [...(formData.projects?.items || [])];
+    const curVal = updated[index].showOnHome !== false;
+    updated[index] = { ...updated[index], showOnHome: !curVal };
+    setFormData(prev => ({ ...prev, projects: { ...prev.projects, items: updated } }));
+  };
+
   const addProject = () => {
     const newProj = {
       id: `p_${Date.now()}`,
@@ -167,7 +213,8 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
       tech: ['React', 'JavaScript', 'CSS'],
       image: 'commerce',
       live: '#contact',
-      github: 'https://github.com/'
+      github: 'https://github.com/',
+      showOnHome: true
     };
     setFormData(prev => ({
       ...prev,
@@ -213,6 +260,13 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
     setFormData(prev => ({ ...prev, services: { ...prev.services, items: updated } }));
   };
 
+  const toggleServiceShowOnHome = (index) => {
+    const updated = [...(formData.services?.items || [])];
+    const curVal = updated[index].showOnHome !== false;
+    updated[index] = { ...updated[index], showOnHome: !curVal };
+    setFormData(prev => ({ ...prev, services: { ...prev.services, items: updated } }));
+  };
+
   const addService = () => {
     const count = (formData.services?.items || []).length + 1;
     const newServ = {
@@ -220,7 +274,8 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
       number: `0${count}`,
       category: 'Frontend',
       title: 'New Service Offering',
-      description: 'Detailed service description...'
+      description: 'Detailed service description...',
+      showOnHome: true
     };
     setFormData(prev => ({
       ...prev,
@@ -565,6 +620,30 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                 <p>Manage showcased projects, category filter tags, and live demo links.</p>
               </div>
 
+              {/* Projects Selection Manager Box */}
+              <div className="admin-card">
+                <h3 className="admin-card-title">💼 Home Page Projects Selector</h3>
+                <p style={{ color: 'var(--muted)', fontSize: '0.85rem', marginBottom: '16px' }}>
+                  Check or uncheck projects to select which ones appear on the Home Page preview:
+                </p>
+                <div className="section-checklist-grid">
+                  {(formData.projects?.items || []).map((proj, idx) => {
+                    const isChecked = proj.showOnHome !== false;
+                    return (
+                      <label key={proj.id || idx} className={`section-checkbox-card ${isChecked ? 'selected' : ''}`}>
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => toggleProjectShowOnHome(idx)}
+                        />
+                        <span className="sec-icon">💼</span>
+                        <span className="sec-name">{proj.title}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
               <div className="admin-card">
                 <h3 className="admin-card-title">Projects Page Header & Filter Categories</h3>
                 <div className="admin-grid-2">
@@ -595,13 +674,25 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                 </div>
               </div>
 
-              <h3>Portfolio Projects List</h3>
+              <h3>Portfolio Projects List (All projects show on /projects page)</h3>
               {(formData.projects?.items || []).map((proj, index) => (
                 <div key={proj.id || index} className="admin-card">
                   <div className="admin-card-title">
                     <span>Project #{index + 1}: {proj.title}</span>
                     <button className="admin-btn-danger" onClick={() => deleteProject(index)}>Delete Project</button>
                   </div>
+
+                  <div style={{ marginBottom: '16px', background: 'rgba(99, 102, 241, 0.1)', padding: '10px 14px', borderRadius: '10px' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', fontSize: '0.88rem', fontWeight: '600' }}>
+                      <input
+                        type="checkbox"
+                        checked={proj.showOnHome !== false}
+                        onChange={() => toggleProjectShowOnHome(index)}
+                      />
+                      Show this Project on Home Page Preview
+                    </label>
+                  </div>
+
                   <div className="admin-grid-2">
                     <div className="admin-field">
                       <label>Project Title</label>
@@ -628,6 +719,30 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
               <div className="admin-section-header">
                 <h2>Services Page & Category Filters (/services)</h2>
                 <p>Manage service offerings, categories, and service breakdown for the Services Page.</p>
+              </div>
+
+              {/* Services Selection Manager Box */}
+              <div className="admin-card">
+                <h3 className="admin-card-title">🛠 Home Page Services Selector</h3>
+                <p style={{ color: 'var(--muted)', fontSize: '0.85rem', marginBottom: '16px' }}>
+                  Check or uncheck services to select which ones appear on the Home Page preview:
+                </p>
+                <div className="section-checklist-grid">
+                  {(formData.services?.items || []).map((serv, idx) => {
+                    const isChecked = serv.showOnHome !== false;
+                    return (
+                      <label key={serv.id || idx} className={`section-checkbox-card ${isChecked ? 'selected' : ''}`}>
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => toggleServiceShowOnHome(idx)}
+                        />
+                        <span className="sec-icon">🛠</span>
+                        <span className="sec-name">{serv.title}</span>
+                      </label>
+                    );
+                  })}
+                </div>
               </div>
 
               <div className="admin-card">
@@ -660,13 +775,25 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                 </div>
               </div>
 
-              <h3>Service Offerings List</h3>
+              <h3>Service Offerings List (All services show on /services page)</h3>
               {(formData.services?.items || []).map((serv, index) => (
                 <div key={serv.id || index} className="admin-card">
                   <div className="admin-card-title">
                     <span>Service #{serv.number || index + 1}: {serv.title}</span>
                     <button className="admin-btn-danger" onClick={() => deleteService(index)}>Delete Service</button>
                   </div>
+
+                  <div style={{ marginBottom: '16px', background: 'rgba(99, 102, 241, 0.1)', padding: '10px 14px', borderRadius: '10px' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', fontSize: '0.88rem', fontWeight: '600' }}>
+                      <input
+                        type="checkbox"
+                        checked={serv.showOnHome !== false}
+                        onChange={() => toggleServiceShowOnHome(index)}
+                      />
+                      Show this Service on Home Page Preview
+                    </label>
+                  </div>
+
                   <div className="admin-grid-2">
                     <div className="admin-field">
                       <label>Service Title</label>
@@ -699,7 +826,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
               <div className="admin-card">
                 <h3 className="admin-card-title">🏠 Home Page Active Sections Selector</h3>
                 <p style={{ color: 'var(--muted)', fontSize: '0.85rem', marginBottom: '16px' }}>
-                  Check or uncheck sections to show or hide them on the main Home landing page:
+                  Check or uncheck sections (including custom sections) to show or hide them on the Home landing page:
                 </p>
                 <div className="section-checklist-grid">
                   {availableSectionsList.map(sec => {
@@ -717,6 +844,65 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                     );
                   })}
                 </div>
+              </div>
+
+              {/* Add Custom Section Form */}
+              <div className="admin-card">
+                <h3 className="admin-card-title">🧩 Add New Custom Section to Portfolio</h3>
+                <form onSubmit={handleAddCustomSection}>
+                  <div className="admin-grid-2">
+                    <div className="admin-field">
+                      <label>Section Title</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Testimonials, Certifications, Awards"
+                        value={newSection.title}
+                        onChange={(e) => setNewSection({ ...newSection, title: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div className="admin-field">
+                      <label>Section Eyebrow Tagline</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Recommendations, Achievements"
+                        value={newSection.eyebrow}
+                        onChange={(e) => setNewSection({ ...newSection, eyebrow: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <div className="admin-field">
+                    <label>Section Description / Content</label>
+                    <textarea
+                      rows={3}
+                      placeholder="Write your custom section content..."
+                      value={newSection.content}
+                      onChange={(e) => setNewSection({ ...newSection, content: e.target.value })}
+                    />
+                  </div>
+                  <button type="submit" className="admin-btn-primary">
+                    Create Custom Section
+                  </button>
+                </form>
+
+                {customSections.length > 0 && (
+                  <div style={{ marginTop: '20px' }}>
+                    <h4 style={{ fontSize: '0.95rem', marginBottom: '10px' }}>Custom Created Sections ({customSections.length})</h4>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      {customSections.map(sec => (
+                        <div key={sec.id} className="page-list-row" style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '12px 16px', borderRadius: '12px', border: '1px solid var(--line)' }}>
+                          <div>
+                            <strong>{sec.title}</strong>
+                            <span style={{ display: 'block', fontSize: '0.8rem', color: 'var(--muted)' }}>{sec.eyebrow}</span>
+                          </div>
+                          <button className="admin-btn-danger" onClick={() => handleDeleteCustomSection(sec.id)}>
+                            Delete Section
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Add New Page Form with Section Selection */}
