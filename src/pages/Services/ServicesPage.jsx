@@ -33,7 +33,7 @@ function ServicesPage({ data, contactData, submit, formStatus, submitting }) {
     'AI Workflow'
   ];
 
-  // Helper to infer category if item.category is missing or undefined
+  // Helper to infer category for filtering logic
   const getItemCategory = (item) => {
     if (item.category) return item.category;
     const titleStr = (item.title || '').toLowerCase();
@@ -151,13 +151,11 @@ function ServicesPage({ data, contactData, submit, formStatus, submitting }) {
         ) : (
           <div className="services-page-grid">
             {filteredServices.map((item, index) => {
-              const num = item.number || `0${index + 1}`;
-              const categoryTag = getItemCategory(item);
+              const num = (index + 1) < 10 ? `0${index + 1}` : `${index + 1}`;
               return (
                 <article className="service-card services-page-card" key={item.id || index}>
                   <div className="card-top-row">
                     <span className="service-num">{num}</span>
-                    <span className="category-badge">{categoryTag}</span>
                   </div>
                   <h3>{item.title}</h3>
                   <p>{item.description}</p>
