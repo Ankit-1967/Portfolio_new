@@ -12,7 +12,8 @@ export async function fetchPortfolioFromSheets() {
     const res = await fetch(GOOGLE_SHEETS_API_URL);
     if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
     const data = await res.json();
-    if (data && typeof data === "object" && Object.keys(data).length > 0) {
+    // Ensure valid portfolio data structure before returning
+    if (data && typeof data === "object" && data.hero && data.contact) {
       return data;
     }
   } catch (err) {

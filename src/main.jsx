@@ -30,7 +30,10 @@ function App() {
     const saved = localStorage.getItem("portfolio-data");
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.hero && parsed.contact) {
+          return { ...initialPortfolioData, ...parsed };
+        }
       } catch (e) {
         console.error("Failed to parse portfolio data from localStorage", e);
       }
@@ -42,9 +45,10 @@ function App() {
   useEffect(() => {
     async function syncRemoteData() {
       const remoteData = await fetchPortfolioFromSheets();
-      if (remoteData) {
-        setPortfolioData(remoteData);
-        localStorage.setItem("portfolio-data", JSON.stringify(remoteData));
+      if (remoteData && remoteData.hero && remoteData.contact) {
+        const merged = { ...initialPortfolioData, ...remoteData };
+        setPortfolioData(merged);
+        localStorage.setItem("portfolio-data", JSON.stringify(merged));
       }
     }
     syncRemoteData();
