@@ -4,5 +4,5 @@ Allow: /
 Disallow: /admin
 
 # Host & Sitemap
-Host: https://ankit-thakur.vercel.app
-Sitemap: https://ankit-thakur.vercel.app/sitemap.xml
+Host: https://ankit-thakur-portfolio.vercel.app
+Sitemap: https://ankit-thakur-portfolio.vercel.app/sitemap.xml
