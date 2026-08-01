@@ -624,6 +624,30 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                 <p>Manage showcased projects, category filter tags, and live demo links.</p>
               </div>
 
+              {/* Projects Batch Selection Card */}
+              <div className="admin-card">
+                <h3 className="admin-card-title">💼 Home Page Projects Selector</h3>
+                <p style={{ color: 'var(--muted)', fontSize: '0.85rem', marginBottom: '16px' }}>
+                  Check or uncheck projects to select which ones appear on the Home Page preview:
+                </p>
+                <div className="section-checklist-grid">
+                  {(formData.projects?.items || []).map((proj, idx) => {
+                    const isChecked = proj.showOnHome !== false;
+                    return (
+                      <label key={proj.id || idx} className={`section-checkbox-card ${isChecked ? 'selected' : ''}`}>
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => toggleProjectShowOnHome(idx)}
+                        />
+                        <span className="sec-icon">💼</span>
+                        <span className="sec-name">{proj.title}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
               <div className="admin-card">
                 <h3 className="admin-card-title">Projects Page Header & Filter Categories</h3>
                 <div className="admin-grid-2">
@@ -654,9 +678,6 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                 </div>
               </div>
 
-              <h3 style={{ margin: '20px 0 10px 0', fontSize: '1.1rem', color: 'var(--text)' }}>
-                Portfolio Projects List (All projects appear on /projects page)
-              </h3>
               {(formData.projects?.items || []).map((proj, index) => (
                 <div key={proj.id || index} className="admin-card">
                   <div className="admin-card-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
@@ -702,6 +723,30 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                 <p>Manage service offerings, categories, and service breakdown for the Services Page.</p>
               </div>
 
+              {/* Services Batch Selection Card */}
+              <div className="admin-card">
+                <h3 className="admin-card-title">🛠 Home Page Services Selector</h3>
+                <p style={{ color: 'var(--muted)', fontSize: '0.85rem', marginBottom: '16px' }}>
+                  Check or uncheck services to select which ones appear on the Home Page preview:
+                </p>
+                <div className="section-checklist-grid">
+                  {(formData.services?.items || []).map((serv, idx) => {
+                    const isChecked = serv.showOnHome !== false;
+                    return (
+                      <label key={serv.id || idx} className={`section-checkbox-card ${isChecked ? 'selected' : ''}`}>
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => toggleServiceShowOnHome(idx)}
+                        />
+                        <span className="sec-icon">🛠</span>
+                        <span className="sec-name">{serv.title}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
               <div className="admin-card">
                 <h3 className="admin-card-title">Services Page Header Settings</h3>
                 <div className="admin-grid-2">
@@ -732,9 +777,6 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                 </div>
               </div>
 
-              <h3 style={{ margin: '20px 0 10px 0', fontSize: '1.1rem', color: 'var(--text)' }}>
-                Service Offerings List (All services appear on /services page)
-              </h3>
               {(formData.services?.items || []).map((serv, index) => (
                 <div key={serv.id || index} className="admin-card">
                   <div className="admin-card-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
