@@ -110,23 +110,6 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
     setFormData(prev => ({ ...prev, skills: { ...prev.skills, items: updated } }));
   };
 
-  // AI Skills
-  const updateAiSkill = (index, field, val) => {
-    const updated = [...(formData.aiSkills?.items || [])];
-    updated[index] = { ...updated[index], [field]: val };
-    setFormData(prev => ({ ...prev, aiSkills: { ...prev.aiSkills, items: updated } }));
-  };
-
-  const addAiSkill = () => {
-    const updated = [...(formData.aiSkills?.items || []), { name: 'New AI Assistant', icon: '✦', text: 'AI feature text.' }];
-    setFormData(prev => ({ ...prev, aiSkills: { ...prev.aiSkills, items: updated } }));
-  };
-
-  const deleteAiSkill = (index) => {
-    const updated = formData.aiSkills.items.filter((_, i) => i !== index);
-    setFormData(prev => ({ ...prev, aiSkills: { ...prev.aiSkills, items: updated } }));
-  };
-
   // Projects
   const updateProject = (index, field, val) => {
     const updated = [...(formData.projects?.items || [])];
@@ -246,10 +229,10 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
 
   const visibleNavTabs = allNavTabs.filter(tab => {
     if (selectedPage === 'all') return true;
-    if (selectedPage === 'home') return tab.page === 'home' || tab.page === 'all';
-    if (selectedPage === 'projects') return tab.page === 'projects' || tab.page === 'all';
-    if (selectedPage === 'services') return tab.page === 'services' || tab.page === 'all';
-    if (selectedPage === 'pages') return tab.page === 'pages' || tab.page === 'all';
+    if (selectedPage === 'home') return tab.page === 'home' || tab.id === 'inbox' || tab.id === 'pages';
+    if (selectedPage === 'projects') return tab.page === 'projects' || tab.id === 'inbox' || tab.id === 'pages';
+    if (selectedPage === 'services') return tab.page === 'services' || tab.id === 'inbox' || tab.id === 'pages';
+    if (selectedPage === 'pages') return tab.page === 'pages' || tab.id === 'inbox';
     return true;
   });
 
@@ -276,7 +259,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
         <div className="page-selector-buttons">
           <button
             className={`page-select-btn ${selectedPage === 'all' ? 'active' : ''}`}
-            onClick={() => setSelectedPage('all')}
+            onClick={() => { setSelectedPage('all'); setActiveTab('hero'); }}
           >
             🌐 All Content
           </button>
@@ -309,8 +292,9 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
 
       {/* Main Admin Layout */}
       <div className="admin-layout">
-        {/* Sidebar */}
+        {/* Sidebar Navigation Menu */}
         <aside className="admin-sidebar">
+          <span className="sidebar-group-label">Navigation Menu:</span>
           {visibleNavTabs.map(tab => (
             <button
               key={tab.id}
@@ -327,7 +311,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
         <main className="admin-main-content">
           {/* HERO TAB */}
           {activeTab === 'hero' && (
-            <section>
+            <section id="sec-hero">
               <div className="admin-section-header">
                 <h2>Hero Section Settings (Home Page)</h2>
                 <p>Manage your main introduction, eyebrow status, headline words, and animated roles.</p>
@@ -374,7 +358,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
 
           {/* ABOUT TAB */}
           {activeTab === 'about' && (
-            <section>
+            <section id="sec-about">
               <div className="admin-section-header">
                 <h2>About Me Section (Home Page)</h2>
                 <p>Edit your bio overview, key message, and signature details.</p>
@@ -398,7 +382,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
 
           {/* SKILLS TAB */}
           {activeTab === 'skills' && (
-            <section>
+            <section id="sec-skills">
               <div className="admin-section-header">
                 <h2>Skills & AI Toolkit (Home Page)</h2>
                 <p>Manage your technical skills and proficiency percentages.</p>
@@ -427,7 +411,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
 
           {/* EXPERIENCE TAB */}
           {activeTab === 'experience' && (
-            <section>
+            <section id="sec-experience">
               <div className="admin-section-header">
                 <h2>Experience & Career Timeline (Home Page)</h2>
                 <p>Update work experience, education, and company history.</p>
@@ -464,7 +448,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
 
           {/* PROJECTS TAB */}
           {activeTab === 'projects' && (
-            <section>
+            <section id="sec-projects">
               <div className="admin-section-header">
                 <h2>Projects Page & Category Filters (/projects)</h2>
                 <p>Manage showcased projects, category filter tags, and live demo links.</p>
@@ -529,7 +513,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
 
           {/* SERVICES TAB */}
           {activeTab === 'services' && (
-            <section>
+            <section id="sec-services">
               <div className="admin-section-header">
                 <h2>Services Page & Category Filters (/services)</h2>
                 <p>Manage service offerings, categories, and service breakdown for the Services Page.</p>
@@ -594,7 +578,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
 
           {/* PAGE MANAGEMENT & SECTION SELECTOR LIST */}
           {activeTab === 'pages' && (
-            <section>
+            <section id="sec-pages">
               <div className="admin-section-header">
                 <h2>Page Management & Section List Selector</h2>
                 <p>Configure page routes and select which sections display on each page.</p>
@@ -732,7 +716,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
 
           {/* CONTACT TAB */}
           {activeTab === 'contact' && (
-            <section>
+            <section id="sec-contact">
               <div className="admin-section-header">
                 <h2>Contact Section & Socials (Home Page)</h2>
                 <p>Update contact section headlines, description, email address, and social links.</p>
@@ -760,9 +744,9 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
             </section>
           )}
 
-          {/* INBOX TAB */}
+          {/* INBOX TAB - ENHANCED FULL MESSAGE DETAILS */}
           {activeTab === 'inbox' && (
-            <section className="admin-tab-content">
+            <section id="sec-inbox" className="admin-tab-content">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
                 <div>
                   <h2>📬 Inbox Messages ({ (formData.inbox || []).length })</h2>
@@ -782,22 +766,46 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   {formData.inbox.map((msg, index) => (
-                    <div key={msg.id || index} className="admin-card">
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                        <strong>{msg.name}</strong>
-                        <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>{msg.date}</span>
+                    <div key={msg.id || index} className="admin-card inbox-message-card">
+                      <div className="inbox-card-header">
+                        <div className="inbox-sender-info">
+                          <span className="sender-avatar">👤</span>
+                          <div>
+                            <strong className="sender-name">{msg.name || 'Anonymous Visitor'}</strong>
+                            {msg.email && (
+                              <a href={`mailto:${msg.email}`} className="sender-email">
+                                ✉ {msg.email}
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                        <span className="inbox-date">📅 {msg.date || 'Recent'}</span>
                       </div>
-                      <p>{msg.message}</p>
-                      <button
-                        className="admin-btn-danger"
-                        style={{ marginTop: '10px' }}
-                        onClick={() => {
-                          const updated = formData.inbox.filter((_, i) => i !== index);
-                          setFormData(prev => ({ ...prev, inbox: updated }));
-                        }}
-                      >
-                        Delete Message
-                      </button>
+
+                      <div className="inbox-message-body">
+                        <p>{msg.message}</p>
+                      </div>
+
+                      <div className="inbox-card-actions">
+                        {msg.email && (
+                          <a
+                            href={`mailto:${msg.email}?subject=Re:%20Portfolio%20Inquiry`}
+                            className="admin-btn-secondary"
+                            style={{ textDecoration: 'none' }}
+                          >
+                            ✉ Reply via Email
+                          </a>
+                        )}
+                        <button
+                          className="admin-btn-danger"
+                          onClick={() => {
+                            const updated = formData.inbox.filter((_, i) => i !== index);
+                            setFormData(prev => ({ ...prev, inbox: updated }));
+                          }}
+                        >
+                          🗑 Delete Message
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
