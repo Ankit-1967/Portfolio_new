@@ -19,55 +19,85 @@ function HomePage({
   formStatus,
   submitting
 }) {
+  const activeSections = data?.homeSections || [
+    'hero',
+    'about',
+    'skills',
+    'ai',
+    'projects',
+    'experience',
+    'services',
+    'contact'
+  ];
+
+  const showSection = (sec) => activeSections.includes(sec);
+
   return (
     <main>
       {/* Hero Section */}
-      <Hero
-        data={data?.hero}
-        typed={typed}
-        cursorVisible={cursorVisible}
-        scrollTo={scrollTo}
-      />
+      {showSection('hero') && (
+        <Hero
+          data={data?.hero}
+          typed={typed}
+          cursorVisible={cursorVisible}
+          scrollTo={scrollTo}
+        />
+      )}
 
       {/* About Section */}
-      <About
-        data={data?.about}
-      />
+      {showSection('about') && (
+        <About
+          data={data?.about}
+        />
+      )}
 
       {/* Skills & Toolkit Section */}
-      <Skills
-        data={data?.skills}
-      />
+      {showSection('skills') && (
+        <Skills
+          data={data?.skills}
+        />
+      )}
 
-      <AiWorkflow
-        data={data?.aiSkills}
-      />
+      {/* AI Workflow Section */}
+      {showSection('ai') && (
+        <AiWorkflow
+          data={data?.aiSkills}
+        />
+      )}
 
       {/* Projects Preview Section */}
-      <Projects
-        data={data?.projects}
-        filter={filter}
-        setFilter={setFilter}
-        isHomePage={true}
-      />
+      {showSection('projects') && (
+        <Projects
+          data={data?.projects}
+          filter={filter}
+          setFilter={setFilter}
+          isHomePage={true}
+        />
+      )}
 
       {/* Experience Section */}
-      <Experience
-        data={data?.experience}
-      />
+      {showSection('experience') && (
+        <Experience
+          data={data?.experience}
+        />
+      )}
 
       {/* Services Preview Section */}
-      <Services
-        data={data?.services}
-      />
+      {showSection('services') && (
+        <Services
+          data={data?.services}
+        />
+      )}
 
       {/* Contact Section */}
-      <Contact
-        data={data?.contact}
-        submit={submit}
-        formStatus={formStatus}
-        submitting={submitting}
-      />
+      {showSection('contact') && (
+        <Contact
+          data={data?.contact}
+          submit={submit}
+          formStatus={formStatus}
+          submitting={submitting}
+        />
+      )}
     </main>
   );
 }

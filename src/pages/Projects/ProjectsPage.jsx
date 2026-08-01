@@ -4,6 +4,18 @@ import Icon from '../../components/Icon/Icon';
 import Contact from '../../components/Contact/Contact';
 import './ProjectsPage.css';
 
+function SectionHeading({ number, title, label }) {
+  return (
+    <div className="section-heading reveal">
+      <span className="section-number">{number}</span>
+      <div>
+        <p className="eyebrow">{label}</p>
+        <h2>{title}</h2>
+      </div>
+    </div>
+  );
+}
+
 function ProjectsPage({ data, contactData, submit, formStatus, submitting }) {
   const [activeFilter, setActiveFilter] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -29,32 +41,27 @@ function ProjectsPage({ data, contactData, submit, formStatus, submitting }) {
 
   return (
     <main className="projects-page-main">
-      {/* Projects Page Hero Banner */}
-      <section className="projects-page-hero section">
-        <div className="projects-page-hero-content">
-          <Link to="/" className="back-link">
-            ← Back to Home
-          </Link>
-          <div className="section-heading">
-            <span className="section-number">{number || "04"}</span>
-            <div>
-              <p className="eyebrow">{label || "Selected Work"}</p>
-              <h2>{title || "Projects & Case Studies"}</h2>
-            </div>
-          </div>
-          <p className="projects-page-lead">
-            {introText || "Explore my portfolio of web applications, Shopify stores, interactive React components, and AI development projects."}
-          </p>
-        </div>
+      <section className="section projects-section-wrapper">
+        <Link to="/" className="back-link">
+          ← Back to Home
+        </Link>
 
-        {/* Filter & Search Bar on Projects Page */}
-        <div className="projects-filter-container">
-          <div className="projects-filter-header">
-            <h3>Filter Projects by Category</h3>
+        {/* Header Heading */}
+        <SectionHeading
+          number={number || "04"}
+          title={title || "Selected work"}
+          label={label || "RECENT PROJECTS"}
+        />
+
+        {/* Toolbar with Paragraph & Category Filter Pills matching Screenshot 1 */}
+        <div className="project-toolbar reveal">
+          <p>{introText || "A selection of interfaces and web experiences I've built while working with modern front-end technologies."}</p>
+          
+          <div className="filters-and-search">
             <div className="search-box">
               <input
                 type="text"
-                placeholder="Search projects by name or tech..."
+                placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 aria-label="Search projects"
@@ -63,31 +70,29 @@ function ProjectsPage({ data, contactData, submit, formStatus, submitting }) {
                 <button className="clear-search" onClick={() => setSearchQuery('')}>✕</button>
               )}
             </div>
-          </div>
 
-          <div className="projects-filter-pills">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                className={`filter-pill ${activeFilter === cat ? 'active' : ''}`}
-                onClick={() => setActiveFilter(cat)}
-              >
-                {cat}
-              </button>
-            ))}
+            <div className="filters">
+              {categories.map(cat => (
+                <button
+                  key={cat}
+                  className={activeFilter === cat ? "selected" : ""}
+                  onClick={() => setActiveFilter(cat)}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
-      </section>
 
-      {/* Projects Grid Section */}
-      <section className="section projects-grid-section">
+        {/* Projects Grid */}
         {filteredProjects.length === 0 ? (
-          <div className="no-projects-found">
+          <div className="no-projects-found" style={{ marginTop: '2rem' }}>
             <p>No projects found matching <strong>"{activeFilter}"</strong> {searchQuery && `or "${searchQuery}"`}.</p>
             <button className="btn btn-secondary" onClick={() => { setActiveFilter('All'); setSearchQuery(''); }}>Reset Filters</button>
           </div>
         ) : (
-          <div className="projects-grid">
+          <div className="projects-grid" style={{ marginTop: '2rem' }}>
             {filteredProjects.map((project, i) => (
               <article className="project-card reveal" style={{ "--delay": `${i * 70}ms` }} key={project.id || i}>
                 <div className={`project-image ${project.image || 'commerce'}`}>

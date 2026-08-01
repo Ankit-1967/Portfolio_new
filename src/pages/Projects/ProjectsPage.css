@@ -2,10 +2,6 @@
   padding-top: 5rem;
 }
 
-.projects-page-hero {
-  margin-bottom: 2rem;
-}
-
 .back-link {
   display: inline-flex;
   align-items: center;
@@ -22,38 +18,11 @@
   opacity: 0.85;
 }
 
-.projects-page-lead {
-  max-width: 650px;
-  font-size: 1.15rem;
-  line-height: 1.7;
-  color: var(--text-muted, #94a3b8);
-  margin-top: 1rem;
-  margin-bottom: 2.5rem;
-}
-
-.projects-filter-container {
-  background: var(--card-bg, rgba(255, 255, 255, 0.03));
-  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
-  border-radius: 16px;
-  padding: 1.5rem;
-  margin-top: 2rem;
-  backdrop-filter: blur(10px);
-}
-
-.projects-filter-header {
+.filters-and-search {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
   gap: 1rem;
-  margin-bottom: 1.25rem;
-}
-
-.projects-filter-header h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--text-color, #f8fafc);
-  margin: 0;
+  flex-wrap: wrap;
 }
 
 .search-box {
@@ -66,12 +35,12 @@
   background: var(--input-bg, rgba(0, 0, 0, 0.2));
   border: 1px solid var(--border-color, rgba(255, 255, 255, 0.12));
   border-radius: 20px;
-  padding: 0.5rem 2rem 0.5rem 1rem;
+  padding: 0.4rem 1.8rem 0.4rem 0.9rem;
   color: var(--text-color, #fff);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   outline: none;
   transition: border-color 0.2s ease;
-  min-width: 250px;
+  min-width: 150px;
 }
 
 .search-box input:focus {
@@ -80,47 +49,12 @@
 
 .clear-search {
   position: absolute;
-  right: 10px;
+  right: 8px;
   background: none;
   border: none;
   color: var(--text-muted, #94a3b8);
   cursor: pointer;
-  font-size: 0.85rem;
-}
-
-.projects-filter-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.filter-pill {
-  background: var(--pill-bg, rgba(255, 255, 255, 0.05));
-  border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
-  color: var(--text-muted, #94a3b8);
-  padding: 0.5rem 1.2rem;
-  border-radius: 30px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.25s ease;
-}
-
-.filter-pill:hover {
-  background: rgba(99, 102, 241, 0.15);
-  color: var(--text-color, #fff);
-  border-color: rgba(99, 102, 241, 0.3);
-}
-
-.filter-pill.active {
-  background: var(--accent, #6366f1);
-  color: #ffffff;
-  border-color: var(--accent, #6366f1);
-  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
-}
-
-.projects-grid-section {
-  padding-top: 1rem;
+  font-size: 0.8rem;
 }
 
 .no-projects-found {

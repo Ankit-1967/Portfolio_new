@@ -6,19 +6,40 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
   const [selectedPage, setSelectedPage] = useState('all'); // 'all', 'home', 'projects', 'services', 'pages'
   const [activeTab, setActiveTab] = useState('hero');
   const [statusMsg, setStatusMsg] = useState('');
-  const [sheetsUrl, setSheetsUrl] = useState(() => localStorage.getItem("portfolio_sheets_url") || import.meta.env.VITE_GOOGLE_SHEETS_API_URL || "");
 
-  // State for registered site pages & custom page section items
-  const [pagesList, setPagesList] = useState(() => data?.pages || [
-    { id: 'home', name: 'Home Page', path: '/', status: 'Active', type: 'Main Landing' },
-    { id: 'projects', name: 'Projects Page', path: '/projects', status: 'Active', type: 'Filtered Projects' },
-    { id: 'services', name: 'Services Page', path: '/services', status: 'Active', type: 'Filtered Services' },
-    { id: 'admin', name: 'Admin Control Center', path: '/admin', status: 'Active', type: 'Management' }
+  // Available portfolio sections list
+  const availableSectionsList = [
+    { id: 'hero', name: 'Hero & Headline', icon: '🚀' },
+    { id: 'about', name: 'About Me', icon: '👤' },
+    { id: 'skills', name: 'Skills & Toolkit', icon: '⚡' },
+    { id: 'ai', name: 'AI Workflows', icon: '🤖' },
+    { id: 'projects', name: 'Selected Projects', icon: '💼' },
+    { id: 'experience', name: 'Experience Timeline', icon: '📜' },
+    { id: 'services', name: 'Services Offered', icon: '🛠' },
+    { id: 'contact', name: 'Contact & Socials', icon: '✉' }
+  ];
+
+  // Active home page sections
+  const [homeSections, setHomeSections] = useState(() => data?.homeSections || [
+    'hero',
+    'about',
+    'skills',
+    'ai',
+    'projects',
+    'experience',
+    'services',
+    'contact'
   ]);
 
-  const [newPage, setNewPage] = useState({ name: '', path: '', type: 'Custom Page', status: 'Active' });
-  const [customSections, setCustomSections] = useState(() => data?.customSections || []);
-  const [newSection, setNewSection] = useState({ title: '', eyebrow: '', targetPage: '/', content: '' });
+  // State for registered site pages
+  const [pagesList, setPagesList] = useState(() => data?.pages || [
+    { id: 'home', name: 'Home Page', path: '/', status: 'Active', type: 'Main Landing', sections: ['hero', 'about', 'skills', 'ai', 'projects', 'experience', 'services', 'contact'] },
+    { id: 'projects', name: 'Projects Page', path: '/projects', status: 'Active', type: 'Filtered Projects', sections: ['projects', 'contact'] },
+    { id: 'services', name: 'Services Page', path: '/services', status: 'Active', type: 'Filtered Services', sections: ['services', 'contact'] },
+    { id: 'admin', name: 'Admin Control Center', path: '/admin', status: 'Active', type: 'Management', sections: [] }
+  ]);
+
+  const [newPage, setNewPage] = useState({ name: '', path: '', type: 'Custom Page', status: 'Active', sections: ['hero', 'about', 'contact'] });
 
   useEffect(() => {
     setFormData(data);
@@ -26,25 +47,9 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
 
   const handleSave = async () => {
     setStatusMsg('⏳ Saving all changes...');
-    if (sheetsUrl && sheetsUrl.trim()) {
-      localStorage.setItem("portfolio_sheets_url", sheetsUrl.trim());
-    } else {
-      localStorage.removeItem("portfolio_sheets_url");
-    }
-    const updatedDataWithPages = { ...formData, pages: pagesList, customSections };
+    const updatedDataWithPages = { ...formData, pages: pagesList, homeSections };
     const res = await onSave(updatedDataWithPages);
-    if (sheetsUrl && sheetsUrl.trim()) {
-      setStatusMsg('✓ Portfolio data successfully updated live in Google Sheets!');
-    } else {
-      setStatusMsg('✓ Portfolio data saved locally!');
-    }
-    setTimeout(() => setStatusMsg(''), 5000);
-  };
-
-  const handleDisconnectSheets = () => {
-    setSheetsUrl('');
-    localStorage.removeItem("portfolio_sheets_url");
-    setStatusMsg('🔌 Google Sheet link disconnected successfully!');
+    setStatusMsg('✓ Portfolio data saved successfully!');
     setTimeout(() => setStatusMsg(''), 4000);
   };
 
@@ -54,6 +59,25 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
       setStatusMsg('🗑 All inbox messages cleared!');
       setTimeout(() => setStatusMsg(''), 4000);
     }
+  };
+
+  const toggleHomeSection = (secId) => {
+    if (homeSections.includes(secId)) {
+      setHomeSections(homeSections.filter(id => id !== secId));
+    } else {
+      setHomeSections([...homeSections, secId]);
+    }
+  };
+
+  const togglePageSection = (pageId, secId) => {
+    setPagesList(pagesList.map(p => {
+      if (p.id === pageId) {
+        const secs = p.sections || [];
+        const updatedSecs = secs.includes(secId) ? secs.filter(s => s !== secId) : [...secs, secId];
+        return { ...p, sections: updatedSecs };
+      }
+      return p;
+    }));
   };
 
   // Updaters
@@ -188,7 +212,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
     setFormData(prev => ({ ...prev, services: { ...prev.services, items: updated } }));
   };
 
-  // Pages & Custom Sections Management
+  // Pages Management
   const handleAddPage = (e) => {
     e.preventDefault();
     if (!newPage.name || !newPage.path) return;
@@ -197,32 +221,15 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
       name: newPage.name,
       path: newPage.path.startsWith('/') ? newPage.path : `/${newPage.path}`,
       status: 'Active',
-      type: newPage.type || 'Custom Page'
+      type: newPage.type || 'Custom Page',
+      sections: newPage.sections || ['hero', 'about', 'contact']
     };
     setPagesList(prev => [...prev, pageObj]);
-    setNewPage({ name: '', path: '', type: 'Custom Page', status: 'Active' });
+    setNewPage({ name: '', path: '', type: 'Custom Page', status: 'Active', sections: ['hero', 'about', 'contact'] });
   };
 
   const handleDeletePage = (id) => {
     setPagesList(prev => prev.filter(p => p.id !== id));
-  };
-
-  const handleAddCustomSection = (e) => {
-    e.preventDefault();
-    if (!newSection.title) return;
-    const sectionObj = {
-      id: `sec_${Date.now()}`,
-      title: newSection.title,
-      eyebrow: newSection.eyebrow || 'Section Eyebrow',
-      targetPage: newSection.targetPage || '/',
-      content: newSection.content || 'Section content paragraph...'
-    };
-    setCustomSections(prev => [...prev, sectionObj]);
-    setNewSection({ title: '', eyebrow: '', targetPage: '/', content: '' });
-  };
-
-  const handleDeleteCustomSection = (id) => {
-    setCustomSections(prev => prev.filter(s => s.id !== id));
   };
 
   const allNavTabs = [
@@ -232,10 +239,9 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
     { id: 'experience', label: 'Experience Timeline', icon: '📜', page: 'home' },
     { id: 'projects', label: 'Projects Page & Filters', icon: '💼', page: 'projects' },
     { id: 'services', label: 'Services Page & Filters', icon: '🛠', page: 'services' },
-    { id: 'pages', label: 'Add / Edit Pages & Sections', icon: '📄', page: 'pages' },
+    { id: 'pages', label: 'Add / Edit Pages & Section List', icon: '📄', page: 'pages' },
     { id: 'contact', label: 'Contact & Socials', icon: '✉', page: 'home' },
-    { id: 'inbox', label: 'Inbox Messages', icon: '📬', page: 'all' },
-    { id: 'backend', label: 'Google Sheets Backend', icon: '📊', page: 'all' }
+    { id: 'inbox', label: 'Inbox Messages', icon: '📬', page: 'all' }
   ];
 
   const visibleNavTabs = allNavTabs.filter(tab => {
@@ -296,7 +302,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
             className={`page-select-btn ${selectedPage === 'pages' ? 'active' : ''}`}
             onClick={() => { setSelectedPage('pages'); setActiveTab('pages'); }}
           >
-            ➕ Add / Edit Pages & Custom Sections
+            ➕ Add / Edit Pages & Section List
           </button>
         </div>
       </div>
@@ -586,17 +592,41 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
             </section>
           )}
 
-          {/* PAGE MANAGEMENT & ADD CUSTOM SECTION OPTION */}
+          {/* PAGE MANAGEMENT & SECTION SELECTOR LIST */}
           {activeTab === 'pages' && (
             <section>
               <div className="admin-section-header">
-                <h2>Page & Custom Section Management</h2>
-                <p>Configure pages, routes, and custom section options in your portfolio system.</p>
+                <h2>Page Management & Section List Selector</h2>
+                <p>Configure page routes and select which sections display on each page.</p>
               </div>
 
-              {/* Add New Page Form */}
+              {/* Home Page Sections Checklist Manager */}
               <div className="admin-card">
-                <h3 className="admin-card-title">➕ Add New Page Option</h3>
+                <h3 className="admin-card-title">🏠 Home Page Active Sections Selector</h3>
+                <p style={{ color: 'var(--muted)', fontSize: '0.85rem', marginBottom: '16px' }}>
+                  Check or uncheck sections to show or hide them on the main Home landing page:
+                </p>
+                <div className="section-checklist-grid">
+                  {availableSectionsList.map(sec => {
+                    const isChecked = homeSections.includes(sec.id);
+                    return (
+                      <label key={sec.id} className={`section-checkbox-card ${isChecked ? 'selected' : ''}`}>
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => toggleHomeSection(sec.id)}
+                        />
+                        <span className="sec-icon">{sec.icon}</span>
+                        <span className="sec-name">{sec.name}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Add New Page Form with Section Selection */}
+              <div className="admin-card">
+                <h3 className="admin-card-title">➕ Add New Page & Select Sections</h3>
                 <form onSubmit={handleAddPage}>
                   <div className="admin-grid-2">
                     <div className="admin-field">
@@ -620,144 +650,83 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                       />
                     </div>
                   </div>
-                  <div className="admin-grid-2">
-                    <div className="admin-field">
-                      <label>Page Type</label>
-                      <select
-                        value={newPage.type}
-                        onChange={(e) => setNewPage({ ...newPage, type: e.target.value })}
-                      >
-                        <option value="Filtered Services">Filtered Services</option>
-                        <option value="Filtered Projects">Filtered Projects</option>
-                        <option value="Main Landing">Main Landing</option>
-                        <option value="Custom Page">Custom Page</option>
-                      </select>
-                    </div>
-                    <div className="admin-field">
-                      <label>Status</label>
-                      <select
-                        value={newPage.status}
-                        onChange={(e) => setNewPage({ ...newPage, status: e.target.value })}
-                      >
-                        <option value="Active">Active</option>
-                        <option value="Draft">Draft</option>
-                      </select>
+
+                  <div className="admin-field">
+                    <label>Select Included Sections for New Page</label>
+                    <div className="section-checklist-grid">
+                      {availableSectionsList.map(sec => {
+                        const isChecked = (newPage.sections || []).includes(sec.id);
+                        return (
+                          <label key={sec.id} className={`section-checkbox-card ${isChecked ? 'selected' : ''}`}>
+                            <input
+                              type="checkbox"
+                              checked={isChecked}
+                              onChange={() => {
+                                const cur = newPage.sections || [];
+                                const updated = cur.includes(sec.id) ? cur.filter(s => s !== sec.id) : [...cur, sec.id];
+                                setNewPage({ ...newPage, sections: updated });
+                              }}
+                            />
+                            <span className="sec-icon">{sec.icon}</span>
+                            <span className="sec-name">{sec.name}</span>
+                          </label>
+                        );
+                      })}
                     </div>
                   </div>
+
                   <button type="submit" className="admin-btn-primary" style={{ marginTop: '10px' }}>
-                    Create Page Option
+                    Create Page with Selected Sections
                   </button>
                 </form>
               </div>
 
-              {/* Add Custom Section Form */}
-              <div className="admin-card">
-                <h3 className="admin-card-title">🧩 Add Custom Section Option</h3>
-                <form onSubmit={handleAddCustomSection}>
-                  <div className="admin-grid-2">
-                    <div className="admin-field">
-                      <label>Section Title</label>
-                      <input
-                        type="text"
-                        placeholder="e.g. Testimonials, Achievements"
-                        value={newSection.title}
-                        onChange={(e) => setNewSection({ ...newSection, title: e.target.value })}
-                        required
-                      />
-                    </div>
-                    <div className="admin-field">
-                      <label>Section Eyebrow</label>
-                      <input
-                        type="text"
-                        placeholder="e.g. Recommendations, Feedback"
-                        value={newSection.eyebrow}
-                        onChange={(e) => setNewSection({ ...newSection, eyebrow: e.target.value })}
-                      />
-                    </div>
-                  </div>
-                  <div className="admin-field">
-                    <label>Target Page Route</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. / or /services"
-                      value={newSection.targetPage}
-                      onChange={(e) => setNewSection({ ...newSection, targetPage: e.target.value })}
-                    />
-                  </div>
-                  <div className="admin-field">
-                    <label>Section Content Description</label>
-                    <textarea
-                      rows={3}
-                      placeholder="Describe the section content..."
-                      value={newSection.content}
-                      onChange={(e) => setNewSection({ ...newSection, content: e.target.value })}
-                    />
-                  </div>
-                  <button type="submit" className="admin-btn-primary">
-                    Create Custom Section
-                  </button>
-                </form>
-              </div>
-
-              {/* Registered Pages List */}
+              {/* Registered Pages List with Manage Sections */}
               <div className="admin-card">
                 <h3 className="admin-card-title">Registered Site Pages ({pagesList.length})</h3>
                 <div className="pages-list-table">
                   {pagesList.map((p, idx) => (
-                    <div key={p.id || idx} className="page-list-row">
-                      <div className="page-info">
-                        <strong>{p.name}</strong>
-                        <span className="page-path">{p.path}</span>
+                    <div key={p.id || idx} className="page-list-row-card">
+                      <div className="page-list-row">
+                        <div className="page-info">
+                          <strong>{p.name}</strong>
+                          <span className="page-path">{p.path}</span>
+                        </div>
+                        <div className="page-meta">
+                          <span className="page-badge">{p.type}</span>
+                          <span className={`status-badge ${p.status?.toLowerCase()}`}>{p.status}</span>
+                          {p.id !== 'home' && p.id !== 'projects' && p.id !== 'services' && p.id !== 'admin' && (
+                            <button className="admin-btn-danger" onClick={() => handleDeletePage(p.id)}>
+                              Delete Page
+                            </button>
+                          )}
+                        </div>
                       </div>
-                      <div className="page-meta">
-                        <span className="page-badge">{p.type}</span>
-                        <span className={`status-badge ${p.status?.toLowerCase()}`}>{p.status}</span>
-                        {p.id === 'services' && (
-                          <button
-                            className="admin-btn-secondary"
-                            onClick={() => { setSelectedPage('services'); setActiveTab('services'); }}
-                          >
-                            Edit Page Data →
-                          </button>
-                        )}
-                        {p.id === 'projects' && (
-                          <button
-                            className="admin-btn-secondary"
-                            onClick={() => { setSelectedPage('projects'); setActiveTab('projects'); }}
-                          >
-                            Edit Page Data →
-                          </button>
-                        )}
-                        {p.id !== 'home' && p.id !== 'projects' && p.id !== 'services' && p.id !== 'admin' && (
-                          <button className="admin-btn-danger" onClick={() => handleDeletePage(p.id)}>
-                            Delete Page
-                          </button>
-                        )}
+
+                      {/* Display Section List Toggles per page */}
+                      <div className="page-sections-toggle-area">
+                        <span className="toggle-area-label">Included Sections:</span>
+                        <div className="section-checklist-grid mini">
+                          {availableSectionsList.map(sec => {
+                            const isChecked = (p.sections || []).includes(sec.id);
+                            return (
+                              <label key={sec.id} className={`section-checkbox-card mini ${isChecked ? 'selected' : ''}`}>
+                                <input
+                                  type="checkbox"
+                                  checked={isChecked}
+                                  onChange={() => togglePageSection(p.id, sec.id)}
+                                />
+                                <span className="sec-icon">{sec.icon}</span>
+                                <span className="sec-name">{sec.name}</span>
+                              </label>
+                            );
+                          })}
+                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
-
-              {/* Custom Sections List */}
-              {customSections.length > 0 && (
-                <div className="admin-card">
-                  <h3 className="admin-card-title">Custom Created Sections ({customSections.length})</h3>
-                  <div className="pages-list-table">
-                    {customSections.map((sec, idx) => (
-                      <div key={sec.id || idx} className="page-list-row">
-                        <div className="page-info">
-                          <strong>{sec.title} ({sec.eyebrow})</strong>
-                          <span className="page-path">Assigned to: {sec.targetPage}</span>
-                        </div>
-                        <button className="admin-btn-danger" onClick={() => handleDeleteCustomSection(sec.id)}>
-                          Delete Section
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </section>
           )}
 
@@ -833,37 +802,6 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                   ))}
                 </div>
               )}
-            </section>
-          )}
-
-          {/* GOOGLE SHEETS TAB */}
-          {activeTab === 'backend' && (
-            <section className="admin-tab-content">
-              <h2>📊 Google Sheets Backend Integration</h2>
-              <p className="admin-tab-subtitle">Connect your Google Sheet Web App URL so all changes update live worldwide for all visitors.</p>
-              <div className="admin-card">
-                <div className="admin-field">
-                  <label>Web App Deployment URL</label>
-                  <input
-                    type="url"
-                    placeholder="https://script.google.com/macros/s/.../exec"
-                    value={sheetsUrl}
-                    onChange={(e) => setSheetsUrl(e.target.value)}
-                  />
-                  <small style={{ color: 'var(--muted)', marginTop: '8px', display: 'block', lineHeight: '1.4' }}>
-                    Note: If your Google Script is already connected, it is active automatically! You only need to update this field if you change your Web App deployment URL.
-                  </small>
-                </div>
-                {sheetsUrl && (
-                  <button
-                    className="admin-btn-danger"
-                    style={{ marginTop: '14px' }}
-                    onClick={handleDisconnectSheets}
-                  >
-                    🔌 Disconnect Google Sheet Link
-                  </button>
-                )}
-              </div>
             </section>
           )}
         </main>

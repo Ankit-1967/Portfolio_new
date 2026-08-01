@@ -57,32 +57,36 @@ function Projects({ data, filter, setFilter, isHomePage = false }) {
   return (
     <section id="projects" className="section projects-section-wrapper">
       <SectionHeading number={number || "04"} title={title || "Selected work"} label={label || "Recent projects"} />
+      
       <div className="project-toolbar reveal">
         <p>{introText || "A selection of interfaces and web experiences I've built while working with modern front-end technologies."}</p>
-        <div className="filters">
-          {availableCategories.map(f => (
-            <button
-              key={f}
-              className={filter === f ? "selected" : ""}
-              onClick={() => setFilter(f)}
-            >
-              {f}
-            </button>
-          ))}
-        </div>
+        
+        {isHomePage ? (
+          <div className="filters">
+            <Link to="/projects" className="services-explore-btn">
+              View All Projects <Icon name="arrow" />
+            </Link>
+          </div>
+        ) : (
+          <div className="filters">
+            {availableCategories.map(f => (
+              <button
+                key={f}
+                className={filter === f ? "selected" : ""}
+                onClick={() => setFilter(f)}
+              >
+                {f}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
+
       <div className="projects-grid">
         {filteredProjects.map((project, i) => (
           <ProjectCard project={project} index={i} key={project.id || project.title || i} />
         ))}
       </div>
-      {isHomePage && (
-        <div className="projects-home-footer reveal" style={{ marginTop: '2.5rem', textAlign: 'center' }}>
-          <Link to="/projects" className="services-explore-btn">
-            View All Projects & Filter Options <Icon name="arrow" />
-          </Link>
-        </div>
-      )}
     </section>
   );
 }
