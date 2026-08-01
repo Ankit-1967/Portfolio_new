@@ -32,35 +32,62 @@ function Header({ menuOpen, setMenuOpen, active, scrollTo, navLinks, pages, them
   const handleNavClick = (link) => {
     setMenuOpen(false);
 
-    const { id, target } = link;
+    let rawTarget = (link.target || link.id || '').trim();
+    if (!rawTarget) rawTarget = '/';
 
-    if (target && target.startsWith('/')) {
-      if (location.pathname === target) {
+    // 1. External Links (http://, https://, mailto:, tel:)
+    if (rawTarget.startsWith('http://') || rawTarget.startsWith('https://')) {
+      window.open(rawTarget, '_blank', 'noreferrer,noopener');
+      return;
+    }
+    if (rawTarget.startsWith('mailto:') || rawTarget.startsWith('tel:')) {
+      window.location.href = rawTarget;
+      return;
+    }
+
+    // 2. Direct Registered React Page Routes (/projects, /services, /admin)
+    const validRoutes = ['/projects', '/services', '/admin'];
+    const customPageRoutes = (pages || []).map(p => p.path);
+    const registeredRoutes = [...validRoutes, ...customPageRoutes];
+
+    if (registeredRoutes.includes(rawTarget)) {
+      if (location.pathname === rawTarget) {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        navigate(target);
+        navigate(rawTarget);
       }
       return;
     }
 
-    const sectionId = target ? target.replace('#', '') : id;
+    // 3. Section Anchor Targets (e.g. #about, /about, about, #skills, /skills, skills, #contact, contact)
+    let cleanSectionId = rawTarget.replace(/^[/#]+/, ''); // removes leading / or #
+    if (!cleanSectionId) cleanSectionId = 'home';
 
     if (location.pathname !== '/') {
       navigate('/');
       setTimeout(() => {
-        if (sectionId === 'home' || sectionId === '/') {
+        if (cleanSectionId === 'home' || cleanSectionId === '/') {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
-          const el = document.getElementById(sectionId);
+          const el = document.getElementById(cleanSectionId);
           if (el) {
             el.scrollIntoView({ behavior: 'smooth' });
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }
         }
-      }, 150);
+      }, 180);
     } else {
-      scrollTo(sectionId);
+      if (cleanSectionId === 'home' || cleanSectionId === '/') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        const el = document.getElementById(cleanSectionId);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          scrollTo(cleanSectionId);
+        }
+      }
     }
   };
 
@@ -89,8 +116,9 @@ function Header({ menuOpen, setMenuOpen, active, scrollTo, navLinks, pages, them
 
         <nav className={`nav ${menuOpen ? "open" : ""}`} aria-label="Primary navigation">
           {activeNavLinks.map((item, index) => {
-            const sectionId = item.target ? item.target.replace('#', '') : item.id;
-            let isActive = active === sectionId || active === item.id;
+            const rawTarget = item.target || item.id || '';
+            const cleanId = rawTarget.replace(/^[/#]+/, '');
+            let isActive = active === cleanId || active === item.id;
             if (isProjectsPage && (item.target === '/projects' || item.id === 'projects')) isActive = true;
             if (isServicesPage && (item.target === '/services' || item.id === 'services')) isActive = true;
             if (location.pathname === item.target) isActive = true;

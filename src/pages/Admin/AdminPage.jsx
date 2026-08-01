@@ -69,6 +69,10 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
 
   useEffect(() => {
     setFormData(data);
+    if (data?.navLinks && data.navLinks.length > 0) setNavLinks(data.navLinks);
+    if (data?.homeSections && data.homeSections.length > 0) setHomeSections(data.homeSections);
+    if (data?.pages && data.pages.length > 0) setPagesList(data.pages);
+    if (data?.customSections) setCustomSections(data.customSections);
   }, [data]);
 
   const handleSave = async () => {
@@ -620,30 +624,6 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                 <p>Manage showcased projects, category filter tags, and live demo links.</p>
               </div>
 
-              {/* Projects Selection Manager Box */}
-              <div className="admin-card">
-                <h3 className="admin-card-title">💼 Home Page Projects Selector</h3>
-                <p style={{ color: 'var(--muted)', fontSize: '0.85rem', marginBottom: '16px' }}>
-                  Check or uncheck projects to select which ones appear on the Home Page preview:
-                </p>
-                <div className="section-checklist-grid">
-                  {(formData.projects?.items || []).map((proj, idx) => {
-                    const isChecked = proj.showOnHome !== false;
-                    return (
-                      <label key={proj.id || idx} className={`section-checkbox-card ${isChecked ? 'selected' : ''}`}>
-                        <input
-                          type="checkbox"
-                          checked={isChecked}
-                          onChange={() => toggleProjectShowOnHome(idx)}
-                        />
-                        <span className="sec-icon">💼</span>
-                        <span className="sec-name">{proj.title}</span>
-                      </label>
-                    );
-                  })}
-                </div>
-              </div>
-
               <div className="admin-card">
                 <h3 className="admin-card-title">Projects Page Header & Filter Categories</h3>
                 <div className="admin-grid-2">
@@ -674,26 +654,27 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                 </div>
               </div>
 
-              <h3>Portfolio Projects List (All projects show on /projects page)</h3>
+              <h3 style={{ margin: '20px 0 10px 0', fontSize: '1.1rem', color: 'var(--text)' }}>
+                Portfolio Projects List (All projects appear on /projects page)
+              </h3>
               {(formData.projects?.items || []).map((proj, index) => (
                 <div key={proj.id || index} className="admin-card">
-                  <div className="admin-card-title">
+                  <div className="admin-card-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
                     <span>Project #{index + 1}: {proj.title}</span>
-                    <button className="admin-btn-danger" onClick={() => deleteProject(index)}>Delete Project</button>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.85rem', color: 'var(--accent)', fontWeight: '600' }}>
+                        <input
+                          type="checkbox"
+                          checked={proj.showOnHome !== false}
+                          onChange={() => toggleProjectShowOnHome(index)}
+                        />
+                        Show on Home Page Preview
+                      </label>
+                      <button className="admin-btn-danger" onClick={() => deleteProject(index)}>Delete Project</button>
+                    </div>
                   </div>
 
-                  <div style={{ marginBottom: '16px', background: 'rgba(99, 102, 241, 0.1)', padding: '10px 14px', borderRadius: '10px' }}>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', fontSize: '0.88rem', fontWeight: '600' }}>
-                      <input
-                        type="checkbox"
-                        checked={proj.showOnHome !== false}
-                        onChange={() => toggleProjectShowOnHome(index)}
-                      />
-                      Show this Project on Home Page Preview
-                    </label>
-                  </div>
-
-                  <div className="admin-grid-2">
+                  <div className="admin-grid-2" style={{ marginTop: '14px' }}>
                     <div className="admin-field">
                       <label>Project Title</label>
                       <input value={proj.title} onChange={(e) => updateProject(index, 'title', e.target.value)} />
@@ -719,30 +700,6 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
               <div className="admin-section-header">
                 <h2>Services Page & Category Filters (/services)</h2>
                 <p>Manage service offerings, categories, and service breakdown for the Services Page.</p>
-              </div>
-
-              {/* Services Selection Manager Box */}
-              <div className="admin-card">
-                <h3 className="admin-card-title">🛠 Home Page Services Selector</h3>
-                <p style={{ color: 'var(--muted)', fontSize: '0.85rem', marginBottom: '16px' }}>
-                  Check or uncheck services to select which ones appear on the Home Page preview:
-                </p>
-                <div className="section-checklist-grid">
-                  {(formData.services?.items || []).map((serv, idx) => {
-                    const isChecked = serv.showOnHome !== false;
-                    return (
-                      <label key={serv.id || idx} className={`section-checkbox-card ${isChecked ? 'selected' : ''}`}>
-                        <input
-                          type="checkbox"
-                          checked={isChecked}
-                          onChange={() => toggleServiceShowOnHome(idx)}
-                        />
-                        <span className="sec-icon">🛠</span>
-                        <span className="sec-name">{serv.title}</span>
-                      </label>
-                    );
-                  })}
-                </div>
               </div>
 
               <div className="admin-card">
@@ -775,26 +732,27 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                 </div>
               </div>
 
-              <h3>Service Offerings List (All services show on /services page)</h3>
+              <h3 style={{ margin: '20px 0 10px 0', fontSize: '1.1rem', color: 'var(--text)' }}>
+                Service Offerings List (All services appear on /services page)
+              </h3>
               {(formData.services?.items || []).map((serv, index) => (
                 <div key={serv.id || index} className="admin-card">
-                  <div className="admin-card-title">
+                  <div className="admin-card-title" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
                     <span>Service #{serv.number || index + 1}: {serv.title}</span>
-                    <button className="admin-btn-danger" onClick={() => deleteService(index)}>Delete Service</button>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.85rem', color: 'var(--accent)', fontWeight: '600' }}>
+                        <input
+                          type="checkbox"
+                          checked={serv.showOnHome !== false}
+                          onChange={() => toggleServiceShowOnHome(index)}
+                        />
+                        Show on Home Page Preview
+                      </label>
+                      <button className="admin-btn-danger" onClick={() => deleteService(index)}>Delete Service</button>
+                    </div>
                   </div>
 
-                  <div style={{ marginBottom: '16px', background: 'rgba(99, 102, 241, 0.1)', padding: '10px 14px', borderRadius: '10px' }}>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', fontSize: '0.88rem', fontWeight: '600' }}>
-                      <input
-                        type="checkbox"
-                        checked={serv.showOnHome !== false}
-                        onChange={() => toggleServiceShowOnHome(index)}
-                      />
-                      Show this Service on Home Page Preview
-                    </label>
-                  </div>
-
-                  <div className="admin-grid-2">
+                  <div className="admin-grid-2" style={{ marginTop: '14px' }}>
                     <div className="admin-field">
                       <label>Service Title</label>
                       <input value={serv.title} onChange={(e) => updateService(index, 'title', e.target.value)} />
