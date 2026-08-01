@@ -6,7 +6,7 @@ import './ProjectsPage.css';
 
 function SectionHeading({ number, title, label }) {
   return (
-    <div className="section-heading reveal">
+    <div className="section-heading reveal is-visible">
       <span className="section-number">{number}</span>
       <div>
         <p className="eyebrow">{label}</p>
@@ -31,12 +31,28 @@ function ProjectsPage({ data, contactData, submit, formStatus, submitting }) {
   const categories = initialCategories || ["All", "React", "Shopify", "Web"];
 
   const filteredProjects = projectList.filter(project => {
-    const projCat = project.category || 'Web';
-    const matchesFilter = activeFilter === 'All' || projCat.toLowerCase() === activeFilter.toLowerCase();
-    const matchesSearch = project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      project.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (project.tech && project.tech.some(t => t.toLowerCase().includes(searchQuery.toLowerCase())));
-    return matchesFilter && matchesSearch;
+    const q = searchQuery.trim().toLowerCase();
+    const cat = activeFilter.trim().toLowerCase();
+
+    // 1. Category Matching
+    const projCat = (project.category || '').toLowerCase();
+    const matchesCategory = activeFilter === 'All' || projCat.includes(cat) || cat.includes(projCat);
+
+    // 2. Search Query Matching (title, category, description, tech stack)
+    if (!q) return matchesCategory;
+
+    const titleStr = (project.title || '').toLowerCase();
+    const descStr = (project.description || '').toLowerCase();
+    const techList = (project.tech || []).map(t => String(t).toLowerCase());
+
+    const matchesSearch =
+      titleStr.includes(q) ||
+      descStr.includes(q) ||
+      projCat.includes(q) ||
+      techList.some(t => t.includes(q));
+
+    // When searching, match any project matching the search query
+    return matchesSearch;
   });
 
   return (
@@ -53,21 +69,22 @@ function ProjectsPage({ data, contactData, submit, formStatus, submitting }) {
           label={label || "RECENT PROJECTS"}
         />
 
-        {/* Toolbar with Paragraph & Category Filter Pills matching Screenshot 1 */}
-        <div className="project-toolbar reveal">
+        {/* Toolbar with Search Box & Category Filter Pills */}
+        <div className="project-toolbar reveal is-visible">
           <p>{introText || "A selection of interfaces and web experiences I've built while working with modern front-end technologies."}</p>
           
           <div className="filters-and-search">
             <div className="search-box">
+              <span className="search-icon">🔍</span>
               <input
                 type="text"
-                placeholder="Search..."
+                placeholder="Search projects or tech..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 aria-label="Search projects"
               />
               {searchQuery && (
-                <button className="clear-search" onClick={() => setSearchQuery('')}>✕</button>
+                <button className="clear-search" onClick={() => setSearchQuery('')} aria-label="Clear search">✕</button>
               )}
             </div>
 
@@ -75,8 +92,11 @@ function ProjectsPage({ data, contactData, submit, formStatus, submitting }) {
               {categories.map(cat => (
                 <button
                   key={cat}
-                  className={activeFilter === cat ? "selected" : ""}
-                  onClick={() => setActiveFilter(cat)}
+                  className={activeFilter === cat && !searchQuery ? "selected" : ""}
+                  onClick={() => {
+                    setActiveFilter(cat);
+                    setSearchQuery('');
+                  }}
                 >
                   {cat}
                 </button>
@@ -88,13 +108,27 @@ function ProjectsPage({ data, contactData, submit, formStatus, submitting }) {
         {/* Projects Grid */}
         {filteredProjects.length === 0 ? (
           <div className="no-projects-found" style={{ marginTop: '2rem' }}>
-            <p>No projects found matching <strong>"{activeFilter}"</strong> {searchQuery && `or "${searchQuery}"`}.</p>
-            <button className="btn btn-secondary" onClick={() => { setActiveFilter('All'); setSearchQuery(''); }}>Reset Filters</button>
+            <p style={{ fontSize: '1.1rem', marginBottom: '12px' }}>
+              No projects found matching <strong>"{searchQuery || activeFilter}"</strong>.
+            </p>
+            <button
+              className="btn btn-secondary"
+              onClick={() => {
+                setActiveFilter('All');
+                setSearchQuery('');
+              }}
+            >
+              Reset Search & Filters
+            </button>
           </div>
         ) : (
           <div className="projects-grid" style={{ marginTop: '2rem' }}>
             {filteredProjects.map((project, i) => (
-              <article className="project-card reveal" style={{ "--delay": `${i * 70}ms` }} key={project.id || i}>
+              <article
+                className="project-card reveal is-visible"
+                style={{ "--delay": `${i * 60}ms` }}
+                key={project.id || i}
+              >
                 <div className={`project-image ${project.image || 'commerce'}`}>
                   <div className="mock-window">
                     <span /><span /><span />
