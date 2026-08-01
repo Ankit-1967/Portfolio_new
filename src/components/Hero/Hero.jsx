@@ -22,7 +22,7 @@ function Hero({ data, typed, cursorVisible, scrollTo }) {
       <div className="hero-copy reveal is-visible">
         <p className="eyebrow"><span className="status-dot" /> {eyebrow || "Available for frontend projects"}</p>
         <h1>
-          <span className="visually-hidden">Ankit Thakur — Official Portfolio: </span>
+          <span className="visually-hidden">Ankit Thakur Portfolio — </span>
           {headingLine1 || "I build digital"}<br /><span className="gradient-text">{headingLine2 || "experiences"}</span> {headingLine3 || "that matter."}
         </h1>
         <p className="hero-role">Hi, I'm <strong>Ankit Thakur</strong> — <strong>{typed}<span className="caret">{cursorVisible ? "|" : ""}</span></strong></p>
