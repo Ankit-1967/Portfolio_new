@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import Icon from '../../components/Icon/Icon';
 import Contact from '../../components/Contact/Contact';
 import './ServicesPage.css';
@@ -73,9 +72,6 @@ function ServicesPage({ data, contactData, submit, formStatus, submitting }) {
       {/* Hero Banner */}
       <section className="services-page-hero section">
         <div className="services-page-hero-content">
-          <Link to="/" className="back-link">
-            ← Back to Home
-          </Link>
           <div className="section-heading">
             <span className="section-number">01</span>
             <div>

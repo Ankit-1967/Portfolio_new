@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import Icon from '../../components/Icon/Icon';
 import Contact from '../../components/Contact/Contact';
 import './ProjectsPage.css';
@@ -57,10 +56,6 @@ function ProjectsPage({ data, contactData, submit, formStatus, submitting }) {
   return (
     <main className="projects-page-main">
       <section className="section projects-section-wrapper">
-        <Link to="/" className="back-link">
-          ← Back to Home
-        </Link>
-
         {/* Header Heading */}
         <SectionHeading
           number="01"
