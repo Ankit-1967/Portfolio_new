@@ -262,7 +262,21 @@ function App() {
     setFormStatus("Sending your message...");
 
     try {
-      // Send to FormSubmit with captcha/OTP disabled
+      const newMessage = {
+        id: `msg_${Date.now()}`,
+        name: visitorName,
+        email: visitorEmail,
+        message: visitorMessage,
+        date: new Date().toLocaleString()
+      };
+
+      // Save message to Admin Inbox state & local storage
+      const updatedInbox = [newMessage, ...(portfolioData.inbox || [])];
+      const updatedData = { ...portfolioData, inbox: updatedInbox };
+      setPortfolioData(updatedData);
+      localStorage.setItem("portfolio-data", JSON.stringify(updatedData));
+
+      // Send to FormSubmit
       fetch(`https://formsubmit.co/ajax/${adminEmail}`, {
         method: "POST",
         headers: { 
@@ -274,19 +288,18 @@ function App() {
           email: visitorEmail,
           _replyto: visitorEmail,
           message: visitorMessage,
-          _subject: `New Portfolio Message from ${visitorName}`,
-          _captcha: "false",
+          _subject: `📩 Portfolio Inquiry from ${visitorName}`,
           _template: "table"
         })
       }).catch(e => console.log("FormSubmit background dispatch:", e));
 
-      // Also save message to Google Sheets if configured
+      // Save message to Google Sheets backend
       savePortfolioToSheets({
-        type: "contact_message",
+        action: "save_message",
         name: visitorName,
         email: visitorEmail,
         message: visitorMessage,
-        date: new Date().toISOString()
+        date: newMessage.date
       }).catch(e => console.log("Google Sheets message save:", e));
 
       setFormStatus("✓ Thank you for reaching out! Your message has been sent to Ankit. He will contact you shortly.");

@@ -167,6 +167,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
     { id: 'experience', label: 'Experience Timeline', icon: '📜' },
     { id: 'services', label: 'Services Offered', icon: '🛠' },
     { id: 'contact', label: 'Contact & Socials', icon: '✉' },
+    { id: 'inbox', label: 'Inbox Messages', icon: '📬' },
     { id: 'backend', label: 'Google Sheets Backend', icon: '📊' }
   ];
 
@@ -574,6 +575,51 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                   </div>
                 </div>
               </div>
+            </section>
+          )}
+
+          {activeTab === 'inbox' && (
+            <section className="admin-tab-content">
+              <h2>📬 Inbox Messages ({ (formData.inbox || []).length })</h2>
+              <p className="admin-tab-subtitle">Messages submitted by visitors through your live portfolio contact form.</p>
+
+              {(!formData.inbox || formData.inbox.length === 0) ? (
+                <div className="admin-card" style={{ textAlign: 'center', padding: '40px' }}>
+                  <p style={{ color: 'var(--muted)' }}>No messages received yet. When visitors fill out your contact form, their inquiries will appear here!</p>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  {formData.inbox.map((msg, index) => (
+                    <div key={msg.id || index} className="admin-card">
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                        <div>
+                          <strong style={{ fontSize: '1.05rem' }}>{msg.name}</strong>
+                          <span style={{ color: 'var(--accent)', marginLeft: '12px', fontSize: '0.85rem' }}>&lt;{msg.email}&gt;</span>
+                        </div>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>{msg.date}</span>
+                      </div>
+                      <p style={{ whiteSpace: 'pre-wrap', background: 'rgba(127,127,180,0.06)', padding: '14px', borderRadius: '10px', fontSize: '0.9rem' }}>
+                        {msg.message}
+                      </p>
+                      <div style={{ marginTop: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <a href={`mailto:${msg.email}`} className="admin-btn-secondary" style={{ textDecoration: 'none', fontSize: '0.8rem' }}>
+                          ✉ Reply to {msg.name}
+                        </a>
+                        <button
+                          className="admin-btn-danger"
+                          style={{ padding: '6px 12px', fontSize: '0.75rem' }}
+                          onClick={() => {
+                            const updated = formData.inbox.filter((_, i) => i !== index);
+                            setFormData(prev => ({ ...prev, inbox: updated }));
+                          }}
+                        >
+                          Delete Message
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </section>
           )}
 
