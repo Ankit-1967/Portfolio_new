@@ -10,14 +10,15 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
 
   // State for registered site pages & custom page section items
   const [pagesList, setPagesList] = useState(() => data?.pages || [
-    { id: 'home', name: 'Home Page (4 Main Sections)', path: '/', status: 'Active', type: 'Main Landing' },
+    { id: 'home', name: 'Home Page', path: '/', status: 'Active', type: 'Main Landing' },
     { id: 'projects', name: 'Projects Page', path: '/projects', status: 'Active', type: 'Filtered Projects' },
     { id: 'services', name: 'Services Page', path: '/services', status: 'Active', type: 'Filtered Services' },
     { id: 'admin', name: 'Admin Control Center', path: '/admin', status: 'Active', type: 'Management' }
   ]);
 
-  const [selectedEditPageId, setSelectedEditPageId] = useState('services');
   const [newPage, setNewPage] = useState({ name: '', path: '', type: 'Custom Page', status: 'Active' });
+  const [customSections, setCustomSections] = useState(() => data?.customSections || []);
+  const [newSection, setNewSection] = useState({ title: '', eyebrow: '', targetPage: '/', content: '' });
 
   useEffect(() => {
     setFormData(data);
@@ -25,12 +26,12 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
 
   const handleSave = async () => {
     setStatusMsg('⏳ Saving all changes...');
-    if (sheetsUrl) {
+    if (sheetsUrl && sheetsUrl.trim()) {
       localStorage.setItem("portfolio_sheets_url", sheetsUrl.trim());
     } else {
       localStorage.removeItem("portfolio_sheets_url");
     }
-    const updatedDataWithPages = { ...formData, pages: pagesList };
+    const updatedDataWithPages = { ...formData, pages: pagesList, customSections };
     const res = await onSave(updatedDataWithPages);
     if (sheetsUrl && sheetsUrl.trim()) {
       setStatusMsg('✓ Portfolio data successfully updated live in Google Sheets!');
@@ -38,6 +39,21 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
       setStatusMsg('✓ Portfolio data saved locally!');
     }
     setTimeout(() => setStatusMsg(''), 5000);
+  };
+
+  const handleDisconnectSheets = () => {
+    setSheetsUrl('');
+    localStorage.removeItem("portfolio_sheets_url");
+    setStatusMsg('🔌 Google Sheet link disconnected successfully!');
+    setTimeout(() => setStatusMsg(''), 4000);
+  };
+
+  const handleClearAllInbox = () => {
+    if (window.confirm("Are you sure you want to clear all inbox messages?")) {
+      setFormData(prev => ({ ...prev, inbox: [] }));
+      setStatusMsg('🗑 All inbox messages cleared!');
+      setTimeout(() => setStatusMsg(''), 4000);
+    }
   };
 
   // Updaters
@@ -172,7 +188,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
     setFormData(prev => ({ ...prev, services: { ...prev.services, items: updated } }));
   };
 
-  // Pages Management
+  // Pages & Custom Sections Management
   const handleAddPage = (e) => {
     e.preventDefault();
     if (!newPage.name || !newPage.path) return;
@@ -191,10 +207,29 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
     setPagesList(prev => prev.filter(p => p.id !== id));
   };
 
+  const handleAddCustomSection = (e) => {
+    e.preventDefault();
+    if (!newSection.title) return;
+    const sectionObj = {
+      id: `sec_${Date.now()}`,
+      title: newSection.title,
+      eyebrow: newSection.eyebrow || 'Section Eyebrow',
+      targetPage: newSection.targetPage || '/',
+      content: newSection.content || 'Section content paragraph...'
+    };
+    setCustomSections(prev => [...prev, sectionObj]);
+    setNewSection({ title: '', eyebrow: '', targetPage: '/', content: '' });
+  };
+
+  const handleDeleteCustomSection = (id) => {
+    setCustomSections(prev => prev.filter(s => s.id !== id));
+  };
+
   const allNavTabs = [
     { id: 'hero', label: 'Hero & Headline', icon: '🚀', page: 'home' },
     { id: 'about', label: 'About Me', icon: '👤', page: 'home' },
     { id: 'skills', label: 'Skills & AI Toolkit', icon: '⚡', page: 'home' },
+    { id: 'experience', label: 'Experience Timeline', icon: '📜', page: 'home' },
     { id: 'projects', label: 'Projects Page & Filters', icon: '💼', page: 'projects' },
     { id: 'services', label: 'Services Page & Filters', icon: '🛠', page: 'services' },
     { id: 'pages', label: 'Add / Edit Pages & Sections', icon: '📄', page: 'pages' },
@@ -229,7 +264,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
         </div>
       </header>
 
-      {/* PAGE SELECTOR & ADD/EDIT PAGE BAR */}
+      {/* PAGE SELECTOR BAR */}
       <div className="admin-page-selector-bar">
         <span className="page-selector-label">📍 Select Page to Edit:</span>
         <div className="page-selector-buttons">
@@ -243,7 +278,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
             className={`page-select-btn ${selectedPage === 'home' ? 'active' : ''}`}
             onClick={() => { setSelectedPage('home'); setActiveTab('hero'); }}
           >
-            🏠 Home Page (4 Sections)
+            🏠 Home Page Sections
           </button>
           <button
             className={`page-select-btn ${selectedPage === 'projects' ? 'active' : ''}`}
@@ -288,7 +323,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
           {activeTab === 'hero' && (
             <section>
               <div className="admin-section-header">
-                <h2>Hero Section Settings (Home Page Tab 1)</h2>
+                <h2>Hero Section Settings (Home Page)</h2>
                 <p>Manage your main introduction, eyebrow status, headline words, and animated roles.</p>
               </div>
 
@@ -335,7 +370,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
           {activeTab === 'about' && (
             <section>
               <div className="admin-section-header">
-                <h2>About Me Section (Home Page Tab 2)</h2>
+                <h2>About Me Section (Home Page)</h2>
                 <p>Edit your bio overview, key message, and signature details.</p>
               </div>
               <div className="admin-card">
@@ -359,7 +394,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
           {activeTab === 'skills' && (
             <section>
               <div className="admin-section-header">
-                <h2>Skills & AI Toolkit (Home Page Tab 3)</h2>
+                <h2>Skills & AI Toolkit (Home Page)</h2>
                 <p>Manage your technical skills and proficiency percentages.</p>
               </div>
               {(formData.skills?.items || []).map((skill, index) => (
@@ -381,6 +416,43 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                 </div>
               ))}
               <button className="admin-btn-secondary" style={{ width: '100%' }} onClick={addSkill}>+ Add New Skill</button>
+            </section>
+          )}
+
+          {/* EXPERIENCE TAB */}
+          {activeTab === 'experience' && (
+            <section>
+              <div className="admin-section-header">
+                <h2>Experience & Career Timeline (Home Page)</h2>
+                <p>Update work experience, education, and company history.</p>
+              </div>
+              {(formData.experience?.items || []).map((exp, index) => (
+                <div key={exp.id || index} className="admin-card">
+                  <div className="admin-card-title">
+                    <span>Role #{index + 1}: {exp.title} at {exp.company}</span>
+                    <button className="admin-btn-danger" onClick={() => deleteExperience(index)}>Delete Entry</button>
+                  </div>
+                  <div className="admin-grid-2">
+                    <div className="admin-field">
+                      <label>Year / Duration</label>
+                      <input value={exp.year} onChange={(e) => updateExperience(index, 'year', e.target.value)} />
+                    </div>
+                    <div className="admin-field">
+                      <label>Company / Organization</label>
+                      <input value={exp.company} onChange={(e) => updateExperience(index, 'company', e.target.value)} />
+                    </div>
+                  </div>
+                  <div className="admin-field">
+                    <label>Role Title</label>
+                    <input value={exp.title} onChange={(e) => updateExperience(index, 'title', e.target.value)} />
+                  </div>
+                  <div className="admin-field">
+                    <label>Description</label>
+                    <textarea rows={2} value={exp.text} onChange={(e) => updateExperience(index, 'text', e.target.value)} />
+                  </div>
+                </div>
+              ))}
+              <button className="admin-btn-secondary" style={{ width: '100%' }} onClick={addExperience}>+ Add Timeline Entry</button>
             </section>
           )}
 
@@ -514,12 +586,12 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
             </section>
           )}
 
-          {/* PAGE MANAGEMENT / ADD EDIT PAGE OPTION */}
+          {/* PAGE MANAGEMENT & ADD CUSTOM SECTION OPTION */}
           {activeTab === 'pages' && (
             <section>
               <div className="admin-section-header">
-                <h2>Page Management & Add / Edit Page Options</h2>
-                <p>Configure pages, routes, and custom section content in your portfolio system.</p>
+                <h2>Page & Custom Section Management</h2>
+                <p>Configure pages, routes, and custom section options in your portfolio system.</p>
               </div>
 
               {/* Add New Page Form */}
@@ -578,6 +650,55 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                 </form>
               </div>
 
+              {/* Add Custom Section Form */}
+              <div className="admin-card">
+                <h3 className="admin-card-title">🧩 Add Custom Section Option</h3>
+                <form onSubmit={handleAddCustomSection}>
+                  <div className="admin-grid-2">
+                    <div className="admin-field">
+                      <label>Section Title</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Testimonials, Achievements"
+                        value={newSection.title}
+                        onChange={(e) => setNewSection({ ...newSection, title: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div className="admin-field">
+                      <label>Section Eyebrow</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Recommendations, Feedback"
+                        value={newSection.eyebrow}
+                        onChange={(e) => setNewSection({ ...newSection, eyebrow: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                  <div className="admin-field">
+                    <label>Target Page Route</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. / or /services"
+                      value={newSection.targetPage}
+                      onChange={(e) => setNewSection({ ...newSection, targetPage: e.target.value })}
+                    />
+                  </div>
+                  <div className="admin-field">
+                    <label>Section Content Description</label>
+                    <textarea
+                      rows={3}
+                      placeholder="Describe the section content..."
+                      value={newSection.content}
+                      onChange={(e) => setNewSection({ ...newSection, content: e.target.value })}
+                    />
+                  </div>
+                  <button type="submit" className="admin-btn-primary">
+                    Create Custom Section
+                  </button>
+                </form>
+              </div>
+
               {/* Registered Pages List */}
               <div className="admin-card">
                 <h3 className="admin-card-title">Registered Site Pages ({pagesList.length})</h3>
@@ -617,6 +738,26 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                   ))}
                 </div>
               </div>
+
+              {/* Custom Sections List */}
+              {customSections.length > 0 && (
+                <div className="admin-card">
+                  <h3 className="admin-card-title">Custom Created Sections ({customSections.length})</h3>
+                  <div className="pages-list-table">
+                    {customSections.map((sec, idx) => (
+                      <div key={sec.id || idx} className="page-list-row">
+                        <div className="page-info">
+                          <strong>{sec.title} ({sec.eyebrow})</strong>
+                          <span className="page-path">Assigned to: {sec.targetPage}</span>
+                        </div>
+                        <button className="admin-btn-danger" onClick={() => handleDeleteCustomSection(sec.id)}>
+                          Delete Section
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </section>
           )}
 
@@ -624,7 +765,7 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
           {activeTab === 'contact' && (
             <section>
               <div className="admin-section-header">
-                <h2>Contact Section & Socials (Home Page Tab 4)</h2>
+                <h2>Contact Section & Socials (Home Page)</h2>
                 <p>Update contact section headlines, description, email address, and social links.</p>
               </div>
               <div className="admin-card">
@@ -653,8 +794,18 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
           {/* INBOX TAB */}
           {activeTab === 'inbox' && (
             <section className="admin-tab-content">
-              <h2>📬 Inbox Messages ({ (formData.inbox || []).length })</h2>
-              <p className="admin-tab-subtitle">Messages submitted by visitors through your live portfolio contact form.</p>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                <div>
+                  <h2>📬 Inbox Messages ({ (formData.inbox || []).length })</h2>
+                  <p className="admin-tab-subtitle">Messages submitted by visitors through your live portfolio contact form.</p>
+                </div>
+                {(formData.inbox || []).length > 0 && (
+                  <button className="admin-btn-danger" onClick={handleClearAllInbox}>
+                    🗑 Clear All Messages
+                  </button>
+                )}
+              </div>
+
               {(!formData.inbox || formData.inbox.length === 0) ? (
                 <div className="admin-card" style={{ textAlign: 'center', padding: '40px' }}>
                   <p style={{ color: 'var(--muted)' }}>No messages received yet.</p>
@@ -663,11 +814,21 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   {formData.inbox.map((msg, index) => (
                     <div key={msg.id || index} className="admin-card">
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
                         <strong>{msg.name}</strong>
                         <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>{msg.date}</span>
                       </div>
                       <p>{msg.message}</p>
+                      <button
+                        className="admin-btn-danger"
+                        style={{ marginTop: '10px' }}
+                        onClick={() => {
+                          const updated = formData.inbox.filter((_, i) => i !== index);
+                          setFormData(prev => ({ ...prev, inbox: updated }));
+                        }}
+                      >
+                        Delete Message
+                      </button>
                     </div>
                   ))}
                 </div>
@@ -693,6 +854,15 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                     Note: If your Google Script is already connected, it is active automatically! You only need to update this field if you change your Web App deployment URL.
                   </small>
                 </div>
+                {sheetsUrl && (
+                  <button
+                    className="admin-btn-danger"
+                    style={{ marginTop: '14px' }}
+                    onClick={handleDisconnectSheets}
+                  >
+                    🔌 Disconnect Google Sheet Link
+                  </button>
+                )}
               </div>
             </section>
           )}

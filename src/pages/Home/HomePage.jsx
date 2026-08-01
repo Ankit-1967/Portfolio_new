@@ -4,6 +4,7 @@ import About from '../../components/About/About';
 import Skills from '../../components/Skills/Skills';
 import AiWorkflow from '../../components/AiWorkflow/AiWorkflow';
 import Projects from '../../components/Projects/Projects';
+import Experience from '../../components/Experience/Experience';
 import Services from '../../components/Services/Services';
 import Contact from '../../components/Contact/Contact';
 
@@ -20,7 +21,7 @@ function HomePage({
 }) {
   return (
     <main>
-      {/* Tab 1: Hero Intro */}
+      {/* Hero Section */}
       <Hero
         data={data?.hero}
         typed={typed}
@@ -28,12 +29,12 @@ function HomePage({
         scrollTo={scrollTo}
       />
 
-      {/* Tab 2: About Overview */}
+      {/* About Section */}
       <About
         data={data?.about}
       />
 
-      {/* Tab 3: Skills & AI Workflow */}
+      {/* Skills & Toolkit Section */}
       <Skills
         data={data?.skills}
       />
@@ -42,7 +43,7 @@ function HomePage({
         data={data?.aiSkills}
       />
 
-      {/* Featured Projects Preview with Link to /projects */}
+      {/* Projects Preview Section */}
       <Projects
         data={data?.projects}
         filter={filter}
@@ -50,12 +51,17 @@ function HomePage({
         isHomePage={true}
       />
 
-      {/* Featured Services Preview */}
+      {/* Experience Section */}
+      <Experience
+        data={data?.experience}
+      />
+
+      {/* Services Preview Section */}
       <Services
         data={data?.services}
       />
 
-      {/* Tab 4: Contact & Inquiry Form */}
+      {/* Contact Section */}
       <Contact
         data={data?.contact}
         submit={submit}
