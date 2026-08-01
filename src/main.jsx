@@ -21,8 +21,9 @@ import Footer from "./components/Footer/Footer";
 import AdminPage from "./components/Admin/AdminPage";
 import AdminLogin from "./components/Admin/AdminLogin";
 
-// Data Source
+// Data Source & Remote Backend Service
 import { initialPortfolioData } from "./data/portfolioData";
+import { fetchPortfolioFromSheets, savePortfolioToSheets } from "./services/googleSheets";
 
 function App() {
   const [portfolioData, setPortfolioData] = useState(() => {
@@ -36,6 +37,18 @@ function App() {
     }
     return initialPortfolioData;
   });
+
+  // Sync with Google Sheets backend on load if API URL is configured
+  useEffect(() => {
+    async function syncRemoteData() {
+      const remoteData = await fetchPortfolioFromSheets();
+      if (remoteData) {
+        setPortfolioData(remoteData);
+        localStorage.setItem("portfolio-data", JSON.stringify(remoteData));
+      }
+    }
+    syncRemoteData();
+  }, []);
 
   const [currentView, setCurrentView] = useState(() => {
     const isPathAdmin = window.location.pathname.endsWith("/admin");
@@ -277,14 +290,16 @@ function App() {
     }
   };
 
-  const handleSavePortfolioData = (newData) => {
+  const handleSavePortfolioData = async (newData) => {
     setPortfolioData(newData);
     localStorage.setItem("portfolio-data", JSON.stringify(newData));
+    await savePortfolioToSheets(newData);
   };
 
-  const handleResetPortfolioData = () => {
+  const handleResetPortfolioData = async () => {
     setPortfolioData(initialPortfolioData);
     localStorage.removeItem("portfolio-data");
+    await savePortfolioToSheets(initialPortfolioData);
   };
 
   const handleExitAdmin = () => {
