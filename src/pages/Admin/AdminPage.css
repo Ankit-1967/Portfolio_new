@@ -565,16 +565,8 @@
     grid-template-columns: 1fr;
   }
 
-  .admin-field {
+  .admin-grid-2>.admin-field {
     margin-bottom: 0;
   }
 
-  .admin-field:has(+ .admin-grid-2) {
-    margin-bottom: 20px;
-  }
-
-  .admin-field+.admin-field,
-  .admin-grid-2+.admin-field {
-    margin-top: 20px;
-  }
 }
