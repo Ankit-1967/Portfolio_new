@@ -568,4 +568,12 @@
   .admin-field {
     margin-bottom: 0;
   }
+
+  .admin-field:has(+ .admin-grid-2) {
+    margin-bottom: 20px;
+  }
+
+  .admin-grid-2+.admin-field {
+    margin-top: 20px;
+  }
 }
