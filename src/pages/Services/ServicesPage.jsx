@@ -90,6 +90,7 @@ function ServicesPage({ data, contactData, submit, formStatus, submitting }) {
             <h3>Filter Services by Category</h3>
             <div className="search-box">
               <input
+                id="services-search-input"
                 type="text"
                 placeholder="Search..."
                 value={searchQuery}

@@ -164,6 +164,7 @@
   top: 73px;
   height: calc(100vh - 73px);
   overflow-y: auto;
+  scrollbar-width: thin;
 }
 
 .sidebar-group-label {
@@ -527,14 +528,44 @@
   .admin-layout {
     flex-direction: column;
   }
+
   .admin-sidebar {
     width: 100%;
     height: auto;
     position: static;
     flex-direction: row;
     overflow-x: auto;
+    align-items: center;
+    scrollbar-width: none;
   }
+
   .admin-main-content {
     padding: 24px;
+  }
+
+  #sec-experience .admin-card-title span {
+    width: 100%;
+    max-width: calc(100% - 150px);
+  }
+
+  .admin-nav-item span {
+    display: inline-block;
+    width: fit-content;
+    text-wrap-mode: nowrap;
+  }
+
+  .sidebar-group-label {
+    text-wrap-mode: nowrap;
+    margin: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .admin-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-field {
+    margin-bottom: 0;
   }
 }

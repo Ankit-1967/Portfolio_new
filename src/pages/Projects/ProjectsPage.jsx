@@ -70,6 +70,7 @@ function ProjectsPage({ data, contactData, submit, formStatus, submitting }) {
           <div className="filters-and-search">
             <div className="search-box">
               <input
+                id="projects-search-input"
                 type="text"
                 placeholder="Search..."
                 value={searchQuery}

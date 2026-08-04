@@ -439,15 +439,19 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                     <div key={link.id || index} className="admin-card" style={{ background: 'rgba(255, 255, 255, 0.02)', margin: 0, padding: '16px' }}>
                       <div className="admin-grid-2">
                         <div className="admin-field">
-                          <label>Menu Item Display Label</label>
+                          <label htmlFor={`nav-link-label-${link.id || index}`}>Menu Item Display Label</label>
                           <input
+                            id={`nav-link-label-${link.id || index}`}
+                            type="text"
                             value={link.label}
                             onChange={(e) => updateNavLink(index, 'label', e.target.value)}
                           />
                         </div>
                         <div className="admin-field">
-                          <label>Target URL / Route / Anchor (e.g. /, /projects, /services, #about, #contact)</label>
+                          <label htmlFor={`nav-link-target-${link.id || index}`}>Target URL / Route / Anchor (e.g. /, /projects, /services, #about, #contact)</label>
                           <input
+                            id={`nav-link-target-${link.id || index}`}
+                            type="text"
                             value={link.target}
                             onChange={(e) => updateNavLink(index, 'target', e.target.value)}
                           />
@@ -455,8 +459,9 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                       </div>
 
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
-                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.85rem' }}>
+                        <label htmlFor={`nav-link-vis-${link.id || index}`} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.85rem' }}>
                           <input
+                            id={`nav-link-vis-${link.id || index}`}
                             type="checkbox"
                             checked={link.visible !== false}
                             onChange={() => toggleNavLinkVisibility(index)}
@@ -492,37 +497,39 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
               <div className="admin-card">
                 <h3 className="admin-card-title">Main Headlines</h3>
                 <div className="admin-field">
-                  <label>Status / Availability Eyebrow</label>
-                  <input value={formData.hero?.eyebrow || ''} onChange={(e) => updateHeroField('eyebrow', e.target.value)} />
+                  <label htmlFor="hero-eyebrow">Status / Availability Eyebrow</label>
+                  <input id="hero-eyebrow" type="text" value={formData.hero?.eyebrow || ''} onChange={(e) => updateHeroField('eyebrow', e.target.value)} />
                 </div>
                 <div className="admin-grid-2">
                   <div className="admin-field">
-                    <label>Headline Start (Line 1)</label>
-                    <input value={formData.hero?.headingLine1 || ''} onChange={(e) => updateHeroField('headingLine1', e.target.value)} />
+                    <label htmlFor="hero-line1">Headline Start (Line 1)</label>
+                    <input id="hero-line1" type="text" value={formData.hero?.headingLine1 || ''} onChange={(e) => updateHeroField('headingLine1', e.target.value)} />
                   </div>
                   <div className="admin-field">
-                    <label>Gradient Highlight Word (Line 2)</label>
-                    <input value={formData.hero?.headingLine2 || ''} onChange={(e) => updateHeroField('headingLine2', e.target.value)} />
+                    <label htmlFor="hero-line2">Gradient Highlight Word (Line 2)</label>
+                    <input id="hero-line2" type="text" value={formData.hero?.headingLine2 || ''} onChange={(e) => updateHeroField('headingLine2', e.target.value)} />
                   </div>
                 </div>
                 <div className="admin-field">
-                  <label>Headline End (Line 3)</label>
-                  <input value={formData.hero?.headingLine3 || ''} onChange={(e) => updateHeroField('headingLine3', e.target.value)} />
+                  <label htmlFor="hero-line3">Headline End (Line 3)</label>
+                  <input id="hero-line3" type="text" value={formData.hero?.headingLine3 || ''} onChange={(e) => updateHeroField('headingLine3', e.target.value)} />
                 </div>
               </div>
 
               <div className="admin-card">
                 <h3 className="admin-card-title">Roles & Intro Text</h3>
                 <div className="admin-field">
-                  <label>Typed Animated Roles (Comma separated)</label>
+                  <label htmlFor="hero-roles">Typed Animated Roles (Comma separated)</label>
                   <input
+                    id="hero-roles"
+                    type="text"
                     value={(formData.hero?.roles || []).join(', ')}
                     onChange={(e) => updateHeroField('roles', e.target.value.split(',').map(s => s.trim()))}
                   />
                 </div>
                 <div className="admin-field">
-                  <label>Hero Description Paragraph</label>
-                  <textarea rows={3} value={formData.hero?.description || ''} onChange={(e) => updateHeroField('description', e.target.value)} />
+                  <label htmlFor="hero-description">Hero Description Paragraph</label>
+                  <textarea id="hero-description" rows={3} value={formData.hero?.description || ''} onChange={(e) => updateHeroField('description', e.target.value)} />
                 </div>
               </div>
             </section>
@@ -537,16 +544,16 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
               </div>
               <div className="admin-card">
                 <div className="admin-field">
-                  <label>Section Eyebrow</label>
-                  <input value={formData.about?.label || ''} onChange={(e) => updateAboutField('label', e.target.value)} />
+                  <label htmlFor="about-label">Section Eyebrow</label>
+                  <input id="about-label" type="text" value={formData.about?.label || ''} onChange={(e) => updateAboutField('label', e.target.value)} />
                 </div>
                 <div className="admin-field">
-                  <label>Title</label>
-                  <input value={formData.about?.title || ''} onChange={(e) => updateAboutField('title', e.target.value)} />
+                  <label htmlFor="about-title">Title</label>
+                  <input id="about-title" type="text" value={formData.about?.title || ''} onChange={(e) => updateAboutField('title', e.target.value)} />
                 </div>
                 <div className="admin-field">
-                  <label>Lead Statement</label>
-                  <input value={formData.about?.leadText || ''} onChange={(e) => updateAboutField('leadText', e.target.value)} />
+                  <label htmlFor="about-lead">Lead Statement</label>
+                  <input id="about-lead" type="text" value={formData.about?.leadText || ''} onChange={(e) => updateAboutField('leadText', e.target.value)} />
                 </div>
               </div>
             </section>
@@ -567,12 +574,12 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                   </div>
                   <div className="admin-grid-2">
                     <div className="admin-field">
-                      <label>Skill Name</label>
-                      <input value={skill.name} onChange={(e) => updateSkill(index, 'name', e.target.value)} />
+                      <label htmlFor={`skill-name-${index}`}>Skill Name</label>
+                      <input id={`skill-name-${index}`} type="text" value={skill.name} onChange={(e) => updateSkill(index, 'name', e.target.value)} />
                     </div>
                     <div className="admin-field">
-                      <label>Proficiency Percentage (%)</label>
-                      <input type="number" min="1" max="100" value={skill.percentage} onChange={(e) => updateSkill(index, 'percentage', e.target.value)} />
+                      <label htmlFor={`skill-pct-${index}`}>Proficiency Percentage (%)</label>
+                      <input id={`skill-pct-${index}`} type="number" min="1" max="100" value={skill.percentage} onChange={(e) => updateSkill(index, 'percentage', e.target.value)} />
                     </div>
                   </div>
                 </div>
@@ -596,21 +603,21 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                   </div>
                   <div className="admin-grid-2">
                     <div className="admin-field">
-                      <label>Year / Duration</label>
-                      <input value={exp.year} onChange={(e) => updateExperience(index, 'year', e.target.value)} />
+                      <label htmlFor={`exp-year-${exp.id || index}`}>Year / Duration</label>
+                      <input id={`exp-year-${exp.id || index}`} type="text" value={exp.year} onChange={(e) => updateExperience(index, 'year', e.target.value)} />
                     </div>
                     <div className="admin-field">
-                      <label>Company / Organization</label>
-                      <input value={exp.company} onChange={(e) => updateExperience(index, 'company', e.target.value)} />
+                      <label htmlFor={`exp-company-${exp.id || index}`}>Company / Organization</label>
+                      <input id={`exp-company-${exp.id || index}`} type="text" value={exp.company} onChange={(e) => updateExperience(index, 'company', e.target.value)} />
                     </div>
                   </div>
                   <div className="admin-field">
-                    <label>Role Title</label>
-                    <input value={exp.title} onChange={(e) => updateExperience(index, 'title', e.target.value)} />
+                    <label htmlFor={`exp-title-${exp.id || index}`}>Role Title</label>
+                    <input id={`exp-title-${exp.id || index}`} type="text" value={exp.title} onChange={(e) => updateExperience(index, 'title', e.target.value)} />
                   </div>
                   <div className="admin-field">
-                    <label>Description</label>
-                    <textarea rows={2} value={exp.text} onChange={(e) => updateExperience(index, 'text', e.target.value)} />
+                    <label htmlFor={`exp-desc-${exp.id || index}`}>Description</label>
+                    <textarea id={`exp-desc-${exp.id || index}`} rows={2} value={exp.text} onChange={(e) => updateExperience(index, 'text', e.target.value)} />
                   </div>
                 </div>
               ))}
@@ -631,23 +638,29 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                 <h3 className="admin-card-title">Projects Page Header & Filter Categories</h3>
                 <div className="admin-grid-2">
                   <div className="admin-field">
-                    <label>Section Eyebrow</label>
+                    <label htmlFor="proj-header-label">Section Eyebrow</label>
                     <input
+                      id="proj-header-label"
+                      type="text"
                       value={formData.projects?.label || ''}
                       onChange={(e) => setFormData(prev => ({ ...prev, projects: { ...prev.projects, label: e.target.value } }))}
                     />
                   </div>
                   <div className="admin-field">
-                    <label>Page Title</label>
+                    <label htmlFor="proj-header-title">Page Title</label>
                     <input
+                      id="proj-header-title"
+                      type="text"
                       value={formData.projects?.title || ''}
                       onChange={(e) => setFormData(prev => ({ ...prev, projects: { ...prev.projects, title: e.target.value } }))}
                     />
                   </div>
                 </div>
                 <div className="admin-field">
-                  <label>Filter Categories (Comma Separated)</label>
+                  <label htmlFor="proj-header-cats">Filter Categories (Comma Separated)</label>
                   <input
+                    id="proj-header-cats"
+                    type="text"
                     value={(formData.projects?.categories || ['All', 'React', 'Shopify', 'Web']).join(', ')}
                     onChange={(e) => {
                       const cats = e.target.value.split(',').map(s => s.trim()).filter(Boolean);
@@ -667,8 +680,9 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                   {(formData.projects?.items || []).map((proj, idx) => {
                     const isChecked = proj.showOnHome !== false;
                     return (
-                      <label key={proj.id || idx} className={`section-checkbox-card ${isChecked ? 'selected' : ''}`}>
+                      <label htmlFor={`proj-check-${proj.id || idx}`} key={proj.id || idx} className={`section-checkbox-card ${isChecked ? 'selected' : ''}`}>
                         <input
+                          id={`proj-check-${proj.id || idx}`}
                           type="checkbox"
                           checked={isChecked}
                           onChange={() => toggleProjectShowOnHome(idx)}
@@ -693,17 +707,17 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
 
                       <div className="admin-grid-2" style={{ marginTop: '14px' }}>
                         <div className="admin-field">
-                          <label>Project Title</label>
-                          <input value={proj.title} onChange={(e) => updateProject(index, 'title', e.target.value)} />
+                          <label htmlFor={`proj-title-${proj.id || index}`}>Project Title</label>
+                          <input id={`proj-title-${proj.id || index}`} type="text" value={proj.title} onChange={(e) => updateProject(index, 'title', e.target.value)} />
                         </div>
                         <div className="admin-field">
-                          <label>Category (e.g. React, Shopify, Web)</label>
-                          <input value={proj.category} onChange={(e) => updateProject(index, 'category', e.target.value)} />
+                          <label htmlFor={`proj-cat-${proj.id || index}`}>Category (e.g. React, Shopify, Web)</label>
+                          <input id={`proj-cat-${proj.id || index}`} type="text" value={proj.category} onChange={(e) => updateProject(index, 'category', e.target.value)} />
                         </div>
                       </div>
                       <div className="admin-field">
-                        <label>Description</label>
-                        <textarea rows={2} value={proj.description} onChange={(e) => updateProject(index, 'description', e.target.value)} />
+                        <label htmlFor={`proj-desc-${proj.id || index}`}>Description</label>
+                        <textarea id={`proj-desc-${proj.id || index}`} rows={2} value={proj.description} onChange={(e) => updateProject(index, 'description', e.target.value)} />
                       </div>
                     </div>
                   ))}
@@ -726,23 +740,29 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                 <h3 className="admin-card-title">Services Page Header Settings</h3>
                 <div className="admin-grid-2">
                   <div className="admin-field">
-                    <label>Section Eyebrow</label>
+                    <label htmlFor="serv-header-label">Section Eyebrow</label>
                     <input
+                      id="serv-header-label"
+                      type="text"
                       value={formData.services?.label || ''}
                       onChange={(e) => setFormData(prev => ({ ...prev, services: { ...prev.services, label: e.target.value } }))}
                     />
                   </div>
                   <div className="admin-field">
-                    <label>Page Heading Title</label>
+                    <label htmlFor="serv-header-title">Page Heading Title</label>
                     <input
+                      id="serv-header-title"
+                      type="text"
                       value={formData.services?.title || ''}
                       onChange={(e) => setFormData(prev => ({ ...prev, services: { ...prev.services, title: e.target.value } }))}
                     />
                   </div>
                 </div>
                 <div className="admin-field">
-                  <label>Filter Categories (Comma Separated for Services Page Filter Pills)</label>
+                  <label htmlFor="serv-header-cats">Filter Categories (Comma Separated for Services Page Filter Pills)</label>
                   <input
+                    id="serv-header-cats"
+                    type="text"
                     value={(formData.services?.categories || ['All', 'Frontend', 'Shopify', 'React', 'UI Engineering', 'Performance', 'AI Workflow']).join(', ')}
                     onChange={(e) => {
                       const cats = e.target.value.split(',').map(s => s.trim()).filter(Boolean);
@@ -762,8 +782,9 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
                   {(formData.services?.items || []).map((serv, idx) => {
                     const isChecked = serv.showOnHome !== false;
                     return (
-                      <label key={serv.id || idx} className={`section-checkbox-card ${isChecked ? 'selected' : ''}`}>
+                      <label htmlFor={`serv-check-${serv.id || idx}`} key={serv.id || idx} className={`section-checkbox-card ${isChecked ? 'selected' : ''}`}>
                         <input
+                          id={`serv-check-${serv.id || idx}`}
                           type="checkbox"
                           checked={isChecked}
                           onChange={() => toggleServiceShowOnHome(idx)}
@@ -788,17 +809,17 @@ function AdminPage({ data, onSave, onReset, onBackToPortfolio }) {
 
                       <div className="admin-grid-2" style={{ marginTop: '14px' }}>
                         <div className="admin-field">
-                          <label>Service Title</label>
-                          <input value={serv.title} onChange={(e) => updateService(index, 'title', e.target.value)} />
+                          <label htmlFor={`serv-title-${serv.id || index}`}>Service Title</label>
+                          <input id={`serv-title-${serv.id || index}`} type="text" value={serv.title} onChange={(e) => updateService(index, 'title', e.target.value)} />
                         </div>
                         <div className="admin-field">
-                          <label>Category Tag (for Filter)</label>
-                          <input value={serv.category || 'Frontend'} onChange={(e) => updateService(index, 'category', e.target.value)} />
+                          <label htmlFor={`serv-cat-${serv.id || index}`}>Category Tag (for Filter)</label>
+                          <input id={`serv-cat-${serv.id || index}`} type="text" value={serv.category || 'Frontend'} onChange={(e) => updateService(index, 'category', e.target.value)} />
                         </div>
                       </div>
                       <div className="admin-field">
-                        <label>Service Description</label>
-                        <textarea rows={2} value={serv.description} onChange={(e) => updateService(index, 'description', e.target.value)} />
+                        <label htmlFor={`serv-desc-${serv.id || index}`}>Service Description</label>
+                        <textarea id={`serv-desc-${serv.id || index}`} rows={2} value={serv.description} onChange={(e) => updateService(index, 'description', e.target.value)} />
                       </div>
                     </div>
                   ))}

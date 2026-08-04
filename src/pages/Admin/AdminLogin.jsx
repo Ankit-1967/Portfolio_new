@@ -107,8 +107,9 @@ function AdminLogin({ targetEmail, onAuthenticated, onBackToPortfolio }) {
 
         <form className="admin-login-form" onSubmit={handleVerify}>
           <div className="admin-login-field">
-            <label>Enter 6-Digit OTP Code</label>
+            <label htmlFor="admin-otp-input">Enter 6-Digit OTP Code</label>
             <input
+              id="admin-otp-input"
               type="text"
               maxLength="6"
               placeholder="••••••"

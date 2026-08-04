@@ -19,9 +19,18 @@ function Contact({ data, submit, formStatus, submitting }) {
           </div>
         </div>
         <form className="contact-form reveal" onSubmit={submit}>
-          <label>Name<input name="name" required placeholder="Your name" /></label>
-          <label>Email<input type="email" name="email" required placeholder="you@example.com" /></label>
-          <label>Message<textarea name="message" required minLength="10" placeholder="Tell me about your project..." /></label>
+          <div className="contact-field-group">
+            <label htmlFor="contact-name">Name</label>
+            <input type="text" id="contact-name" name="name" required placeholder="Your name" />
+          </div>
+          <div className="contact-field-group">
+            <label htmlFor="contact-email">Email</label>
+            <input type="email" id="contact-email" name="email" required placeholder="you@example.com" />
+          </div>
+          <div className="contact-field-group">
+            <label htmlFor="contact-message">Message</label>
+            <textarea id="contact-message" name="message" required minLength="10" placeholder="Tell me about your project..." />
+          </div>
           <button className="btn btn-primary" type="submit" disabled={submitting}>
             {submitting ? "Sending message..." : "Let's work together"} <Icon name="arrow" />
           </button>
