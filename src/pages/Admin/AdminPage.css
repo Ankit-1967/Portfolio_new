@@ -569,4 +569,18 @@
     margin-bottom: 0;
   }
 
+  .admin-grid-2+.admin-field {
+    margin-top: 20px;
+  }
+
+  .admin-field:last-child {
+    margin-bottom: 0;
+  }
+
+  section#sec-navLinks div:has(> .admin-btn-danger) {
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: flex-start !important;
+  }
 }
