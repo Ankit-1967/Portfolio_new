@@ -1,47 +1,57 @@
-// Google Sheets API Integration Service for Portfolio Backend
+// Google Sheets Apps Script API integration service
+
+const GOOGLE_SHEETS_API_URL = import.meta.env?.VITE_GOOGLE_SHEETS_URL || "";
 
 export function getGoogleSheetsUrl() {
-  return localStorage.getItem("portfolio_sheets_url") || import.meta.env.VITE_GOOGLE_SHEETS_API_URL || "";
+  return GOOGLE_SHEETS_API_URL;
 }
 
 /**
- * Fetch portfolio data from Google Sheets API
+ * Fetch portfolio configuration data from remote Google Sheets Apps Script backend
  */
 export async function fetchPortfolioFromSheets() {
-  const url = getGoogleSheetsUrl();
-  if (!url) return null;
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-    const data = await res.json();
-    // Ensure valid portfolio data structure before returning
-    if (data && typeof data === "object" && data.hero && data.contact) {
-      return data;
-    }
-  } catch (err) {
-    console.warn("Could not fetch from Google Sheets API, falling back to local storage:", err);
+  if (!GOOGLE_SHEETS_API_URL) {
+    return null;
   }
-  return null;
+  try {
+    const response = await fetch(GOOGLE_SHEETS_API_URL, {
+      method: "GET",
+      headers: {
+        "Accept": "application/json"
+      }
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.warn("Google Sheets fetch failed or disabled:", error);
+    return null;
+  }
 }
 
 /**
- * Save portfolio data to Google Sheets API
+ * Save portfolio data or contact message to Google Sheets Apps Script backend
  */
-export async function savePortfolioToSheets(data) {
-  const url = getGoogleSheetsUrl();
-  if (!url) return { success: false, reason: "No API URL configured" };
+export async function savePortfolioToSheets(payload) {
+  if (!GOOGLE_SHEETS_API_URL) {
+    return false;
+  }
   try {
-    const res = await fetch(url, {
+    const response = await fetch(GOOGLE_SHEETS_API_URL, {
       method: "POST",
       headers: {
-        "Content-Type": "text/plain;charset=utf-8", // text/plain prevents CORS preflight issue with Google Apps Script
+        "Content-Type": "text/plain;charset=utf-8" // avoiding CORS preflight for Apps Script POST if needed
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload)
     });
-    const result = await res.json();
-    return { success: true, result };
-  } catch (err) {
-    console.error("Failed to save data to Google Sheets API:", err);
-    return { success: false, error: err };
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return true;
+  } catch (error) {
+    console.warn("Google Sheets save failed or disabled:", error);
+    return false;
   }
 }

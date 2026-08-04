@@ -1,0 +1,95 @@
+/* Ambient Background, Stars, Clouds, Moon/Sun, and Particles */
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  pointer-events: none;
+  background: radial-gradient(circle at 80% 12%, rgba(109, 91, 255, .14), transparent 28%), linear-gradient(135deg, #eef7ff, #f5f3ff 50%, #eaf6ff);
+  transition: background 1s ease;
+}
+
+.ambient.dark {
+  background: radial-gradient(circle at 80% 12%, rgba(100, 87, 255, .18), transparent 27%), radial-gradient(circle at 12% 70%, rgba(41, 164, 255, .08), transparent 25%), linear-gradient(135deg, #030711, #080c19 52%, #030711);
+}
+
+.stars {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity .8s;
+}
+
+.dark .stars {
+  opacity: 1;
+}
+
+.stars i {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: #fff;
+  left: calc((var(--i)*29)%100*1%);
+  top: calc((var(--i)*47)%100*1%);
+  opacity: .35;
+  animation: twinkle 3s infinite ease-in-out;
+  animation-delay: calc(var(--i)*-130ms);
+}
+
+.cloud {
+  position: absolute;
+  width: 280px;
+  height: 70px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .5);
+  filter: blur(8px);
+  opacity: .7;
+  transition: opacity .8s;
+  animation: cloud 24s linear infinite;
+}
+
+.dark .cloud {
+  opacity: 0;
+}
+
+.cloud-a {
+  top: 16%;
+  left: -80px;
+}
+
+.cloud-b {
+  top: 32%;
+  right: -100px;
+  animation-delay: -12s;
+}
+
+.moon-sun {
+  position: absolute;
+  right: 7vw;
+  top: 10vh;
+  font-size: 9rem;
+  line-height: 1;
+  opacity: .1;
+  color: var(--text);
+  filter: blur(.2px);
+  animation: float 7s ease-in-out infinite;
+}
+
+.dark .moon-sun {
+  color: #b9c8ff;
+  opacity: .14;
+}
+
+.particles i {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: .1;
+  left: calc((var(--i)*41)%100*1%);
+  top: calc((var(--i)*61)%100*1%);
+  animation: particle 9s ease-in-out infinite;
+  animation-delay: calc(var(--i)*-400ms);
+}

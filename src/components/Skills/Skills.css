@@ -1,4 +1,67 @@
-/* Skills component styles */
-.skills-section-wrapper {
-  position: relative;
+/* Skills Section Component Styles */
+.skills-layout {
+  display: grid;
+  grid-template-columns: .8fr 1.2fr;
+  gap: 100px;
+}
+
+.huge-number {
+  display: block;
+  font-size: 9rem;
+  line-height: .8;
+  letter-spacing: -.1em;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--line);
+  margin-bottom: 30px;
+}
+
+.skills-intro p {
+  max-width: 300px;
+  color: var(--muted);
+}
+
+.skill-row {
+  margin-bottom: 25px;
+  transition-delay: var(--delay);
+}
+
+.skill-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: .82rem;
+  margin-bottom: 8px;
+}
+
+.skill-label b {
+  color: var(--muted);
+  font-size: .7rem;
+}
+
+.progress {
+  height: 4px;
+  background: var(--line);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  border-radius: inherit;
+  transform-origin: left;
+  animation: progress 1.3s cubic-bezier(.2, .8, .2, 1) both;
+}
+
+@media(max-width:900px) {
+  .skills-layout {
+    grid-template-columns: 1fr;
+    gap: 45px;
+  }
+}
+
+@media(max-width:620px) {
+  .huge-number {
+    font-size: 7rem;
+  }
 }

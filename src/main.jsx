@@ -264,7 +264,7 @@ function AppContent() {
 
       fetch(`https://formsubmit.co/ajax/${adminEmail}`, {
         method: "POST",
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },

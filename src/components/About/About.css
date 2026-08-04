@@ -1,4 +1,42 @@
-/* About component styles */
-.about-section-wrapper {
-  position: relative;
+/* About Section Component Styles */
+.about-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+}
+
+.big-copy {
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1.1;
+  letter-spacing: -.055em;
+}
+
+.about-body {
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+.about-body p+p {
+  margin-top: 20px;
+}
+
+.signature {
+  margin-top: 35px;
+  color: var(--text);
+  font-weight: 750;
+}
+
+.signature span {
+  display: block;
+  color: var(--muted);
+  font-size: .7rem;
+  font-weight: 500;
+  margin-top: 3px;
+}
+
+@media(max-width:900px) {
+  .about-layout {
+    grid-template-columns: 1fr;
+    gap: 45px;
+  }
 }

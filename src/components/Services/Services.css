@@ -1,4 +1,51 @@
-/* Services component styles */
-.services-section-wrapper {
+/* Services Section Component Styles */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+
+.service-card {
+  min-height: 280px;
+  padding: 30px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
   position: relative;
+  transition: .3s;
+}
+
+.service-card:hover {
+  background: var(--surface);
+  transform: translateY(-3px);
+}
+
+.service-card>span {
+  font: 600 .65rem monospace;
+  color: var(--accent);
+}
+
+.service-card h3 {
+  font-size: 1.5rem;
+  margin: 50px 0 10px;
+  letter-spacing: -.04em;
+}
+
+.service-card p {
+  color: var(--muted);
+  font-size: .84rem;
+  max-width: 420px;
+}
+
+.service-card>span:last-child {
+  position: absolute;
+  right: 28px;
+  top: 28px;
+  color: var(--muted);
+}
+
+@media(max-width:620px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
 }

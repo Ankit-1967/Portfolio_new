@@ -1,4 +1,66 @@
-/* Experience component styles */
-.experience-section-wrapper {
+/* Experience Timeline Section Component Styles */
+.timeline {
+  max-width: 900px;
+  margin-left: 90px;
+  border-left: 1px solid var(--line);
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 30px;
   position: relative;
+  padding: 0 0 55px 40px;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -5px;
+  top: 5px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 0 5px var(--bg);
+}
+
+.timeline-year {
+  font-size: .7rem;
+  color: var(--accent);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.timeline-item h3 {
+  font-size: 1.25rem;
+  letter-spacing: -.03em;
+}
+
+.timeline-item strong {
+  display: block;
+  color: var(--muted);
+  font-size: .75rem;
+  margin: 3px 0 10px;
+}
+
+.timeline-item p {
+  color: var(--muted);
+  font-size: .85rem;
+  max-width: 600px;
+}
+
+@media(max-width:900px) {
+  .timeline {
+    margin-left: 20px;
+  }
+}
+
+@media(max-width:620px) {
+  .timeline-item {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding-left: 28px;
+  }
 }

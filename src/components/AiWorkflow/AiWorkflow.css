@@ -1,4 +1,62 @@
-/* AiWorkflow component styles */
-.ai-section-wrapper {
+/* AI Workflow Section Component Styles */
+.ai-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.ai-card {
+  min-height: 300px;
+  padding: 28px;
+  border-radius: 22px;
   position: relative;
+  overflow: hidden;
+  transition: .35s;
+  transition-delay: var(--delay);
+}
+
+.ai-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(130, 115, 255, .35);
+  box-shadow: var(--shadow);
+}
+
+.ai-icon {
+  font-size: 2rem;
+  color: var(--accent);
+  margin-bottom: 50px;
+}
+
+.card-index {
+  position: absolute;
+  right: 24px;
+  top: 25px;
+  font: 600 .68rem monospace;
+  color: var(--muted);
+}
+
+.ai-card h3 {
+  font-size: 1.5rem;
+  letter-spacing: -.04em;
+}
+
+.ai-card p {
+  color: var(--muted);
+  font-size: .88rem;
+  margin-top: 8px;
+}
+
+.card-line {
+  position: absolute;
+  left: 28px;
+  right: 28px;
+  bottom: 28px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+}
+
+@media(max-width:900px) {
+  .ai-grid {
+    grid-template-columns: 1fr;
+  }
 }

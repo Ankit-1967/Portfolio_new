@@ -103,12 +103,12 @@ function Header({ menuOpen, setMenuOpen, active, scrollTo, navLinks, pages, them
         />
       )}
       <header className="site-header">
-        <Link 
-          className="logo" 
-          to="/" 
-          onClick={() => { 
-            handleNavClick({ id: 'home', target: '/' }); 
-          }} 
+        <Link
+          className="logo"
+          to="/"
+          onClick={() => {
+            handleNavClick({ id: 'home', target: '/' });
+          }}
           aria-label="Home"
         >
           <span className="logo-mark">A</span><span>Ankit<span className="accent">.</span></span>
@@ -141,27 +141,27 @@ function Header({ menuOpen, setMenuOpen, active, scrollTo, navLinks, pages, them
         </nav>
 
         <div className="header-actions">
-          <a 
-            className="header-cta" 
-            href="#contact" 
-            onClick={(e) => { 
-              e.preventDefault(); 
-              handleNavClick({ id: 'contact', target: '#contact' }); 
+          <a
+            className="header-cta"
+            href="#contact"
+            onClick={(e) => {
+              e.preventDefault();
+              handleNavClick({ id: 'contact', target: '#contact' });
             }}
           >
             Let's talk <Icon name="arrow" />
           </a>
-          <button 
-            className="theme-toggle" 
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")} 
+          <button
+            className="theme-toggle"
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`}
           >
             <span className="theme-orb">{theme === "dark" ? "☾" : "☼"}</span>
           </button>
-          <button 
-            className="menu-toggle" 
-            onClick={() => setMenuOpen(!menuOpen)} 
-            aria-expanded={menuOpen} 
+          <button
+            className="menu-toggle"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-expanded={menuOpen}
             aria-label="Toggle menu"
           >
             <Icon name={menuOpen ? "close" : "menu"} />
